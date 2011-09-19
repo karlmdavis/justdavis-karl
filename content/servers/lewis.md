@@ -1,0 +1,102 @@
+--- 
+title: Lewis
+kind: topic
+summary: Describes the setup of lewis, which acts as a DNS, Kerberos, and LDAP server.
+---
+
+# Lewis
+
+`lewis` is a directory server which hosts DNS, Kerberos, and LDAP.  This page documents everything done to get `lewis` up, running, and configured.
+
+
+## Specs
+
+* `lewis` is a virtual machine client running on `eddings`
+* Number of Processors: One
+* Hard disk size (preallocated): 20GB
+* Memory: 512MB
+* Network Connection: bridged networking
+
+
+## Setup
+
+Please see the following sub-guides:
+
+* <%= topic_summary_link("/servers/lewis/dns/") %>
+* <%= topic_summary_link("/servers/lewis/kerberos/") %>
+* <%= topic_summary_link("/servers/lewis/ldap/") %>
+
+
+### Create New Virtual Machine Client
+
+Create a new client for the `lewis` virtual machine:
+
+1. Connect to the virtual machine console on the host server.
+1. Create a new virtual machine, using the __'Specs__' listed above.
+
+
+### 32bit Ubuntu 8.04 (Hardy Heron), Server Edition
+
+
+#### Installation Media
+
+Acquire and prepare the installer:
+
+1. Find a URL for the appropriate installer `.iso` file at <http://www.ubuntu.com/getubuntu/download>.
+1. Use the `wget` command on the virtual machine's host to download that `.iso`.
+1. Mount that `.iso` file as a CD via the virtual machine console.
+
+
+#### Installation
+
+Boot from the "CD" created earlier (press `ESC` at the POST screen).  Select the following options to proceed through the install:
+
+1. __English__.
+1. __Install Ubuntu Server__.
+1. Choose a language: __English__
+1. Choose a country, territory, or state: __United States__
+1. Keyboard layout: __us__
+1. Hostname: `lewis`
+1. Time zone: __Arizona__
+1. Partitioning method: __Guided - use entire disk__
+1. Disk to partition: whichever represents the SATA drive (__SCSI3__ for me)
+1. Full name: `Karl M. Davis`
+1. Username: `karl`
+1. Password: (be sure to note this in `Identity.ods`)
+1. Software to install: __OpenSSH Server__ (we'll install some of the others later)
+
+
+### Network Connection
+
+Assign the server a static public IP:
+
+1. Edit the `/etc/network/interfaces` file and set the `eth0` section as follows:
+
+        auto eth0
+        iface eth0 inet static
+                address 75.146.134.36
+                netmask 255.255.255.248
+                gateway 75.146.134.38
+
+1. Restart networking:
+
+        # /etc/init.d/networking restart
+
+
+### Connecting via SSH
+
+After the network connection has been setup, you should be able to connect to the computer from other hosts via the following SSH command:
+
+    $ ssh karl@75.146.134.36
+
+
+### Keeping the Clock Synchronized
+
+References:
+
+* <https://help.ubuntu.com/8.04/serverguide/C/NTP.html>
+
+As a virtual machine guest, the computer's clock will tend to "drift" faster than normal.  To correct this, simply install `ntpd` via the following command:
+
+    # apt-get install ntp
+

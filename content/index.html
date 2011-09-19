@@ -2,13 +2,50 @@
 title: Home
 ---
 
-<h1>A Brand New nanoc Site</h1>
+<h1>Documentation for davisonlinehome.name</h1>
 
-<p>You’ve just created a new nanoc site. The page you are looking at right now is the home page for your site. To get started, consider replacing this default homepage with your own customized homepage. Some pointers on how to do so:</p>
+<p>This site contains the IT documentation for the <code>davisonlinehome.name</code> intranet. The site is organized as a series of hierarchical topics, generally grouped by the various devices on the network.</p>
 
+<h2>Servers</h2>
 <ul>
-  <li><p><strong>Change this page’s content</strong> by editing the “index.html” file in the “content” directory. This is the actual page content, and therefore doesn’t include the header, sidebar or style information (those are part of the layout).</p></li>
-  <li><p><strong>Change the layout</strong>, which is the “default.html” file in the “layouts” directory, and create something unique (and hopefully less bland).</p></li>
+<% topics("/servers/").each do |topic| %>
+  <li><%= topic_summary_link(topic) %></li>
+<% end %>
 </ul>
 
-<p>If you need any help with customizing your nanoc web site, be sure to check out the documentation (see sidebar), and be sure to subscribe to the discussion group (also see sidebar). Enjoy!</p>
+<h2>Workstations</h2>
+<ul>
+<% topics("/workstations/").each do |topic| %>
+  <li><%= topic_summary_link(topic) %></li>
+<% end %>
+</ul>
+
+<h2>Miscellaneous</h2>
+<ul>
+<% topics("/misc/").each do |topic| %>
+  <li><%= topic_summary_link(topic) %></li>
+<% end %>
+</ul>
+
+<!--
+<h2>Top-Level Topics</h2>
+<ul>
+<% topics("/").each do |topic| %>
+  <li><%= topic.identifier %></li>
+<% end %>
+</ul>
+
+<h2>Root Children</h2>
+<ul>
+<% @items.find { |item| item.identifier == "/" }.children.each do |item| %>
+  <li><%= item.identifier %></li>
+<% end %>
+</ul>
+
+<h2>Items</h2>
+<ul>
+<% @items.each do |item| %>
+  <li><%= item.identifier %></li>
+<% end %>
+</ul>
+-->
