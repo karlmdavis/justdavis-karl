@@ -1,0 +1,146 @@
+= FeistSetupDevelopment =
+
+This FeistSetup sub-guide describes the steps necessary to install the development tools used on the computer.
+
+
+== Java: [http://openjdk.java.net/ OpenJDK] ==
+
+Install the JRE, JDK, etc.:
+{{{
+# apt-get install openjdk-6-jdk openjdk-6-source visualvm icedtea6-plugin
+}}}
+
+
+== [http://subversion.tigris.org/ Subversion] ==
+
+Install the subversion client:
+{{{
+# apt-get install subversion
+}}}
+
+Install the Java bindings for subversion:
+{{{
+# apt-get install libsvn-java
+}}}
+
+
+== [http://git.or.cz/ Git] ==
+
+Install the git client:
+{{{
+# apt-get install git-core
+}}}
+
+
+== [http://maven.apache.org/ Apache Maven 2] ==
+
+Install Maven 2.2.1 from the Ubuntu repos:
+{{{
+# apt-get install maven2
+}}}
+
+
+== [http://code.google.com/android/download_list.html Android SDK] ==
+
+References:
+ * http://code.google.com/android/intro/installing.html
+ * http://developer.android.com/guide/developing/eclipse-adt.html#Running
+
+Install the SDK:
+ 1. Download the Android SDK.
+ 1. Unzip the download and move its root folder to `/usr/local/bin'.
+ 1. Add the SDK's `tools` directory to your path by adding the following lines to your `~/.bashrc`:
+{{{
+#Add the Android SDK tools directory to the path
+if [ -d /usr/local/bin/android-sdk-linux_x86-1.0_r2/tools ] ; then
+    export PATH=$PATH:/usr/local/bin/android-sdk-linux_x86-1.0_r2/tools
+fi
+}}}
+
+Configure the emulator:
+ 1. Run the following command to list the available deployment targets:
+{{{
+$ android list targets
+}}}
+ 1. Create a new Android Virtual Device (AVD) by running a version of the following command:
+{{{
+$ android create avd --name <your_avd_name> --target <targetID>
+}}}
+    * Replace `<your_avd_name>` with a descriptive name for the new AVD, e.g. `default-1.1`.
+    * Replace `<targetID>` with the ID of the Android target you wish the AVD to use (from the previous `list targets` command), e.g. `1`.
+
+
+== [http://www.eclipse.org/ Eclipse] ==
+
+References:
+ * http://www.ailis.de/~k/archives/49-Ubuntu-Karmic-workarounds.html
+
+Install Eclipse 3.5 from the Ubuntu repos:
+{{{
+# apt-get install eclipse
+}}}
+
+For some reason, Ubuntu's version of Eclipse ships with no update sites, which prevents plugins from being installed.  Add the following update site in Eclipse: [http://download.eclipse.org/releases/galileo/].
+
+
+=== Eclipse Plugins ===
+
+
+==== Trac Mylyn Connector ====
+
+In order to install this Eclipse plugin, the most recent version of Mylyn needs to be installed.  Add the [http://download.eclipse.org/tools/mylyn/update/weekly/e3.4 Mylyn Weekly] update site to Eclipse and then update all Eclipse components ('''Help > Check for Updates''').
+
+After that, the Trac integration plugin can be installed from the [http://download.eclipse.org/tools/mylyn/update/extras Mylynn Extras] update site.
+
+
+==== Google Code Mylyn Connector ====
+
+References:
+ * http://www.jroller.com/alexRuiz/entry/using_mylyn_with_google_code1
+
+There actually isn't a specific Mylyn connector currently available for Google Code task repositories.  However, the "Web Templates" Mylyn connector can be used.
+
+To setup a Google Code repository in Eclipse:
+ 1. Install the "Web Templates" Mylyn connector from the [http://download.eclipse.org/tools/mylyn/update/incubator Mylynn Incubator] update site.
+ 1. Add the ''Task Repositories'' view:
+    1. Open '''Window > Show View > Other...'''.
+    1. Select '''Tasks > Task Repositories'''.
+    1. Click '''OK'''.
+ 1. Right-click a blank spot in that view and select '''Add Task Repository...'''.
+ 1. Select '''Web Template (Advanced)''' and click '''Next'''.
+ 1. Select '''Eclipse Outliner (Google Code)''' from the ''Server'' drop-down.
+ 1. Alter the ''Server'', ''Label'', and other connection details to match the Google Code repository you wish to use.
+ 1. Click '''Finish'''.
+
+
+==== [http://m2eclipse.sonatype.org/ M2Eclipse] ====
+
+Provides Eclipse integration with Maven.  Install it from this update site: [http://m2eclipse.sonatype.org/update/].
+
+
+==== [http://subclipse.tigris.org/ Subclipse] ====
+
+Provides Eclipse integration with Subversion.  Install it from this update site: [http://subclipse.tigris.org/update_1.6.x].  To configure the plugin:
+ 1. Go to ''Window --> Preferences'' in Eclipse.
+ 1. Select the ''Team --> SVN'' node.
+ 1. Select ''SVNKit'' as the client.
+
+If you see the error "JavaHL (JNI) not available", do the following:
+   1. Open `/usr/local/bin/eclipse/3.4-sr1/eclipse.ini` for editing.
+   1. Below the `-vmargs` line, add the following:
+{{{
+-Djava.library.path=/usr/lib/jni
+}}}
+
+
+==== [http://code.google.com/android/intro/installing.html#installingplugin Android Development Tools (ADT)] ====
+
+Provides Eclipse integration for Android development.  Install it from this update site: [https://dl-ssl.google.com/android/eclipse/].  To configure the plugin:
+ 1. Go to ''Window --> Preferences'' in Eclipse.
+ 1. Select the ''Android'' node.
+ 1. Enter the path to the Android SDK, e.g. '''/usr/local/bin/android-sdk-linux_x86-1.0_r2/'''.
+
+
+== Netbeans ==
+
+TODO

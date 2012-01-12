@@ -1,0 +1,236 @@
+= GoodkindSetupNetworkClient =
+
+This GoodkindSetup sub-guide describes the steps necessary to make `goodkind` a part of the DOH network.
+
+
+== Kerberos Client ==
+
+Install kerberos client utilities:
+{{{
+# apt-get install krb5-user
+}}}
+
+Edit `/etc/krb5.conf` to add the DAVISONLINEHOME.NAME realm:
+{{{
+[libdefaults]
+	default_realm = DAVISONLINEHOME.NAME
+...
+[realms]
+	DAVISONLINEHOME.NAME = {
+		kdc = kerberos.davisonlinehome.name
+		admin_server = kerberos.davisonlinehome.name
+		default_domain = davisonlinehome.name
+	}
+...
+[domain_realm]
+	.davisonlinehome.name = DAVISONLINEHOME.NAME
+	davisonlinehome.name = DAVISONLINEHOME.NAME
+...
+}}}
+
+
+== OpenAFS Client ==
+
+References:
+ * Debian openafs documentation in /usr/share/doc/openafs-* (after packages are installed)
+
+Install the openafs client packages:
+{{{
+# apt-get install openafs-doc openafs-client openafs-modules-source openafs-krb5
+}}}
+
+You will be prompted to enter values for the following settings:
+ * ''cell name'': `davisonlinehome.name`
+ * ''client cache size'': `500000`
+ * ''db server host names'': `eddings.davisonlinehome.name`
+ * ''run client at boot'': Select '''yes'''.
+
+The openafs kernel module now needs to be built and installed.  Run these commands to do so:
+
+{{{
+# apt-get install module-assistant
+# module-assistant prepare openafs-modules
+# module-assistant auto-build openafs-modules
+# dpkg -i /usr/src/openafs-modules-<version>.deb
+}}}
+
+In order to keep from having to restart the `openafs-client` service after booting, set ''AFS_DYNROOT'' to '''true''' in `/etc/openafs/afs.conf.client`:
+{{{
+...
+AFS_DYNROOT=true
+...
+}}}
+
+Normally, I would tweak the AFS client's performance by editing /etc/openafs/afs.conf as follows:
+{{{
+...
+#OPTIONS=AUTOMATIC
+OPTIONS="-chunksize 20 -memcache -blocks 65536"
+...
+}}}
+
+However, that causes the errors mentioned in [https://bugs.launchpad.net/openafs/+bug/294527 Bug 294527].  Leave those options alone.
+
+Reboot.
+
+
+== LDAP Client ==
+
+Install the required packages:
+{{{
+# apt-get install ldap-utils libsasl2-modules-gssapi-mit
+}}}
+
+Edit `/etc/ldap/ldap.conf`:
+{{{
+...
+BASE	dc=davisonlinehome,dc=name
+URI	ldaps://davisonlinehome.name
+
+TLS_CACERT	/etc/ssl/certs/ca-certificates.crt
+TLS_REQCERT	allow
+...
+}}}
+
+Please note that setting TLS_REQCERT to "allow" (as opposed to require) is a workaround for the following bug: https://bugs.launchpad.net/bugs/257153
+
+Test LDAP searches:
+{{{
+$ ldapsearch -x <-- test unauthenticated lookups
+$ kinit
+$ ldapsearch <-- test lookups via GSSAPI (Kerberos)
+}}}
+
+
+== `libnss-ldapd` ==
+
+References:
+ * http://ch.tudelft.nl/~arthur/nss-ldapd/setup.html
+ * https://help.ubuntu.com/community/LDAPClientAuthentication
+
+Install and configure `libnss-ldapd`:
+{{{
+# apt-get install libnss-ldapd
+}}}
+
+When asked, answer:
+ * LDAP server URI: '''ldaps://davisonlinehome.name/'''
+ * Search Base BN: '''dc=davisonlinehome,dc=name'''
+ * Name services to configure: ''group'', ''passwd'', ''shadow''
+ * LDAP version: ''3''
+ * Make local root DB admin: ''No''
+ * Does the LDAP database require login: ''No''
+
+Edit the `/etc/nss-ldapd.conf` file to ensure that the following parameters are set:
+{{{
+bind_timelimit 2
+idle_timelimit 120
+timelimit 10
+reconnect_tries 0
+tls_cacertfile /etc/ssl/certs/ca.pem
+}}}
+
+
+== `libnss-db` ==
+
+References:
+ * http://ch.tudelft.nl/~arthur/nss-ldapd/setup.html
+ * https://help.ubuntu.com/community/LDAPClientAuthentication
+
+Install and configure `libnss-ldapd`:
+{{{
+# apt-get install nss-updatedb libnss-db
+}}}
+
+Populate the libnss-db database:
+{{{
+# ln -s /usr/lib/libnss_ldap.so.2 /lib/libnss_ldap.so.2  <-- This doesn't seem to be necessary in Ibex
+# nss_updatedb ldap
+}}}
+
+
+== `libpam-ccreds` ==
+
+References:
+ * https://help.ubuntu.com/community/PamCcredsHowto
+
+Install the package:
+{{{
+# apt-get install libpam-ccreds
+}}}
+
+
+== !AuthClient: Kerberos, LDAP, `pam_ccreds`, etc. ==
+
+References:
+ * https://wiki.ubuntu.com/NetworkAuthentication/Client#head-f9a567ed3e3aceff2b2cdf5b522debc95a6226ca
+ * http://tylerlesmann.com/
+
+Install the remaining PAM modules:
+{{{
+# apt-get install libpam-krb5 libpam-openafs-session
+}}}
+
+Create a Kerberos principal and keytab for the client computer:
+{{{
+# kadmin -p karl/admin
+kadmin:  addprinc -randkey host/goodkind.davisonlinehome.name
+kadmin:  ktadd host/goodkind.davisonlinehome.name
+kadmin:  quit
+}}}
+
+Install !AuthClient:
+{{{
+# apt-get install auth-client-config
+}}}
+
+Create a new !AuthClient profile in the file `/etc/auth-client-config/profile.d/doh_network`:
+{{{
+[doh_network]
+nss_passwd=passwd: compat ldap [NOTFOUND=return] db
+nss_group=group: compat ldap [NOTFOUND=return] db
+nss_shadow=shadow: compat
+nss_netgroup=netgroup: nis
+pam_auth=auth [default=reset success=done]                           pam_unix.so debug
+	auth optional                                               pam_group.so
+	auth [default=ignore success=1 service_err=reset]           pam_krb5.so use_first_pass debug forwardable
+	auth [default=die success=done]                             pam_ccreds.so action=validate use_first_pass
+	auth optional                                               pam_afs_session.so use_first_pass
+	auth [default=done]                                         pam_ccreds.so action=store use_first_pass
+pam_account=account sufficient   pam_unix.so
+	account sufficient   pam_krb5.so
+pam_password=password sufficient     pam_unix.so obscure sha512
+	password sufficient     pam_krb5.so debug try_first_pass
+	password required       pam_deny.so
+pam_session=session optional    pam_krb5.so
+	session optional    pam_afs_session.so
+	session required    pam_unix.so
+	session required    pam_mkhomedir.so umask=0022 skel=/etc/skel
+}}}
+
+Enable the `doh_network` !AuthClient profile:
+{{{
+# auth-client-config -a -p doh_network
+}}}
+
+Add the following to the end of `/etc/security/group.conf`:
+{{{
+# Ensure that network-authenticated users are added to the standard user groups
+gdm; *; *;Al0000-2400; adm, dialout, cdrom, floppy, audio, dip, video, plugdev, fuse, lpadmin, admin, disk
+}}}
+
+Add users (as necessary) to the sudoers file by running `sudo visudo`:
+{{{
+...
+# User privilege specification
+root    ALL=(ALL) ALL
+karl    ALL=(ALL) ALL
+erica   ALL=(ALL) ALL
+}}}
+
+== GNOME Screensaver ==
+
+Setting up a password protected screensaver will rerun the `common-auth` PAM stack, renewing the user's Kerberos credentials, which will otherwise expire every ten hours or so.
+
+ 1. Open ''System --> Preferences --> Screensaver''.
+ 1. Check ''Lock screen when screensaver is active''.

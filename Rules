@@ -27,23 +27,32 @@ end
 #  nil # Don't create output files for summaries (they will be manually included in pages).
 #end
 
+compile '/css/*' do
+  filter :less
+  filter :rainpress
+end
+
+route '/css/*' do
+  item.identifier.chop + '.css'
+end
+
 compile '*' do
   if item.binary?
     # don’t filter binary items
   else
     case item[:extension]
-      when 'md'
+      when 'markdown'
         filter :erb
+        filter :kramdown
+      when 'tracwiki'
+        filter :erb
+        filter :tracwiki
         filter :kramdown
       else
         filter :erb
     end
     layout 'default'
   end
-end
-
-route '/stylesheet/' do
-  '/style.css'
 end
 
 route '*' do

@@ -1,0 +1,82 @@
+= BrooksSetup =
+
+`brooks` is the name of the Vista OS on my new (as of 2009-01-05) desktop.
+
+Please see the following sub-guides:
+ * BrooksSetupNetworkClient: describes the steps necessary to make the computer a client of the DOH network
+ * BrooksSetupUserSettings: describes the steps necessary to setup a new user account on the computer
+
+
+== Vista 64bit Home Premium SP1 Clean Install ==
+
+Here's what I did:
+ 1. Installed Vista from the boot DVD, let it take the whole drive.
+ 1. Installed the network drivers from the Gigabyte CD (see also TODO).
+ 1. Enabled Microsoft Update.
+ 1. Ran Microsoft Update until it ran out of updates.
+ 1. Download and install the following drivers from [http://www.gigabyte.us/ Gigabyte], specifically [http://www.gigabyte.us/Support/Motherboard/Driver_Model.aspx?ProductID=2914]:
+    * Audio, Realtek Function driver for Realtek Azalia audio chip
+    * Chipset, Intel INF installation
+
+
+== Restoring BCD After Installing Second OS ==
+
+References:
+ * http://www.multibooters.co.uk/cloning.html
+
+If Linux is installed after Vista, trying to boot the Vista partition will result in an error mentioning that "winload.exe" is "missing or corrupt."  This error is a result of the Vista BCD not reflecting the new partition table.  To repair:
+ 1. Boot off of the Vista install DVD.
+ 1. Get up to and click the ''Install Now'' button.
+ 1. On the next screen, press `shift+F10` to open a command prompt.
+ 1. Run the following command to use the `bcdedit` tool to automatically detect and create a boot entry for your Vista partition:
+{{{
+> bcdedit /repairbcd
+}}}
+ 1. Exit the Vista installer, remove the DVD, and reboot.
+
+After this, you may want to generalize the BCD to ensure that this problem does not occur again in the future.  Generalizing the BCD will also be required if you wish to boot the Vista partition as a VM from inside Linux (see [http://davisonlinehome.name:8080/trac/dohNetwork/wiki/FeistSetupVirtualBox#BootbrooksasaVM]).  Here are the steps required to generalize the BCD:
+ 1. Boot into the Vista partition.
+ 1. Open Command Prompt as Administrator (right-click and select "Run as administrator" from the Start menu).
+ 1. Run the following commands:
+{{{
+> bcdedit /set {current} osdevice boot
+> bcdedit /set {current} device boot
+> bcdedit /set {bootmgr} device boot
+> bcdedit /set {memdiag} device boot
+}}}
+
+
+== Video/Display Setup ==
+
+Install the latest ATI drivers:
+ 1. Download the 64bit Catalyst drivers from [http://www.ati.com], specfically [http://game.amd.com/us-en/drivers_catalyst.aspx?p=vista64/common-vista64].
+ 1. Install the drivers.
+ 1. Configure the monitors.
+
+
+== Audio ==
+
+TODO
+
+
+== Windows Experience Index ==
+
+References:
+ * http://www.msfn.org/board/Windows-Experience-Index-is-not-working-t96622.html
+
+If the Index gets "stuck" at "Unrated" even after installing all drivers updating the score, clear out the Index's data store and update the score again:
+ 1. Open the `C:\Windows\Performance\WinSAT\DataStore` folder.
+ 1. Delete all of the files from it.
+
+
+== VM Guest Additions ==
+
+If you [http://davisonlinehome.name:8080/trac/dohNetwork/wiki/FeistSetupVirtualBox#BootbrooksasaVM boot brooks as a VM] you'll need to install the !VirtualBox Guest Additions:
+ 1. Select ''Devices --> Install Guest Additions...'' from a running `brooks` !VirtualBox console.
+ 1. Run `VBoxWindowsAdditions.exe` from the CD that this mounts.
+ 1. Reboot.
+
+
+== Adobe Flash ==
+
+TODO

@@ -1,27 +1,65 @@
 <!DOCTYPE HTML>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>DOH Documentation - <%= @item[:title] %></title>
-    <link rel="stylesheet" type="text/css" href="/style.css" media="screen">
-    <meta name="generator" content="nanoc 3.2.2">
-  </head>
-  <body>
-    <div id="main">
-      <%= yield %>
-    </div>
-    <div id="sidebar">
-      <h2>Documentation</h2>
-      <ul>
-        <li><a href="http://nanoc.stoneship.org/docs/">Documentation</a></li>
-        <li><a href="http://nanoc.stoneship.org/docs/3-getting-started/">Getting Started</a></li>
-      </ul>
-      <h2>Community</h2>
-      <ul>
-        <li><a href="http://groups.google.com/group/nanoc/">Discussion Group</a></li>
-        <li><a href="irc://chat.freenode.net/#nanoc">IRC Channel</a></li>
-        <li><a href="http://projects.stoneship.org/trac/nanoc/">Wiki</a></li>
-      </ul>
-    </div>
-  </body>
+	<head>
+		<meta charset="utf-8">
+		<title>Davis Family IT - <%= @item[:title] %></title>
+		<link rel="stylesheet" type="text/css" href="/css/layout.css" media="screen">
+		<link rel="stylesheet" type="text/css" href="/css/style.css" media="screen">
+		<meta name="generator" content="nanoc 3.2.2">
+	</head>
+	<body>
+		<div id="header">
+			<h2><a href="#">Davis Family IT</a></h2>
+			<p>The design and configuration of a home network.</p>
+		</div>
+		<div id="middle">
+			<div id="sidebar">
+				<h2>Site</h2>
+				<ul>
+					<li><%= topic_link("/") %></li>
+					<li><%= topic_link("/wiki/") %></li>
+				</ul>
+				<h2>Servers</h2>
+				<ul>
+				<% topics("/servers/").each do |topic| %>
+					<li><%= topic_link(topic) %></li>
+				<% end %>
+				</ul>
+<!--
+				<h2>Workstations</h2>
+				<ul>
+				<% topics("/workstations/").each do |topic| %>
+					<li><%= topic_link(topic) %></li>
+				<% end %>
+				</ul>
+-->
+				<h2>Applications</h2>
+				<ul>
+				<% topics("/applications/").each do |topic| %>
+					<li><%= topic_link(topic) %></li>
+				<% end %>
+				</ul>
+<!--
+				<h2>Miscellaneous</h2>
+				<ul>
+				<% topics("/misc/").each do |topic| %>
+					<li><%= topic_link(topic) %></li>
+				<% end %>
+				</ul>
+-->
+			</div>
+			<div id="main">
+				<%= yield %>
+			</div>
+		</div>
+		<div id="footer"
+			<p>
+				Copyright 2011, Karl M. Davis.
+			</p>
+			<p>
+				<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a><br />
+				This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.
+			</p>
+		</div>
+	</body>
 </html>

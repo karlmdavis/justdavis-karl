@@ -1,0 +1,53 @@
+= AndroidSetupWifiTethering =
+
+This AndroidSetup sub-guide describes the steps necessary to use the phone as a wifi tether.  Please note that this requires root access to the phone (see AndroidSetupRooting).
+
+
+== Install Wifi Tether App ==
+
+The open-source [http://code.google.com/p/android-wifi-tether/ android-wifi-tether] application allows Android phones to host an ad-hoc wifi network that is bridged with its Edge or 3G data connection.  This application is not available in the Android Market.
+
+To install the application, first enable the installation of non-Market apps on the phone:
+ 1. Go to the phone's home screen.
+ 1. Press the ''MENU'' button and select ''Settings''.
+ 1. Select the ''Applications'' entry.
+ 1. Check the ''Unknown sources''  option.
+
+Then, simply install the application from its website:
+ 1. Browse to [http://code.google.com/p/android-wifi-tether/] on the phone.
+ 1. Download the latest `.apk` application package from ''Featured Downloads''.
+ 1. Once the file has downloaded, select it and click ''Install''.
+
+
+== Connect to the Network via Linux Terminal ==
+
+It seems that Ubuntu's Network Manager applet has trouble connecting to ad-hoc wireless networks (at least on Hardy).  Fortunately, the connection can be made via a terminal.
+
+First, use the `iwlist` command to list the details of the G1's network:
+{{{
+# iwlist wlan0 scanning
+wlan0     Scan completed :
+          Cell 01 - Address: 00:12:17:31:83:08
+                    ESSID:"Homeboy"
+                    ... SNIP ...
+          Cell 02 - Address: 02:18:41:4E:9F:BB
+                    ESSID:"davis_g1"
+                    Mode:Ad-Hoc
+                    Channel:1
+                    Frequency:2.412 GHz (Channel 1)
+                    Quality=98/100  Signal level=-25 dBm  Noise level=-127 dBm
+                    Encryption key:off
+                    Bit Rates:1 Mb/s; 2 Mb/s; 5.5 Mb/s; 11 Mb/s
+                    Extra:tsf=0000000010b5e695
+}}}
+
+Next, configure the wireless interface to match the "Ad-Hoc" network details:
+{{{
+# /etc/dbus-1/event.d/25NetworkManager stop
+# ifconfig wlan0 down
+# iwconfig wlan0 mode ad-hoc
+# iwconfig wlan0 channel 1
+# iwconfig wlan0 essid 'davis_g1'
+# ifconfig wlan0 up
+# dhclient wlan0
+}}}

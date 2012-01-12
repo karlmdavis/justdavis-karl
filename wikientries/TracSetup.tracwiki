@@ -1,0 +1,41 @@
+= TracSetup =
+
+Trac is setup and running on `eddings`.
+
+== Create a New Project ==
+
+ 1. Create a subversion project root:
+{{{
+# svn mkdir http://davisonlinehome.name:8080/svn/java-repo/projectname
+}}}
+ 1. Create a project:
+{{{
+# trac-admin /var/lib/trac/projects/projectname initenv
+}}}
+    When prompted, enter `/var/svn/java-repo/projectname` as the repository directory.
+ 1. Make user `karl` a trac admin for that project:
+{{{
+# trac-admin /var/lib/trac/projects/projectname permission add karl TRAC_ADMIN
+}}}
+ 1. Give apache access to all of the trac folders:
+{{{
+# chown -R www-data:www-data /var/lib/trac
+}}}
+
+
+== Plugins ==
+
+=== [http://trac-hacks.org/wiki/XmlRpcPlugin XmlRpcPlugin] ===
+
+The !XmlRpcPlugin allows programmatic access to the Trac projects' data.  This is particularly useful as it enables Trac-Mylynn interoperability.
+
+To install:
+ 1. Run the following command to install the latest code available for !XmlRpcPlugin:
+{{{
+# easy_install http://trac-hacks.org/svn/xmlrpcplugin/trunk/
+}}}
+ 1. Restart apache:
+{{{
+# /etc/init.d/apache2 restart
+}}}
+ 1. Enable the !XmlRpcPlugin components from the ''Admin --> Plugins'' section of each Trac project.

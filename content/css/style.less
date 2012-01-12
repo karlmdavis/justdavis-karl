@@ -1,0 +1,103 @@
+/* GENERAL TYPOGRAPHY */
+
+@color_background: #fff;
+
+* {
+  font-family: Georgia, Palatino, Times, 'Times New Roman', sans-serif;
+}
+
+body {
+  background: @color_background;
+}
+
+p {
+	margin-top: 1.25em;
+  line-height: 1.25em;
+}
+
+
+h1 {
+  font-size: 2.5em;
+  font-weight: normal;
+
+  letter-spacing: -1px;
+}
+
+h2, h3, h4, h5, h6 {
+	margin-top: 0.5em;
+}
+
+
+/* LINKS */
+
+@color_link_active: #f30;
+@color_link_hover: #f90;
+
+a {
+  text-decoration: none;
+	
+	&:link, &:visited {
+	  color: @color_link_active;
+	}
+
+	&:hover {
+		color: @color_link_hover;
+	}
+}
+
+
+/* LISTS */
+
+ul, ol {
+	margin-top: 1.25em;
+	margin-left: 1.0em;
+}
+
+li {
+  line-height: 1.25em;
+}
+
+ul li {
+  list-style-type: square;
+}
+
+
+/* SIDEBAR */
+
+@color_sidebar_headings: #333;
+
+#sidebar {
+  line-height: 0.75em;
+}
+
+#sidebar h2 {
+  margin-top: 0.9em;
+
+  font-size: 0.9em;
+  letter-spacing: 1px;
+
+  text-transform: uppercase;
+  color: @color_sidebar_headings;
+}
+
+#sidebar ul {
+  margin-top: 0.5em;
+
+	li {
+	  font-size: 0.9em;
+	  list-style-type: none;
+	}
+}
+
+/* CODE */
+
+code {
+	font-family: monospace;
+	font-size: 1.2em;
+}
+
+pre {
+	border: dashed 1px gray;
+	background: LightGray;
+	overflow-x: auto;
+}

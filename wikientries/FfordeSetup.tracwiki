@@ -1,0 +1,96 @@
+= FfordeSetup =
+
+`fforde` is the name of the Erica's Eee PC 900A, which runs Ubuntu Netbook Remix.  It was bought from the [http://www.woot.com/Blog/ViewEntry.aspx?Id=8983 2009-08-17 woot!].
+
+Hardware Specs:
+ * CPU: Intel 1.6GHz Atom N270
+ * Hard Drive: 4GB SSD
+ * WLAN: 802.11b/g
+ * Display: 8.9", 1024x600
+ * Display Card: Intel UMA
+ * Weight: 0.99kg
+
+Please see the following sub-guides:
+ * FfordeSetupNetworkClient: describes the steps necessary to make the computer a client of the DOH network
+ * FfordeSetupUserSettings: describes the steps necessary to setup a new user account on the computer
+
+
+== Ubuntu 9.10 32bit Netbook Remix, Clean Install ==
+
+To install Ubuntu NBR 9.10, do the following:
+ 1. Create a 9.04 NBR thumb drive using the usb-creator tool on Windows (does not work correctly if created in Ubuntu 8.10).
+ 1. Boot from thumb drive into Live Desktop.
+ 1. Run Ubuntu install from Live environment.
+    * '''Prepare disk space'''
+      * Select the ''Erase and use the entire disk'' option.
+    * '''Who are you?'''
+      * Create a "`localuser`" account (as opposed to a `karl` account).
+      * Name the computer "`fforde`".
+      * Select the ''Require my password to log in'' option.
+ 1. After rebooting into the new Ubuntu system, install the available updates before doing anything else:
+{{{
+# apt-get update
+# apt-get dist-upgrade
+}}}
+
+
+== OpenSSH Server ==
+
+Install it:
+{{{
+# apt-get install openssh-server
+}}}
+
+
+== Adobe Flash ==
+
+Install the Adobe plugin from the `multiverse` repository:
+{{{
+# apt-get install flashplugin-nonfree
+}}}
+
+
+== Gnome Do ==
+
+Install gnome-do:
+{{{
+# apt-get install gnome-do
+}}}
+
+Set it to automatically start at login:
+ 1. Open ''Applications --> Accessories --> GNOME Do''.
+ 1. Right-click the icon for it by the clock and choose ''Preferences''.
+ 1. Enable ''Start GNOME Do at login''.
+
+
+== Fonts To Install ==
+
+Install the fonts:
+{{{
+# apt-get install ttf-sil-gentium ttf-dustin
+}}}
+
+
+== HP Photosmart C4500 All-in-one Printer ==
+
+References:
+ * https://answers.launchpad.net/hplip/+question/45556
+
+To setup this printer for a wireless connection, the setup software that came with it must be run once from a Windows computer connected to the printer.
+
+Instal the PyQT libraries on the Linux computer for a graphical version of the printer setup (highly recommended):
+{{{
+# apt-get install python-qt4
+}}}
+
+After the printer's wireless connection has been setup, run the following on the Linux computer:
+{{{
+# hp-setup
+}}}
+
+If automatic discovery fails, select '''Find Manually...''' and enter the IP (likely `192.168.1.103`).  It did not have a driver listed for the 4500 series but selecting the 4400 series driver seems to have worked (though printing a test page failed).
+
+Once the printer is setup and working correctly, remove `python-qt4` and related libraries to conserve space (they were only needed to install the printer):
+{{{
+# apt-get autoremove --purge python-qt4
+}}}

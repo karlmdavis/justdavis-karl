@@ -1,0 +1,113 @@
+= BrooksSetupNetworkClient =
+
+This BrooksSetup sub-guide describes the steps necessary to make the computer a client of the DOH network.
+
+
+== Kerberos Authentication ==
+
+References:
+ * http://web.mit.edu/Kerberos/kfw-3.2/kfw-3.2.2/relnotes.html#mslsa
+ * http://technet.microsoft.com/en-us/library/cc738673.aspx
+
+Install all required dependencies:
+ 1. MIT Kerberos for Windows 64 bit client:
+    1. Download the latest version from [http://www.secure-endpoints.com/binaries/mit-kfw-3-2-2/kfw-amd64-3-2-2.msi].
+    1. Install it.
+       * Install the debug symbols.
+       * Enable auto-start at login.
+ 1. MIT Kerberos for Windows 32 bit client:
+    1. Download the latest version from [http://www.secure-endpoints.com/binaries/mit-kfw-3-2-2/kfw-i386-3-2-2.msi].
+    1. Install it.
+       * Install the debug symbols.
+       * Enable auto-start at login.
+ 1. Windows Server 2003 Support Tools:
+    1. Download from [http://www.microsoft.com/downloads/details.aspx?FamilyId=6EC50B78-8BE1-4E81-B3BE-4E7AC4F0912D&displaylang=en].
+    1. Install.
+ 1. Windows Server 2003 Resource Kit:
+    1. Download from [http://www.microsoft.com/downloads/details.aspx?familyid=9d467a69-57ff-4ae7-96ee-b18c4790cffd&displaylang=en].
+    1. Install.
+
+Create a Kerberos principal for the computer.
+ 1. Come up with a ridiculous password and write it down.  Use it when prompted by `kadmin`.
+ 1. Run these commands on a Linux DOH client:
+{{{
+$ kadmin -p karl/admin
+kadmin:  addprinc host/brooks
+kadmin:  addprinc host/brooks.davisonlinehome.name
+kadmin:  addprinc cifs/brooks
+kadmin:  addprinc cifs/brooks.davisonlinehome.name
+}}}
+
+Setup Kerberos authentication (all commands must be run from a "Run as administrator" command prompt):
+ 1. Add the realm and KDC (via DNS):
+{{{
+> KSETUP /AddKdc DAVISONLINEHOME.NAME kerberos.davisonlinehome.name
+}}}
+ 1. Add the Kerberos admin server:
+{{{
+> KSETUP /AddKpasswd DAVISONLINEHOME.NAME kerberos.davisonlinehome.name
+}}}
+ 1. Assign the realm:
+{{{
+> KSETUP /SetRealm DAVISONLINEHOME.NAME
+}}}
+ 1. Specify the KDC's capabilities:
+{{{
+> KSETUP /SetRealmFlags DAVISONLINEHOME.NAME None
+}}}
+ 1.Set the computer's host principal password:
+{{{
+> KSETUP /SetComputerPassword "<Password>"
+}}}
+ 1. Set the following registry keys:
+    * `HKLM\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos`
+      * `AllowTGTSessionKey` = `0x01` (DWORD)
+    * `HKLM\Software\MIT\Kerberos5\`
+      * `PreserveInitialTicketIdentity` = `0x0` (DWORD)
+
+Setup each Kerberos account that will be logging in:
+ 1. Create a normal (non-admin!) Windows account for the Kerberos principal.
+ 1. Map the Windows account to the Kerberos principal:
+{{{
+> KSETUP /MapUser <principal> <account>
+e.g.:
+> KSETUP /MapUser karl@DAVISONLINEHOME.NAME karl
+}}}
+
+When logging in:
+ * To login via Kerberos, the username should be `<user>@DAVISONLINEHOME.NAME`, with the Kerberos password.
+ * To login to the account without Kerberos, the username should be `brooks\<user>`, with the Windows account password (if any).
+
+
+== OpenAFS Client ==
+
+Install the dependencies:
+ 1. Microsoft Visual C++ 2005 SP1 Redistributable Package (x64):
+    1. Download from [http://www.microsoft.com/downloads/details.aspx?FamilyID=eb4ebe2d-33c0-4a47-9dd4-b9a6d7bd44da&DisplayLang=en].
+    1. Install.
+
+Install the 32 bit binary tools:
+ 1. Download MSI from [http://www.openafs.org/windows.html].
+ 1. Install it.
+    * Include the debug symbols.
+    * AFS cell name: davisonlinehome.name
+
+Install the 64 bit client:
+ 1. Download MSI from [http://www.openafs.org/windows.html].
+ 1. Install it.
+    * Include the debug symbols.
+    * AFS cell name: davisonlinehome.name
+
+Please note that v1.5.56 has a bug that prevents configuration of the AFS client.  As a workaround for this bug, you can install the 1.5-20090105 builds from [http://web.mit.edu/~jaltman/Public/OpenAFS/].
+
+Configure the client:
+ 1. Open the ''Authentication'' client via ''Run as administrator''.
+ 1. Right-click the system tray icon and choose ''Show tokens...''.
+ 1. Go to the ''Advanced'' tab and click ''Configure AFS Client''.
+    * General
+      * Cell Name: `davisonlinehome.name`
+      * Obtain AFS tokens when logging to Windows: yes
+    * AFS Cells
+      * AFS Cell: `davisonlinehome.name`
+      * Submount: (blank)
+      * Server Name: `asimov.davisonlinehome.name`

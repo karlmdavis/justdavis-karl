@@ -1,0 +1,114 @@
+= AndroidSetupRooting =
+
+Many of the "cool things" that can be done with an Android G1 (e.g. tethering), require root access to the phone.
+
+
+== Rooting ==
+
+References:
+ * http://forum.xda-developers.com/showthread.php?t=442480
+
+To root the phone, the firmware has to be at release `RC29` or '''less'''.  To check the current firmware version:
+ 1. Go to the Home screen.
+ 1. Press the ''MENU'' key.
+ 1. Select ''Settings''.
+ 1. Select ''About phone''.
+ 1. Check the ''Build number'' entry.
+
+To downgrade to `RC29`, do the following:
+ 1. Connect the phone to a computer via USB.
+ 1. Mount the phone as a USB device:
+   1. Pull down the phone's ''Notifications'' tray.
+   1. Select ''USB connected''.
+   1. Click the ''Mount'' button.
+ 1. Ensure the phone's filesystem is FAT32:
+   1. Right-click the drive on your computer and select ''Properties''.
+   1. The filesystem type should be listed as ''msdos'' or ''FAT32''.
+   1. If it isn't, back everything up and reformat it as FAT32.
+ 1. Download the `RC29` firmware from [http://koushikdutta.blurryfox.com/G1/DREAIMG-RC29.zip] (also stored in `/afs/davisonlinehome.name/sysAdmin`).
+ 1. Follow the steps below to install this firmware via the bootloader.
+
+Phones running firmware `RC29` or less have an interesting bug where anything typed into the keyboard (no matter what's showing on the screen) is actually also being run in a hidden terminal, with root access.  This "feature" can be used to gain permanent root access to the phone.  Follow these steps to do just that:
+ 1. Download the [http://koushikdutta.blurryfox.com/G1RootWalkthrough/recovery.img recovery.img] file and copy it to the root of the SD card using the same instructions as above (this file is also stored in `/afs/davisonlinehome.name/sysAdmin`).
+ 1. Restart the phone (normally).
+ 1. On the phone's home screen, hit the keyboard's `ENTER` key twice and type `telnetd`.  This is for the benefit of the afore-mentioned hidden terminal.  It will likely open up a contact screen or somesuch on the actual display, which can be ignored.
+ 1. Go to the Android market and install a "Telnet" application.
+ 1. If everything worked correctly, starting the Telnet application should give you a root prompt: "`#`" instead of "`$`".
+ 1. Run the following commands to ensure the Telnet application will have root access by default after a restart:
+{{{
+# mount -o rw,remount -t yaffs2 /dev/block/mtdblock3 /system
+# cd sdcard
+# flash_image recovery recovery.img
+# cat recovery.img > /system/recovery.img
+}}}
+
+The next thing to do with this new root access is to apply "Hard SPL" to the phone. Hard SPL will allow you to:
+ * install flash images from other regions (like UK on US phones, and vice versa)
+ * create full backups of the phone
+ * install the latest build from the Android source
+ * resurrect the phone if it is "bricked"
+
+Follow the following steps to apply Hard SPL:
+ 1. Download the [http://koushikdutta.blurryfox.com/G1RootWalkthrough/HardSPL/update.zip Hard SPL] file and copy it to the root of the SD card using the same instructions as above (this file is also stored in `/afs/davisonlinehome.name/sysAdmin`).
+ 1. Follow the steps below to install this update via recovery mode.
+
+The last step in this process is to upgrade "back" to more recent phone and radio firmware release.  '''Do not''' install the normal over-the-air updates as these will likely strip away your shiny new root access.  Instead, only modified firmware updates should be installed.  Check back at the [http://android-dls.com/forum/index.php?f=24&rb_v=viewforum] forum for the latest releases.  Previously-downloaded "new" releases have also been copied to `/afs/davisonlinehome.name/sysAdmin`.  These updates can be installed via recovery mode (see below).
+
+As a for instance: after rooting my phone, I installed the `JFv1.43_Holiday.zip` update, which also required me to install the `RC33radio_update.zip` update.
+
+
+== Install Firmware via Bootloader Mode ==
+
+Installing via the bootloader will wipe all data on your phone (not the SD card).  This is the required method, though, for reverting to RC29.
+ 1. Download the firmware, unzip it, and copy the `DREAMIMG.nbh` file to the root of the phone's SD card.
+ 1. Turn the phone's power completely off by holding down the power button and selecting ''Power off''.
+ 1. Reboot the phone into its bootloader mode:
+    1. Power on the phone while holding in the camera button.
+    1. Follow the prompts on the gray/white screen to flash the phone with the image you just placed on the SD card.
+    1. When prompted, press the power button to start the upgrade procedure.  '''Do not interrupt this process.'''
+    1. After the flashing is complete, restart the phone.
+
+
+== Installing Updates via Recovery Mode ==
+
+Installing an update in recovery mode will not necessarily wipe the phone's data.  Performing such a wipe is an option, though, and may be required depending on the update being installed (check the release notes).
+ 1. Download the update file and copy it to the root of the SD card.
+ 1. Name the file `update.zip`.
+ 1. Turn the phone's power completely off by holding down the power button and selecting ''Power off''.
+ 1. Reboot the phone into its recovery mode:
+    1. Power on the phone while holding in the home button.
+    1. Once the phone has entered recovery mode, an exclamation mark will be displayed.
+    1. Press `alt+L` to display the recovery mode menu.
+    1. Press `alt+S` to apply the update from the SD card.
+    1. If required for the update being installed, press `alt+W` to wipe the device.
+    1. After the update is complete, hold home and press back to restart.
+
+
+== Installing !CyanogenMod ==
+
+References:
+ * http://wiki.cyanogenmod.com/index.php/How_to_upgrade_from_JesusFreke_1.5
+ * http://forum.xda-developers.com/showthread.php?t=567610
+
+Unfortunately, the 1.5 release of the JF firmware was the last of that series (author has moved on to other projects).  The most popular firmware at the moment seems to be [http://wiki.cyanogenmod.com/index.php/Main_Page CyanogenMod].
+
+To install that over the JF 1.5 firmware, complete the following:
+ 1. Download the latest !CyanogenMod bootloader/recovery image from [http://cyanogenmod.com/download/recovery/cm-recovery-1.4.img] (also stored in `/afs/davisonlinehome.name/sysAdmin/devices/misc/android-g1/rooting/CyanogenMod`).
+ 1. Copy the `cm-recovery-1.4.img` file to the root of the phone's SD card.
+ 1. Start the '''Terminal Emulator''' application on the phone.
+ 1. Obtain root access (accept the confirmation):
+{{{
+$ su
+}}}
+ 1. Install the !CyanogenMod bootloader:
+{{{
+# flash_image recovery /sdcard/cm-recovery-1.4.img
+}}}
+ 1. Download the HTC "recovery" (just a normal `update.zip`-style update, includes radio update) firmware from [http://developer.htc.com/adp.html#s3] (also stored in `/afs/davisonlinehome.name/sysAdmin/devices/misc/android-g1/rooting/CyanogenMod`).
+ 1. Download the latest stable !CyanogenMod build, e.g. `update-cm-4.1.999-signed.zip` from [http://n0rp.chemlab.org/android/experimental/update-cm-4.1.999-signed.zip] (also stored in `/afs/davisonlinehome.name/sysAdmin/devices/misc/android-g1/rooting/CyanogenMod`).
+ 1. Copy both of these files to the phone's SD card-- do not rename them.
+ 1. Turn off the phone and boot into recovery mode by holding down the Home and Power buttons.
+ 1. Wipe the phone (unfortunately, does seem to be required).
+ 1. Select the ''apply any zip from sd'' option and then select the ''signed-dream_devphone_us...'' option.  After this finishes installing, select the option to reboot the phone.  It will then automatically begin installing the radio image (the screen will only display the unpacking icon).  Be sure to '''hold down the Home button''' as it will restart automatically after it finishes installing the radio image.  Holding the Home key will ensure the phone boots back into recovery mode-- '''do not allow it to boot normally'''.
+ 1. Select the ''apply any zip from sd'' option and then select the ''update-cm-4.1.99-signed...'' option.  After this finishes installing, select the option to reboot the phone.  Again, '''be sure to boot the phone into recovery mode'''.
+ 1. Select the ''apply any zip from sd'' option and then select the ''update-cm-4.1.99-signed...'' option.  After this finishes installing, select the option to reboot the phone.  Again, '''be sure to boot the phone into recovery mode'''.
