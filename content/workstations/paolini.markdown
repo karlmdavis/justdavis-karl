@@ -4,7 +4,7 @@ kind: topic
 summary: Describes the setup of paolini, which is a Windows Vista guest virtual machine used on Karl's primary desktop.
 ---
 
-# Paolini
+# <%= @item[:title] %>
 
 `paolini` is the Windows virtual machine guest used on Karl's primary desktop. This page documents the steps required to create and configure this VM.
 

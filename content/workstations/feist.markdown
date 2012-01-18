@@ -4,7 +4,7 @@ kind: topic
 summary: Describes the setup of feist, which is Karl's primary Linux desktop.
 ---
 
-# Feist
+# <%= @item[:title] %>
 
 `feist` is Karl's primary Linux desktop. The original setup documentation for `feist` is archived at <%= wiki_entry_link("FeistSetup") %>. This page documents everything done since then to configure `feist`.
 

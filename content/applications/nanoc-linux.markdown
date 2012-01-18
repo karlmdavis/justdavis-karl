@@ -1,10 +1,10 @@
 --- 
-title: nanoc-linux
+title: nanoc on Linux
 kind: topic
 summary: Describes the setup of nanoc on a Linux machine.
 ---
 
-# `nanoc` on Linux
+# <%= @item[:title] %>
 
 [nanoc](http://http://nanoc.stoneship.org/) is a light-weight content management system that can be used to replace traditional blogs and wikis.  This page documents how to install, configure, and use it on a Linux machine.
 

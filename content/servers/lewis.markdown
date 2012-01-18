@@ -4,7 +4,7 @@ kind: topic
 summary: Describes the setup of lewis, which acts as a DNS, Kerberos, and LDAP server.
 ---
 
-# Lewis
+# <%= @item[:title] %>
 
 `lewis` is a directory server which hosts DNS, Kerberos, and LDAP.  This page documents everything done to get `lewis` up, running, and configured.
 

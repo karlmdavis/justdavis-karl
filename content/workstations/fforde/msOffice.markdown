@@ -4,7 +4,7 @@ kind: topic
 summary: Describes the steps necessary to install, configure, and run Microsoft Office on fforde.
 ---
 
-# Lewis DNS Service
+# <%= @item[:title] %>
 
 This <%= topic_link("/workstations/fforde/") %> sub-guide describes the steps necessary to install, configure, and run Microsoft Office 2010 on fforde.
 

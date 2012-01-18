@@ -4,7 +4,7 @@ kind: topic
 summary: Describes the steps necessary to make lewis a DNS server.
 ---
 
-# Lewis DNS Service
+# <%= @item[:title] %>
 
 This <%= topic_link("/servers/lewis/") %> sub-guide describes the steps necessary to make the computer a DNS server.
 

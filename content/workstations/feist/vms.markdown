@@ -4,7 +4,7 @@ kind: topic
 summary: Describes the steps necessary to make feist a VM host.
 ---
 
-# Feist Virtual Machine Host
+# <%= @item[:title] %>
 
 This <%= topic_link("/workstations/feist/") %> sub-guide describes the steps necessary to make the computer a VM host.
 

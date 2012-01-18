@@ -4,7 +4,7 @@ kind: topic
 summary: Describes the setup of fforde, which is Erica's EeePC 900A Linux laptop.
 ---
 
-# Feist
+# <%= @item[:title] %>
 
 `fforde` is Erica's EeePC 900A Linux laptop. The original setup documentation for `fforde` is archived at <%= wiki_entry_link("FfordeSetup") %>. This page documents everything done since then to configure `fforde`.
 
