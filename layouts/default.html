@@ -47,6 +47,15 @@
 -->
 			</div>
 			<div id="main">
+				<% if breadcrumbs_trail.size > 1 %>
+				<ol id="breadcrumbs">
+					<% breadcrumbs_trail.each do |crumb_item| %>
+					<% if !crumb_item.nil? && !crumb_item[:title].nil? %>
+					<li><%= link_to_unless_current(crumb_item[:title], crumb_item) %></li>
+					<% end %>
+					<% end %>
+				</ol>
+				<% end %>
 				<%= yield %>
 			</div>
 		</div>

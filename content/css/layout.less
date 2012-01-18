@@ -50,6 +50,27 @@
 	text-align: right;
 }
 
+
+/* BREADCRUMBS */
+
+ol#breadcrumbs {
+	margin-left: 0;
+	margin-bottom: 0.5em;
+
+	li {
+		display: inline;
+	  font-size: 0.9em;
+	  list-style-type: none;
+
+		:after {
+			content: ' » ';
+		}
+		:last-child:after {
+			content: '';
+		}
+	}
+}
+
 /* FOOTER */
 
 #footer {
