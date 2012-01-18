@@ -19,14 +19,12 @@ The content from the old Trac wiki that was previously used to house this conten
 <% end %>
 </ul>
 
-<!--
 ### Workstations
 <ul>
 <% topics("/workstations/").each do |topic| %>
   <li><%= topic_summary_link(topic) %></li>
 <% end %>
 </ul>
--->
 
 ### Applications
 <ul>

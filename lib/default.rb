@@ -12,6 +12,22 @@ include Nanoc3::Helpers::Tagging
 include Nanoc3::Helpers::Text
 include Nanoc3::Helpers::XMLSitemap
 
+def item_ids()
+  item_ids = Array.new
+  @items.each do |item|
+    item_ids << item.identifier
+  end
+  item_ids.sort!()
+
+  item_ids_text = String.new
+  item_ids.each do |item_id|
+    item_ids_text.concat(item_id)
+    item_ids_text.concat(", ")
+  end
+
+  item_ids_text
+end
+
 def topics_broken(parent_topic)
   if parent_topic.is_a?(String)
     parent_topic = @items.find { |item| item.identifier == parent_topic }

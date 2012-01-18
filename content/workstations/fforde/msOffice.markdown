@@ -13,15 +13,14 @@ This <%= topic_link("/workstations/fforde/") %> sub-guide describes the steps ne
 
 References:
 
-* http://appdb.winehq.org/objectManager.php?sClass=version&iId=17336&iTestingId=67549
-* http://superuser.com/questions/275120/how-install-office-2010-under-wine-in-linux-ubuntu
+* <http://appdb.winehq.org/objectManager.php?sClass=version&iId=17336&iTestingId=67549>
+* <http://superuser.com/questions/275120/how-install-office-2010-under-wine-in-linux-ubuntu>
 
 [Wine](http://www.winehq.org/) is a compatibility layer that allows Linux to run Microsoft Windows applications. It's not complete; a number of applications don't run at all or have glitches. However, it is impressively comprehensive; a lot of applications do run just fine. Ubuntu 10.04 has version 1.2.x of Wine available, so we'll add a PPA repository to make the more up-to-date (but less stable) version 1.3.x available.
 
 [PlayOnLinux](http://www.playonlinux.com/) is a GUI and management tool for Wine applications that simplifies things some. The version of PlayOnLinux available in Ubuntu 10.04 is out of date and no longer supported by the upstream developers, unfortunately. We'll need to add the upstream-produced repositories to get a working version. Both PlayOnLinux and Wine (a dependency of it) will be installed by running the following commands:
 
-<pre><code>
-# add-apt-repository ppa:ubuntu-wine/ppa
+<pre><code># add-apt-repository ppa:ubuntu-wine/ppa
 $ wget -q "http://deb.playonlinux.com/public.gpg" -O- | sudo apt-key add -
 # wget http://deb.playonlinux.com/playonlinux_lucid.list -O /etc/apt/sources.list.d/playonlinux.list
 # apt-get update
@@ -32,11 +31,10 @@ Once this installation is complete, you'll need to run the ''Configure Wine'' ap
 
 Because this laptop doesn't have a CD/DVD drive, the MS Office installation CDs had to be shared from another computer. This was accomplished by inserting the CD and running the following commands on the EeePC:
 
-<code><pre>
-# apt-get install sshfs
+<pre><code># apt-get install sshfs
 $ mkdir cdShare
 $ sshfs remoteUser@remotemachine.domain:/media/cdrom0 cdShare
-</pre></code>
+</code></pre>
 
 In the above command, replace the following values, as necessary:
 

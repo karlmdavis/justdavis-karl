@@ -9,7 +9,16 @@ end
 
 def wiki_entry_link(entry)
   if entry.is_a?(String)
-    entry = @items.find { |item| item.identifier == entry }
+    entry_id_orig = entry
+    entry_id = entry
+    if !entry_id.start_with?("/wiki/")
+      entry_id = "/wiki/" + entry_id
+    end
+    if !entry_id.end_with?("/")
+      entry_id = entry_id + "/"
+    end
+    entry = @items.find { |item| item.identifier == entry_id }
+    raise ArgumentError, "Cannot create a link to item '#{entry_id_orig}'. Had items: #{item_ids()}" if entry.nil?
   end
 
   raise ArgumentError, "Cannot create a link to #{entry.inspect} because it is not of :kind 'wikientry': #{entry[:kind]}." if entry[:kind] != 'wikientry'
