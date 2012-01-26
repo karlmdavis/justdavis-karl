@@ -22,9 +22,9 @@ summary: Describes the setup of lewis, which acts as a DNS, Kerberos, and LDAP s
 
 Please see the following sub-guides:
 
-* <%= topic_summary_link("/servers/lewis/dns/") %>
-* <%= topic_summary_link("/servers/lewis/kerberos/") %>
-* <%= topic_summary_link("/servers/lewis/ldap/") %>
+* <%= topic_summary_link("/it/davis/servers/lewis/dns/") %>
+* <%= topic_summary_link("/it/davis/servers/lewis/kerberos/") %>
+* <%= topic_summary_link("/it/davis/servers/lewis/ldap/") %>
 
 
 ### Create New Virtual Machine Client

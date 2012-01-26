@@ -6,7 +6,7 @@ summary: Describes the steps necessary to make lewis a DNS server.
 
 # <%= @item[:title] %>
 
-This <%= topic_link("/servers/lewis/") %> sub-guide describes the steps necessary to make the computer a DNS server.
+This <%= topic_link("/it/davis/servers/lewis/") %> sub-guide describes the steps necessary to make the computer a DNS server.
 
 The DNS Server will be used to host the `davisonlinehome.name` domain, which was registered with [1&1 Internet](http://1and1.com/).
 

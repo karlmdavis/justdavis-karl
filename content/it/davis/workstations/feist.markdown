@@ -37,5 +37,5 @@ summary: Describes the setup of feist, which is Karl's primary Linux desktop.
 
 Please see the following sub-guides:
 
-* <%= topic_summary_link("/workstations/feist/vms/") %>
+* <%= topic_summary_link("/it/davis/workstations/feist/vms/") %>
 

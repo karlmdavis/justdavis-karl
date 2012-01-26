@@ -13,6 +13,16 @@
 #   item, use the pattern “/about/*/”; “/about/*” will also select the parent,
 #   because “*” matches zero or more characters.
 
+preprocess do
+	# Topics, blog articles, etc. may be unpublished by setting the following meta attribute:
+	# publish: false
+	items.delete_if { |item| item[:publish] == false }
+
+	#copy_static
+	create_tag_pages
+	add_update_item_attributes
+end
+
 compile '/stylesheet/' do
   # don’t filter or layout
 end
@@ -36,33 +46,57 @@ route '/css/*' do
   item.identifier.chop + '.css'
 end
 
+compile '/wiki/*' do
+  filter :erb
+  filter :tracwiki
+  filter :kramdown
+  layout 'default'
+end
+
+route '/wiki/*' do
+  '/it' + item.identifier + 'index.html'
+end
+
+#compile '/content/*' do
+#  filter :erb
+#  filter :tracwiki
+#  filter :kramdown
+#  layout 'default'
+#end
+
+# I'm envisioining the following site hierarchy:
+# http://davishq.com/
+#   index.html           Links to each person's stuff.
+#                        Perhaps I should just redirect to /karl unless/until 
+#                        someone else wants to join the site?
+#                        Even if this page exists, it should not have a layout 
+#                        in common with /karl; each person should be able to 
+#                        use whatever layout they'd like.
+#   /karl
+#     index.html         A replacement for the MRC "About" page with links to child content, GitHub, Google+, etc.
+#     /it
+#       ...              All of the current IT documentation content.
+#     /blog
+#       ...              All of the madrivercode blog entries, plus any new ones.
+
 compile '*' do
-  if item.binary?
-    # don’t filter binary items
+  # item[:extension] returns 'html.erb' for multi-dotted filename
+  ext = item[:extension].nil? ? nil : item[:extension].split('.').last
+
+  # Apply filters, based on each item's extension
+  if ext == 'markdown'
+    filter :erb
+    filter :kramdown
   else
-    case item[:extension]
-      when 'markdown'
-        filter :erb
-        filter :kramdown
-      when 'tracwiki'
-        filter :erb
-        filter :tracwiki
-        filter :kramdown
-      else
-        filter :erb
-    end
-    layout 'default'
+    raise "No filter configured for #{item.identifier} in the Rules file."
   end
+  
+  # Apply layouts, based on each item's path.
+  layout 'default'
 end
 
 route '*' do
-  if item.binary?
-    # Write item with identifier /foo/ to /foo.ext
-    item.identifier.chop + '.' + item[:extension]
-  else
-    # Write item with identifier /foo/ to /foo/index.html
-    item.identifier + 'index.html'
-  end
+	route_path(item)
 end
 
 layout '*', :erb

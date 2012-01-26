@@ -24,5 +24,5 @@ summary: Describes the setup of fforde, which is Erica's EeePC 900A Linux laptop
 
 Please see the following sub-guides:
 
-* <%= topic_summary_link("/workstations/fforde/msOffice/") %>
+* <%= topic_summary_link("/it/davis/workstations/fforde/msOffice/") %>
 

@@ -1,0 +1,11 @@
+--- 
+title: Test Article
+kind: article
+created_at: 2012/01/25
+tags: []
+excerpt: Just a test.
+
+---
+
+TODO
+

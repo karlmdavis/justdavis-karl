@@ -6,10 +6,10 @@ summary: Describes the steps necessary to make feist a VM host.
 
 # <%= @item[:title] %>
 
-This <%= topic_link("/workstations/feist/") %> sub-guide describes the steps necessary to make the computer a VM host.
+This <%= topic_link("/it/davis/workstations/feist/") %> sub-guide describes the steps necessary to make the computer a VM host.
 
 The VM host will be used to run the following virtual machines:
-* <%= topic_link("/workstations/paolini/") %>
+* <%= topic_link("/it/davis/workstations/paolini/") %>
 
 
 ## Selecting a VM Technology

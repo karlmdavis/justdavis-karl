@@ -6,7 +6,7 @@ summary: Describes the steps necessary to install, configure, and run Microsoft 
 
 # <%= @item[:title] %>
 
-This <%= topic_link("/workstations/fforde/") %> sub-guide describes the steps necessary to install, configure, and run Microsoft Office 2010 on fforde.
+This <%= topic_link("/it/davis/workstations/fforde/") %> sub-guide describes the steps necessary to install, configure, and run Microsoft Office 2010 on fforde.
 
 
 ## Installing PlayOnLinux and Wine

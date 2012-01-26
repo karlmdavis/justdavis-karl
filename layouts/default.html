@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Davis Family IT - <%= @item[:title] %></title>
+		<title>Karl M. Davis - <%= @item[:title] %></title>
 		<link rel="stylesheet" type="text/css" href="/css/layout.css" media="screen">
 		<link rel="stylesheet" type="text/css" href="/css/style.css" media="screen">
 		<meta name="generator" content="nanoc 3.2.2">
@@ -10,41 +10,15 @@
 	<body>
 		<div id="header">
 			<h2><%= topic_link("/") %></h2>
-			<p>The design and configuration of a home network.</p>
+			<p>Coding, technology, and other thoughts.</p>
 		</div>
 		<div id="middle">
 			<div id="sidebar">
 				<h2>Site</h2>
 				<ul>
-					<li><%= topic_link("/") %></li>
-					<li><%= topic_link("/wiki/") %></li>
+					<li><%= topic_link("/blog/") %></li>
+					<li><%= topic_link("/it/") %></li>
 				</ul>
-				<h2>Servers</h2>
-				<ul>
-				<% topics("/servers/").each do |topic| %>
-					<li><%= topic_link(topic) %></li>
-				<% end %>
-				</ul>
-				<h2>Workstations</h2>
-				<ul>
-				<% topics("/workstations/").each do |topic| %>
-					<li><%= topic_link(topic) %></li>
-				<% end %>
-				</ul>
-				<h2>Applications</h2>
-				<ul>
-				<% topics("/applications/").each do |topic| %>
-					<li><%= topic_link(topic) %></li>
-				<% end %>
-				</ul>
-<!--
-				<h2>Miscellaneous</h2>
-				<ul>
-				<% topics("/misc/").each do |topic| %>
-					<li><%= topic_link(topic) %></li>
-				<% end %>
-				</ul>
--->
 			</div>
 			<div id="main">
 				<% if breadcrumbs_trail.size > 1 %>
@@ -61,7 +35,7 @@
 		</div>
 		<div id="footer"
 			<p>
-				Copyright 2011, Karl M. Davis.
+				Copyright 2012, Karl M. Davis.
 			</p>
 			<p>
 				<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a><br />

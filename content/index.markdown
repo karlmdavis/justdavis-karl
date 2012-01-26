@@ -1,66 +1,19 @@
 --- 
-title: Davis Family IT
+title: Karl M. Davis
 kind: topic
-summary: Main documentation page.
+summary: Main page.
 ---
 
-# IT Documentation
+I'm a software engineer that enjoys playing with code and other technology. This site contains articles, how-tos, and other content related to those interests and me.
 
-This site contains the IT documentation for the `davisonlinehome.name` intranet. The site is organized as a series of hierarchical topics, generally grouped by the various devices on the network.
+Please feel free to explore the site:
 
-The content from the old Trac wiki that was previously used to house this content can be found on <%= topic_link("/wiki/") %>.
+* <%= topic_link("/blog/") %>
+* <%= topic_link("/it/") %>
 
-## Categories
+I can also be found on the following sites:
 
-### Servers
-<ul>
-<% topics("/servers/").each do |topic| %>
-  <li><%= topic_summary_link(topic) %></li>
-<% end %>
-</ul>
+* [Karl on GitHub](https://github.com/karlmdavis)
+* [Karl on Google+](https://plus.google.com/112104342326107257987)
+* [Karl on Hacker News](http://news.ycombinator.com/user?id=karlmdavis)
 
-### Workstations
-<ul>
-<% topics("/workstations/").each do |topic| %>
-  <li><%= topic_summary_link(topic) %></li>
-<% end %>
-</ul>
-
-### Applications
-<ul>
-<% topics("/applications/").each do |topic| %>
-  <li><%= topic_summary_link(topic) %></li>
-<% end %>
-</ul>
-
-<!--
-### Miscellaneous
-<ul>
-<% topics("/misc/").each do |topic| %>
-  <li><%= topic_summary_link(topic) %></li>
-<% end %>
-</ul>
--->
-
-<!--
-<h2>Top-Level Topics</h2>
-<ul>
-<% topics("/").each do |topic| %>
-  <li><%= topic.identifier %></li>
-<% end %>
-</ul>
-
-## Root Children
-<ul>
-<% @items.find { |item| item.identifier == "/" }.children.each do |item| %>
-  <li><%= item.identifier %></li>
-<% end %>
-</ul>
-
-## Items
-<ul>
-<% @items.each do |item| %>
-  <li>inspect=<%= item.inspect %>, id=<%= item.identifier %>, kind=<%= item.respond_to?('kind') %></li>
-<% end %>
-</ul>
--->

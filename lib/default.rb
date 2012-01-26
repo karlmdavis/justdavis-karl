@@ -55,7 +55,9 @@ end
 
 def topic_link(topic)
   if topic.is_a?(String)
-    topic = @items.find { |item| item.identifier == topic }
+		topic_id = topic
+		topic = @items.find { |item| item.identifier == topic_id }
+		raise ArgumentError, "Cannot find topic with ID '#{topic_id}'. Had items: #{item_ids()}" if topic.nil?
   end
 
   raise ArgumentError, "Cannot create a link to #{topic.inspect} because it is not of :kind 'topic': #{topic[:kind]}." if topic[:kind] != 'topic'

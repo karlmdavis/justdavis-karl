@@ -1,0 +1,3 @@
+<% url = route_path(item) %>
+<a href="<%= url %>" title="Full article" class="permalink">&laquo; <%= item[:title] %></a>
+<p><%= item[:excerpt] || "!!! Missing excerpt metadata for <code>#{item[:file].path}</code>" %></p>

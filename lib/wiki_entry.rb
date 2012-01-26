@@ -45,7 +45,7 @@ module Nanoc3::DataSources
 
     # See {Nanoc::DataSource#items}.
     def items
-      objects = load_objects('wikientries', 'item', Nanoc3::Item)
+      objects = load_objects('content-wiki', 'item', Nanoc3::Item)
       objects.each do |item|
         item[:title] = item.identifier.split("/").last
         item[:kind] = 'wikientry'
@@ -56,7 +56,7 @@ module Nanoc3::DataSources
 
     # See {Nanoc3::DataSource#create_item}.
     def create_item(content, attributes, identifier, params={})
-      create_object('wikientries', content, attributes, identifier, params)
+      create_object('content-wiki', content, attributes, identifier, params)
     end
 
     # See {Nanoc::DataSource#layouts}.
@@ -128,8 +128,6 @@ module Nanoc3::Filters
     type :text
 
     def run(content, params={})
-      content = content.gsub('nanoc sucks', 'nanoc rocks')
-
       # Headers
       content = content.gsub(/====\s(.+?)\s====/, '#### \1')
       content = content.gsub(/===\s(.+?)\s===/, '### \1')
