@@ -21,6 +21,7 @@ preprocess do
 	#copy_static
 	create_tag_pages
 	add_update_item_attributes
+
 end
 
 compile '/stylesheet/' do
@@ -84,15 +85,28 @@ compile '*' do
   ext = item[:extension].nil? ? nil : item[:extension].split('.').last
 
   # Apply filters, based on each item's extension
-  if ext == 'markdown'
+  if ext == 'markdown' || ext == 'md'
     filter :erb
     filter :kramdown
+  elsif ext == 'erb'
+		filter :erb
+  elsif ext.nil?
+		# This will be the case for auto-generated tag items.
+		filter :erb
   else
-    raise "No filter configured for #{item.identifier} in the Rules file."
+    raise "No filter configured for '#{item.identifier}' with extension of '#{item[:extension]}' in the Rules file."
   end
-  
-  # Apply layouts, based on each item's path.
-  layout 'default'
+
+  # Apply layout(s).
+	if !item[:layout].nil?
+		layout item[:layout]
+	elsif item[:kind] == "topic"
+		layout 'default'
+	elsif item[:kind] == "article"
+		layout 'article'
+	else
+		# No layout for .xml files, etc.
+	end
 end
 
 route '*' do

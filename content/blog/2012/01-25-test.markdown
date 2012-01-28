@@ -2,10 +2,10 @@
 title: Test Article
 kind: article
 created_at: 2012/01/25
-tags: []
+tags: [bob]
 excerpt: Just a test.
 
 ---
 
-TODO
+This is the content of the test article.
 

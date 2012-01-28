@@ -82,3 +82,66 @@ ol#breadcrumbs {
 		font-size: 0.75em;
 	}
 }
+
+/* BLOG ARTICLE EXCERPTS */
+
+.articleExcerpt {
+	margin-bottom: 1.5em;
+
+	h5 {
+		margin-top: 0.1em;
+	}
+
+	p {
+		margin-top: 0.5em;
+		margin-left: 0.25em;
+	}
+}
+
+/* BLOG "OTHER ARTICLES" */
+#otherArticles {
+	margin-top: 3.0em;
+
+	ul {
+		margin-top: 0.25em;
+
+		li {
+			display: inline-block;
+		  list-style-type: none;
+			margin-right: 0.5em;
+		}
+	}
+}
+
+/* BLOG ARTICLES */
+
+#articleMeta {
+	font-size: 0.9em;	
+
+	#timestamp {
+		margin-top: 0.1em;
+	}
+
+	#tags {
+		margin-top: 0.1em;
+
+		ul {
+			display: inline-block;
+			margin: 0;
+
+			li {
+				display: inline-block;
+				margin: 0;
+				list-style-type: none;
+
+				:after {
+					content: ', ';
+				}
+				:last-child:after {
+					content: '';
+				}
+			}
+		}
+	}
+}
+

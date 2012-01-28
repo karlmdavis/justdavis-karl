@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<%= render('parts/head', :item => item) %>
+	<body>
+		<%= render('parts/header', :item => item) %>
+		<div id="middle">
+			<div id="sidebar">
+				<h2>Site</h2>
+				<ul>
+					<li><%= topic_link("/blog/") %></li>
+					<li><%= topic_link("/it/") %></li>
+				</ul>
+			</div>
+			<div id="main">
+				<%= render('parts/breadcrumbTrail', :item => item) %>
+				<h1><%= item[:title] %></h1>
+				<div id="articleMeta">
+					<p id="timestamp">
+						<% created_time_text = pretty_time(item[:created_at]) %>
+						<% updated_time_text = pretty_time(item[:updated_at]) %>
+						Created on <%= created_time_text %>. 
+						<% if created_time_text != updated_time_text %>
+						Last modified on <%= updated_time_text %>.
+						<% end %>
+					</p>
+					<div id="tags">
+						Tags:
+						<% if item[:tags] %>
+						<ul>
+							<% item[:tags].sort.each do |tag| %>
+							<li><a href="/blog/tags/<%= tag %>/"><%= tag %></a></li>
+							<% end %>
+						</ul>
+						<% end %>
+					</div>
+				</div>
+				<%= yield %>
+				<%= render('_other_articles_nav', { :reference_item => @item }) %>
+			</div>
+		</div>
+		<%= render('parts/footer', :item => item) %>
+	</body>
+</html>

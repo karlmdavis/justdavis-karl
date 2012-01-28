@@ -1,17 +1,8 @@
 <!DOCTYPE HTML>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>Karl M. Davis - <%= @item[:title] %></title>
-		<link rel="stylesheet" type="text/css" href="/css/layout.css" media="screen">
-		<link rel="stylesheet" type="text/css" href="/css/style.css" media="screen">
-		<meta name="generator" content="nanoc 3.2.2">
-	</head>
+	<%= render('parts/head', :item => item) %>
 	<body>
-		<div id="header">
-			<h2><%= topic_link("/") %></h2>
-			<p>Coding, technology, and other thoughts.</p>
-		</div>
+		<%= render('parts/header', :item => item) %>
 		<div id="middle">
 			<div id="sidebar">
 				<h2>Site</h2>
@@ -21,26 +12,10 @@
 				</ul>
 			</div>
 			<div id="main">
-				<% if breadcrumbs_trail.size > 1 %>
-				<ol id="breadcrumbs">
-					<% breadcrumbs_trail.each do |crumb_item| %>
-					<% if !crumb_item.nil? && !crumb_item[:title].nil? %>
-					<li><%= link_to_unless_current(crumb_item[:title], crumb_item) %></li>
-					<% end %>
-					<% end %>
-				</ol>
-				<% end %>
+				<%= render('parts/breadcrumbTrail', :item => item) %>
 				<%= yield %>
 			</div>
 		</div>
-		<div id="footer"
-			<p>
-				Copyright 2012, Karl M. Davis.
-			</p>
-			<p>
-				<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a><br />
-				This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.
-			</p>
-		</div>
+		<%= render('parts/footer', :item => item) %>
 	</body>
 </html>
