@@ -88,6 +88,7 @@ compile '*' do
   if ext == 'markdown' || ext == 'md'
     filter :erb
     filter :kramdown
+    filter :colorize_syntax
   elsif ext == 'erb'
 		filter :erb
   elsif ext.nil?
