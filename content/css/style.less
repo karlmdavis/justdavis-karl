@@ -51,6 +51,14 @@ a {
 ul, ol {
 	margin-top: 1.25em;
 	margin-left: 1.0em;
+
+	ul, ol {
+		margin-top: 0;
+	}
+}
+
+p + ul, p + ol {
+	margin-top: 0.25em;
 }
 
 li {
@@ -91,13 +99,21 @@ ul li {
 
 /* CODE */
 
+pre {
+	margin-top: 1.25em;
+	border: dashed 1px gray;
+	padding: 0.1em 1.0em;
+	background: LightGray;
+	overflow-x: auto;
+}
+
+p + pre {
+	margin-top: 0.25em;
+}
+
 code {
 	font-family: monospace;
 	font-size: 1.2em;
 }
 
-pre {
-	border: dashed 1px gray;
-	background: LightGray;
-	overflow-x: auto;
-}
+
