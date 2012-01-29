@@ -152,6 +152,7 @@ Use the domain registrar's tools to register this computer as the domain's prima
 ## Reverse DNS
 
 You will need to contact Comcast business support at 1-800-316-1619 and request that they create a reverse DNS entry for `75.146.134.36` that points to:
+
 * `lewis.davisonlinehome.name`
 * `ns1.davisonlinehome.name`
 
