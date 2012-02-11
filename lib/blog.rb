@@ -20,6 +20,7 @@ def route_path(item)
 	url = item[:content_filename].gsub(/^content/, '')
 
 	# Determine the output extension.
+	raise ArgumentError, "File '#{item[:content_filename]}' has no file extension." if item[:extension].nil?
 	extname = '.' + item[:extension].split('.').last
 	outext = ''
 	if url.match(/(\.[a-zA-Z0-9]+){2}$/) # => *.html.erb, *.html.md ...
