@@ -1,0 +1,139 @@
+= TolkienSetupNexus =
+
+This TolkienSetup sub-guide describes the steps necessary to make the computer a [http://nexus.sonatype.org/ Nexus] server.
+
+
+== Installing Java ==
+
+Nexus is a Java web application, that can be run via an embedded Jetty server.  This requires a JRE.
+
+To check to see if Java is already installed, run the following command:
+{{{
+$ java --version
+}}}
+
+If that comes back with an error, install Java as follows:
+{{{
+# apt-get install openjdk-6-jre-headless
+}}}
+
+== Installing Nexus ==
+
+References:
+ * http://www.sonatype.com/books/nexus-book/reference/install.html
+
+Download the latest Nexus bundle distribution from [http://nexus.sonatype.org/downloads/], e.g.:
+{{{
+$ wget http://nexus.sonatype.org/downloads/nexus-oss-webapp-1.6.0-bundle.tar.gz
+}}}
+
+Unzip the bundle and install it to `/usr/local/bin/`:
+{{{
+# mkdir /usr/local/bin/nexus
+# mv nexus-oss-webapp-1.6.0-bundle.tar.gz /usr/local/bin/nexus/
+# cd /usr/local/bin/nexus/
+# tar xvzf nexus-oss-webapp-1.6.0-bundle.tar.gz
+# ln -s nexus-oss-webapp-1.6.0 nexus-latest
+}}}
+
+Move the `sonatype-work` folder to `/var/lib/`:
+{{{
+# mv /usr/local/bin/nexus/sonatype-work /var/lib/
+}}}
+
+Edit the `/usr/local/bin/nexus/nexus-latest/conf/plexus.properties` file and set the `nexus-work` property to the new location:
+{{{
+...
+nexus-work=/var/lib/sonatype-work/nexus
+...
+}}}
+
+Copy the `/usr/local/bin/nexus/nexus-latest/bin/jsw/linux-x86-32/nexus` script to `/etc/init.d/nexus`:
+{{{
+# cp /usr/local/bin/nexus/nexus-latest/bin/jsw/linux-x86-32/nexus /etc/init.d/
+# chmod 755 /etc/init.d/nexus
+}}}
+
+Configure the `/etc/init.d/nexus` script's properties by editing it, e.g.:
+{{{
+...
+WRAPPER_CMD="/usr/local/bin/nexus/nexus-latest/bin/jsw/linux-x86-32/wrapper"
+WRAPPER_CONF="/usr/local/bin/nexus/nexus-latest/bin/jsw/conf/wrapper.conf"
+...
+PIDDIR="/var/run"
+...
+}}}
+
+Install the service:
+{{{
+$ cd /etc/init.d
+# update-rc.d nexus defaults
+# /etc/init.d/nexus start
+}}}
+
+Check the wrapper's log file to ensure everything is working correctly:
+{{{
+$ tail -f /usr/local/bin/nexus/nexus-latest/logs/wrapper.log
+}}}
+
+Visit [http://madrivercode.com:8081/nexus] to ensure the web application is available and working correctly.  Login as `admin` with the default password of `admin123`.  Once logged in, change the `admin` password, being sure to document it somewhere.
+
+Be sure to read through the [http://www.sonatype.com/books/nexus-book/reference/install-sect-repoman-post-install.html Nexus Post-Install Checklist] and take care of everything in there.
+
+== Configure Apache Proxy ==
+
+References:
+ * http://www.sonatype.com/books/nexus-book/reference/install-sect-behind-proxy.html
+
+By default, Nexus will run in a Jetty instance hosted on port 8081.  If Nexus needs to be hosted on port 80, it will have to be proxied by Apache (assuming that Apache's already running on port 80).
+
+First, enable Apache's `mod_proxy`:
+{{{
+# a2enmod proxy
+# /etc/init.d/apache2 force-reload
+}}}
+
+Edit the `/etc/apache2/sites-enabled/000-default` file and restrict name-based virtual hosts for the server's listening addresses to port 80:
+{{{
+#NameVirtualHost *
+NameVirtualHost *:80
+#<VirtualHost *>
+<VirtualHost *:80>
+}}}
+
+Create a new site configuration file, `/etc/apache2/sites-available/nexus-proxy`:
+{{{
+<VirtualHost *:80>
+	ServerName nexus.madrivercode.com
+	ServerAdmin admin@madrivercode.com
+
+	ProxyRequests Off
+	ProxyPreserveHost On
+
+	<Proxy *>
+		Order deny,allow
+		Allow from all
+	</Proxy>
+
+	ProxyPass / http://localhost:8081/
+	ProxyPassReverse / http://localhost:8080/
+</VirtualHost>
+}}}
+
+Edit the `/usr/local/bin/nexus/nexus-latest/conf/plexus.properties` file and set Nexus' context path to "`/`":
+{{{
+#webapp-context-path=/nexus
+webapp-context-path=/
+}}}
+
+Enable the new site:
+{{{
+# a2ensite nexus-proxy
+}}}
+
+Be sure to create a DNS entry for `nexus.madrivercode.com`.
+
+Restart Nexus and reload Apache:
+{{{
+# /etc/init.d/nexus restart
+# /etc/init.d/apache2 force-reload
