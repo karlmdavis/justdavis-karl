@@ -31,6 +31,7 @@ summary: "Describes the setup of eddings, the primary server for justdavis.com. 
 The content on this page covers the base OS install and configuration; it doesn't cover configuration of any of the main services hosted by the machine. Please see the following sub-guides for details on those:
 
 * <%= topic_summary_link("/it/davis/servers/eddings/vms/") %>
+* <%= topic_summary_link("/it/davis/servers/eddings/dns/") %>
 
 
 ### Install 64bit Ubuntu 10.04.03 (Lucid), Server Edition
