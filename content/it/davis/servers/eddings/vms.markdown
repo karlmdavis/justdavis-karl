@@ -9,6 +9,7 @@ summary: "Describes the steps necessary to make eddings a VM host."
 This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the steps necessary to make the computer a VM host.
 
 This is necessary as the server will be replacing an ESXi server that hosted several old VMs. Until the services on these VMs are migrated onto `eddings`, the VMs will have to be hosted on `eddings` to ensure the services remain available. The VMs being migrated are the following:
+
 * <%= wiki_entry_link("LewisSetup") %>
 * <%= wiki_entry_link("AsimovSetup") %>
 * `piers` (no documentation available)
