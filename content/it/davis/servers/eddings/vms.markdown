@@ -183,6 +183,10 @@ Once the VMs have been defined, they can be "booted" using the `virsh ... start`
 
     $ sudo virsh --connect qemu:///system start lewis
 
+It's probably a good idea to set the VMs to start automatically when the host is booted, e.g.:
+
+    $ sudo virsh --connect qemu:///system autostart lewis
+
 On a separate workstation (one with a graphical shell), the `virt-viewer` application can be used to view the VMs' consoles:
 
     $ sudo apt-get install virt-viewer
