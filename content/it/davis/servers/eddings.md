@@ -28,12 +28,12 @@ summary: "Describes the setup of eddings, the primary server for justdavis.com. 
 
 ## Setup
 
-Please see the following sub-guides:
+The content on this page covers the base OS install and configuration; it doesn't cover configuration of any of the main services hosted by the machine. Please see the following sub-guides for details on those:
 
 * <%= topic_summary_link("/it/davis/servers/eddings/vms/") %>
 
 
-### 64bit Ubuntu 10.04.03 (Lucid), Server Edition
+### Install 64bit Ubuntu 10.04.03 (Lucid), Server Edition
 
 
 #### Installation Media
@@ -147,4 +147,40 @@ References:
 A number of network services, e.g. Kerberos, rely on the server having the correct time. The `ntpd` service can be installed to periodically correct any "clock drift":
 
     # apt-get install ntp
+
+
+### Upgrade to 64bit Ubuntu 12.04.1 (Precise), Server Edition
+
+Ubuntu 12.04 was released in April of 2012. The first point release, 12.04.1, was released in July of 2012.
+
+**Please note:** I intended to perform this upgrade (as described below) on 2012-05-11. However, I discovered that this is against recommended practice: it is recommended that users wait for the first point release (12.04.1, in this case) before upgrading from LTS to LTS. See the following links for more information:
+
+* [Why is “No new release found” when upgrading 10.04 to 12.04 LTS?](http://askubuntu.com/questions/125392/why-is-no-new-release-found-when-upgrading-10-04-to-12-04-lts)
+* [Upgrading LTS to LTS (server) — why wait for the first point release?](http://askubuntu.com/questions/125825/upgrading-lts-to-lts-server-why-wait-for-the-first-point-release)
+
+The `eddings` server was upgraded in May of 2012 to that new [LTS](https://wiki.ubuntu.com/LTS) release.
+
+First, I connected to the server over SSH:
+
+    $ ssh localuser@192.168.1.100
+
+Before running the OS upgrade, I installed all of the updates available for the current release:
+
+    $ sudo apt-get update
+    $ sudo apt-get dist-upgrade
+
+Then, I shutdown all of the virtual machines being hosted:
+
+    $ sudo virsh --connect qemu:///system shutdown tolkien
+    $ sudo virsh --connect qemu:///system shutdown piers
+    $ sudo virsh --connect qemu:///system shutdown asimov
+    $ sudo virsh --connect qemu:///system shutdown lewis
+
+I then restarted the server to ensure everything came back up correctly:
+
+    $ sudo reboot
+
+The actual upgrade is quite simple to start:
+
+    $ sudo do-release-upgrade
 
