@@ -47,6 +47,14 @@ route '/css/*' do
   item.identifier.chop + '.css'
 end
 
+compile '/assets/*' do
+end
+
+route '/assets/*' do
+  # Convert '/assets/foo.bar/ to '/foo.bar'
+  item.identifier[7..-2]
+end
+
 compile '/wiki/*' do
   filter :erb
   filter :tracwiki

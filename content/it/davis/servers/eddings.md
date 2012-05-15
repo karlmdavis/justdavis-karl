@@ -32,6 +32,7 @@ The content on this page covers the base OS install and configuration; it doesn'
 
 * <%= topic_summary_link("/it/davis/servers/eddings/vms/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/dns/") %>
+* <%= topic_summary_link("/it/davis/servers/eddings/web/") %>
 
 
 ### Install 64bit Ubuntu 10.04.03 (Lucid), Server Edition
