@@ -33,6 +33,7 @@ The content on this page covers the base OS install and configuration; it doesn'
 * <%= topic_summary_link("/it/davis/servers/eddings/vms/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/dns/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/web/") %>
+* <%= topic_summary_link("/it/davis/servers/eddings/nexus/") %>
 
 
 ### Install 64bit Ubuntu 10.04.03 (Lucid), Server Edition
@@ -78,7 +79,7 @@ Select the following options to proceed through the install:
 1. Amount of volume group to use for guided partitioning: `max`
 1. Write the changes to disks?: **Yes**
 1. Full name for the new user: `Local User`
-    * We're not using an actual person name here as the machine will (eventually) be set to use Kerberos for authentication. See <%= topic_link("/it/davis/servers/eddings/kerberos/") for details.
+    * We're not using an actual person name here as the machine will (eventually) be set to use Kerberos for authentication.
 1. Username for your account: `localuser`
 1. Choose a password for the new user: (create a password)
     * As this won't be used much once Kerberos has been configured, I recommend using a long randomly-generated password.
@@ -149,6 +150,49 @@ References:
 A number of network services, e.g. Kerberos, rely on the server having the correct time. The `ntpd` service can be installed to periodically correct any "clock drift":
 
     # apt-get install ntp
+
+
+### Configuring Networking (and Decommissioning VMs)
+
+Initially, `eddings` was configured to have one private IP on `eth1` and use `eth0` as only a bridging interface: no IP was assigned to it at all. This configuration is detailed in <%= topic_summary_link("/it/davis/servers/eddings/vms/") %>. This lack of public IP on `eth0` was primarily due to the limited number of public IPs I had available (4); it would have been convenient for `eddings` itself to have a public IP.
+
+As the virtual machines hosted by `eddings` were decommissioned, e.g. `tolkien`'s web services being migrated to `eddings` in <%= topic_link("/it/davis/servers/eddings/web/") %> and <%= topic_link("/it/davis/servers/eddings/nexus/") %>, those public IPs became available for `eddings` to use.
+
+First, the VM was shutdown and set to not boot automatically. For example, these commands were used to disable `tolkien`:
+
+    $ sudo virsh --connect qemu:///system shutdown tolkien
+    $ sudo virsh --connect qemu:///system autostart --disable tolkien
+
+Then, the configuration for `eth0` in `/etc/network/interfaces` was updated. For example, here's the configuration after decommisioning `tolkien` and assigning its public IP to `eddings`:
+
+~~~~
+# The public network's interface
+auto eth0
+iface eth0 inet manual
+
+# The bridge used by libvirt guests, runs on eth0 (the public network)
+auto br0
+iface br0 inet static
+	address 174.79.40.37
+	netmask 255.255.255.240
+	gateway 174.79.40.33
+	bridge_ports eth0
+	bridge_stp off
+	bridge_fd 0
+	bridge_maxwait 0
+~~~~
+
+After modifying `/etc/network/interfaces`, the following had to be done to restart networking, and bring the remaining VMs back up afterwards:
+
+    $ sudo virsh --connect qemu:///system shutdown piers
+    $ sudo virsh --connect qemu:///system shutdown asimov
+    $ sudo virsh --connect qemu:///system shutdown lewis
+    $ sudo /etc/init.d/networking restart
+    $ sudo virsh --connect qemu:///system net-destroy default
+    $ sudo virsh --connect qemu:///system net-start default
+    $ sudo virsh --connect qemu:///system start lewis
+    $ sudo virsh --connect qemu:///system start asimov
+    $ sudo virsh --connect qemu:///system start piers
 
 
 ### Upgrade to 64bit Ubuntu 12.04.1 (Precise), Server Edition
