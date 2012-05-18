@@ -58,14 +58,14 @@ The sections below cover the creation of the individual zone databases that will
 
 ### DNS Zone: justdavis.com
 
-A new `/etc/bind/db.justdavis.com` file will store the records and some other configuration for the zone. The configuration below was used on 2012-05-12 to create the zone, though this was likely modified directly on the server later:
+A new `/etc/bind/db.justdavis.com` file will store the records and some other configuration for the zone. The configuration below was used on 2012-05-17 to create the zone, though this was likely modified directly on the server later:
 
 ~~~~
 $TTL 1h ; sets the default time-to-live for this zone
 
 ; name ttl class rr    name-server                 email-addr  (sn ref ret ex min)
 @          IN    SOA   ns1.justdavis.com.          hostmaster.justdavis.com. (
-                              2012051200 ; sn = serial number (yyyymmdd##)
+                              2012051700 ; sn = serial number (yyyymmdd##)
                               2d         ; ref = refresh
                               15M        ; ret = update retry
                               4W         ; ex = expiry
@@ -95,6 +95,8 @@ kelso                     IN      A                 70.184.78.221
 www                       IN      CNAME             @
 smtp                      IN      CNAME             mail
 karlanderica              IN      CNAME             kelso
+kerberos                  IN      CNAME             lewis
+ldap                      IN      CNAME             lewis
 
 ; Mailserver Records
 ; name             ttl    class   rr     priority   name
@@ -103,6 +105,18 @@ karlanderica              IN      CNAME             kelso
 ; TXT Records
 ; name             ttl    class   rr                name
 @                         IN      TXT               "v=spf1 ip4:174.79.40.36 ~all"
+_kerberos                 IN      TXT               "DAVISONLINEHOME.NAME"
+
+; SRV Records
+; name                   ttl    class   rr                name
+_kerberos._udp                  IN      SRV               0 0 88 lewis
+_kerberos-master._udp           IN      SRV               0 0 88 lewis
+_kerberos-adm._tcp              IN      SRV               0 0 749 lewis
+_kpasswd._udp                   IN      SRV               0 0 464 lewis
+
+; AFSDB Records
+; cell                   ttl    class   rr                name
+davisonlinehome.name.           IN      AFSDB             1 asimov.davisonlinehome.name.
 ~~~~
 
 *Note:* This zone database does not include an $ORIGIN directive, as this would prevent the database from being used as a symlink alias for other domains. Due to this exclusion, `bind` will compute the domain's origin dynamically from the zone names specified in `/etc/bind/named.conf.local`.
@@ -125,6 +139,32 @@ Have the `bind` service reload its configuration:
 Test the domain by running the following, which should return "`174.79.40.37`":
 
     $ dig @127.0.0.1 justdavis.com A
+
+
+### DNS Zone: davisonlinehome.name
+
+This domain is intended to simply be an alias for the `justdavis.com` domain. To that end, we'll simply create a symbolic link to the zone database for that domain and use it as the database for this one:
+
+    $ sudo ln -s /etc/bind/db.justdavis.com /etc/bind/db.davisonlinehome.name
+
+Edit the `/etc/bind/named.conf.local` file and and the following lines to the end:
+
+~~~~
+# Forward zone definition for davisonlinehome.name:
+zone "davisonlinehome.name" {
+	type master;
+	file "/etc/bind/db.davisonlinehome.name"; // symlinked copy of db.justdavis.com
+	allow-transfer { trusted-servers; };
+};
+~~~~
+
+Have the `bind` service reload its configuration:
+
+    $ sudo /etc/init.d/bind9 reload
+
+Test the domain by running the following, which should return "`174.79.40.37`":
+
+    $ dig @127.0.0.1 davisonlinehome.name A
 
 
 ### DNS Zone: madrivercode.com
