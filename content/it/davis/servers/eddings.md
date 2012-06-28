@@ -11,7 +11,8 @@ summary: "Describes the setup of eddings, the primary server for justdavis.com. 
 
 ## Specs
 
-* `eddings` is an older server-class physical machine. Most of the parts were purchased in October, 2007.
+`eddings` is an older server-class physical machine. Most of the parts were purchased in October, 2007.
+
 * CPU
     * [Intel Xeon E5310 Clovertown 1.6GHz LGA 771 80W Quad-Core](http://www.newegg.com/Product/Product.aspx?Item=N82E16819117113)
 * Motherboard
@@ -32,6 +33,7 @@ The content on this page covers the base OS install and configuration; it doesn'
 
 * <%= topic_summary_link("/it/davis/servers/eddings/vms/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/dns/") %>
+* <%= topic_summary_link("/it/davis/servers/eddings/kerberos/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/web/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/nexus/") %>
 
