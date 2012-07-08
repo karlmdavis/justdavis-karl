@@ -13,8 +13,8 @@ summary: Describes the setup of nanoc on a Linux machine.
 
 Run the following commands to install `nanoc` and its dependencies:
 
-    # apt-get install apt-get install ruby ruby1.8-dev rubygems1.8
-    # gem install nanoc kramdown adsf less rainpress
+    # apt-get install ruby ruby1.8-dev rubygems1.8
+    # gem install nanoc kramdown adsf less rainpress coderay nokogiri therubyracer
 
 Add the Ruby gems binaries to the user path by adding the following to the ~/.profile file:
 
