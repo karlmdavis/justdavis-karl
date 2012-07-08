@@ -9,12 +9,12 @@ summary: "Describes the steps necessary to make eddings a Kerberos authenticatio
 
 This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the steps necessary to make the computer a Kerberos authentication server, using [MIT Kerberos](http://web.mit.edu/kerberos/).
 
-Previously, I'd been using `lewis` as a Kerberos server (see <%= wiki_entry_link("LewisSetupKerberosServer") %>). This functionality has now been moved to `eddings`. The Kerberos realm formerly hosted by `lewis`, `DAVISONLINEHOME.NAME`, was decomissioned and replaced with the new `JUSTDAVIS.COM` realm.
+Previously, I'd been using `lewis` as a Kerberos server (see <%= wiki_entry_link("LewisSetupKerberosServer") %>). This functionality has now been moved to `eddings`. The Kerberos realm formerly hosted by `lewis`, `DAVISONLINEHOME.NAME`, was decomissioned and replaced with the new `JUSTDAVIS.COM` realm on `eddings`.
 
 
 ## Installing kerberos
 
-[MIT Kerberos](http://web.mit.edu/kerberos/) is more or less the only Linux Kerberos server available. There's also `samba`, but that's also an attempt to replace all of Microsoft's Active Directory, and wasn't very stable last I checked. I've had good success with MIT's Kerberos, myself. Installing `bind` is as simple as:
+[MIT Kerberos](http://web.mit.edu/kerberos/) is more or less the only Linux Kerberos server available. There's also `samba`, but that's also an attempt to replace all of Microsoft's Active Directory, and wasn't very stable last I checked. I've had good success with MIT's Kerberos, myself. Installing it is as simple as:
 
     $ sudo apt-get install krb5-kdc krb5-admin-server
 
@@ -23,7 +23,7 @@ When prompted, provide the following answers to the configuration helper:
 * Default Kerberos version 5 realm: `JUSTDAVIS.COM`
 
 
-## Creating JUSTDAVIS.COM Realm
+## Creating the JUSTDAVIS.COM Realm
 
 References:
 
@@ -37,7 +37,7 @@ When prompted, enter the following:
 
 * KDC database master key: *(Be sure to enter a very secure password, and ensure it's written down somewhere safe.)*
 
-Run the following commands to create a default policy and an administrator principal:
+Run the following commands to create the default policies that various principals will be assigned to:
 
 ~~~~
 $ sudo kadmin.local -r JUSTDAVIS.COM
@@ -45,7 +45,6 @@ kadmin.local: add_policy -minlength 12 -minclasses 3 default
 kadmin.local: add_policy -minlength 24 -minclasses 4 admins
 kadmin.local: add_policy -minlength 24 -minclasses 4 hosts
 kadmin.local: add_policy -minlength 24 -minclasses 4 services
-kadmin.local: addprinc -policy admins karl/admin
 kadmin.local: quit
 ~~~~
 
@@ -64,6 +63,54 @@ Create the `/etc/krb5kdc/kadm5.acl` file to read as follows:
 Restart `krb5-admin-server`:
 
     $ sudo /etc/init.d/krb5-admin-server restart
+
+
+### Configuring DNS
+
+Kerberos servers and clients rely heavily on DNS: clients use DNS to locate Kerberos servers and servers may use DNS to verify that clients are who they say that they are. Accordingly, forward and reverse DNS entries are oftentimes needed. The following entries were added to the `justdavis.com` DNS zone on `eddings` to assist clients in locating the Kerberos server:
+
+~~~~
+; CNAME Records
+; name             ttl    class   rr                name
+kerberos                  IN      CNAME             eddings
+
+; TXT Records
+; name             ttl    class   rr                name
+_kerberos                 IN      TXT               "JUSTDAVIS.COM"
+
+; SRV Records
+; name                   ttl    class   rr                name
+_kerberos._udp                  IN      SRV               0 0 88 eddings
+_kerberos-master._udp           IN      SRV               0 0 88 eddings
+_kerberos-adm._tcp              IN      SRV               0 0 749 eddings
+_kpasswd._udp                   IN      SRV               0 0 464 eddings
+~~~~
+
+
+### Populating the JUSTDAVIS.COM Realm
+
+Once the realm is setup, it can be populated with the needed "principals": the users and other account objects that will be authenticating against the realm. At a minimum, you should create two principals: one for a regular user under your name, and an "`admin`" variant of that principal. For example:
+
+~~~~
+$ sudo kadmin.local -r JUSTDAVIS.COM
+kadmin.local: addprinc -policy default karl
+kadmin.local: addprinc -policy admins karl/admin
+kadmin.local: quit
+~~~~
+
+The simplest way to interact with Kerberos is using the following commands:
+
+* `kinit`: Obtain a Kerberos ticket for a specific principal.
+* `klist`: List the currently active Kerberos tickets.
+* `kdestroy`: Destroy the currently active Kerberos tickets.
+
+For example, the following commands would obtain a ticket for `karl`, display that ticket, and then destroy it:
+
+~~~~
+$ kinit -p karl
+$ klist
+$ kdestroy
+~~~~
 
 
 ## Decomissioning the DAVISONLINEHOME.NAME Realm

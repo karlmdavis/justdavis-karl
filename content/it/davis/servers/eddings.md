@@ -34,6 +34,7 @@ The content on this page covers the base OS install and configuration; it doesn'
 * <%= topic_summary_link("/it/davis/servers/eddings/vms/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/dns/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/kerberos/") %>
+* <%= topic_summary_link("/it/davis/servers/eddings/ldap/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/web/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/nexus/") %>
 
@@ -152,6 +153,30 @@ References:
 A number of network services, e.g. Kerberos, rely on the server having the correct time. The `ntpd` service can be installed to periodically correct any "clock drift":
 
     # apt-get install ntp
+
+
+### Setting the FQDN
+
+References:
+
+* <http://ubuntuforums.org/showthread.php?t=1467978>
+
+A number of services such as Kerberos rely on each machine having a valid fully qualified domain name. In this server's case, that should be `eddings.justdavis.com`. To ensure this is the case, two files have to be setup correctly:
+
+1. `/etc/hostname`: This file should have the non-qualified hostname.
+1. `/etc/hosts`: This file should have the fully qualified hostname, as well as the non-qualified hostname as an alias assigned to `127.0.0.1`.
+
+Specifically, the first two entries in `/etc/hosts` should read as follows:
+
+~~~~
+127.0.0.1       localhost
+127.0.1.1       eddings.justdavis.com   eddings
+~~~~
+
+The hostname configuration can be tested with the `hostname` command. The first command should return the unqualified name and the second command should return the fully qualified name:
+
+    $ hostname
+    $ hostname -f
 
 
 ### Configuring Networking (and Decommissioning VMs)
