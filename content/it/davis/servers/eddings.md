@@ -35,6 +35,7 @@ The content on this page covers the base OS install and configuration; it doesn'
 * <%= topic_summary_link("/it/davis/servers/eddings/dns/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/kerberos/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/ldap/") %>
+* <%= topic_summary_link("/it/davis/servers/eddings/openafs/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/web/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/nexus/") %>
 
@@ -207,6 +208,15 @@ iface br0 inet static
 	bridge_stp off
 	bridge_fd 0
 	bridge_maxwait 0
+~~~~
+
+Some applications, notably Zimbra and OpenAFS also expect `/etc/hosts` resolution to have been configured correctly for the public IP and FQDN. See the following link for a discussion of this change: <https://lists.ubuntu.com/archives/foundations-bugs/2011-July/011275.html>. To that end, edit the `/etc/hosts` file and make the following changes:
+
+* Comment out or delete the "`127.0.1.1`" line.
+* Add the following line:
+
+~~~~
+174.79.40.37    eddings.justdavis.com   eddings
 ~~~~
 
 After modifying `/etc/network/interfaces`, the following had to be done to restart networking, and bring the remaining VMs back up afterwards:
