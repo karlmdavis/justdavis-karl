@@ -164,7 +164,7 @@ TLS_CACERT      /etc/ssl/certs/ca-certificates.crt
 
 At this point, users should be able to query the LDAP directory if they specify the server, authentication DN, and base search DN, as follows:
 
-    $ ldapsearch -x -D uid=karl,ou=people,dc=justdavis,dc=com -W -H ldaps://eddings.justdavis.com -b dc=justdavis,dc=com
+    $ ldapsearch -x -D uid=karl,ou=people,dc=justdavis,dc=com -W -H ldaps://ldap.justdavis.com -b dc=justdavis,dc=com
 
 For convenience, the OpenLDAP client tools should be configured with the LDAP server's address and the directory's base search DN. This can be accomplished by editing the `/etc/ldap/ldap.conf` file and ensuring the following options are configured correctly:
 
@@ -260,10 +260,10 @@ Once the keytab has been created, the `libnss-ldapd` and `nslcd` packages should
 
 If prompted by the installation, answer the questions as follows:
 
-* Name services to configure: (none)
 * LDAP server URI: `ldaps://ldap.justdavis.com`
 * Search Base BN: `dc=justdavis,dc=com`
-* Check server's SSL certificate: hard
+* Check server's SSL certificate: demand
+* Name services to configure: (none)
 
 If not prompted during the installation, those settings should be configured by setting the following options in the `/etc/nslcd.conf` file:
 
@@ -335,15 +335,21 @@ pam_session=session optional    pam_krb5.so
 	session required    pam_mkhomedir.so umask=0022 skel=/etc/skel
 ~~~~
 
-Enable the `justdavis_network` profile:
+**Please note:** The following customizations may need to be made to the above profile.
+
+* On servers (workstations without a GUI display), the "`pam_gnome_keyring.so`" line should be removed.
+* If the `/lib/security/pam_cap.so` file is present, an additional line should be added after the "`pam_gnome_keyring.so`" one: `auth optional pam_cap.so`
+
+Enable the `justdavis_network` profile and restart `nscd` to clear its cache:
 
     $ sudo auth-client-config -a -p justdavis_network
+    $ sudo /etc/init.d/nscd restart
 
 Add the following to the end of `/etc/security/group.conf`:
 
 ~~~~
 # Ensure that network-authenticated users are added to the standard user groups
-gdm; *; *;Al0000-2400; adm, dialout, cdrom, plugdev, lpadmin, admin, sambashare, disk
+* ; *; *;Al0000-2400; adm, dialout, cdrom, plugdev, lpadmin, admin, sambashare, disk
 ~~~~
 
 Add users (as necessary) to the sudoers file by running `sudo visudo`:
@@ -357,4 +363,19 @@ erica   ALL=(ALL) ALL
 ~~~~
 
 **Troubleshooting Note:** While testing network logins on `pratchett`, I was unable to login and had the following error in `/var/auth.log`: "`Jul 29 22:52:03 pratchett sshd[30251]: pam_krb5(sshd:auth): (user karl) credential verification failed: Server krbtgt/DAVISONLINEHOME.NAME@JUSTDAVIS.COM not found in Kerberos database`". Turns out, this error was due to the old `DAVISONLINEHOME.NAME` host principal still being stored in `/etc/krb5.keytab`. I discovered this by running `ktlist -k` and resolved it by deleting the keytab and re-creating it using `kadmin` and `ktadd`.
+
+
+### SSH Configuration
+
+SSH can also be configured to accept existing Kerberos ticket/credentials via GSSAPI. This will allow users with valid tickets to connect to this workstation over SSH without having to enter a password. Please note that, because this login bypasses PAM, the user will not have a valid Kerberos ticket or AFS token in the new remote session; users will have to manually run `kinit` and `aklog` after connecting, if needed. To temporarily disable GSSAPI, and instead use PAM authentication, when connecting as a client, the `ssh -k` flag can be used.
+
+To enable this, set the following option in the SSH server's `/etc/ssh/sshd_config` file:
+
+~~~~
+GSSAPIAuthentication yes
+~~~~
+
+Then, restart the `ssh` service:
+
+    $ sudo service ssh restart
 
