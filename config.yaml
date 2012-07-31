@@ -75,7 +75,7 @@ watcher:
   notify_on_compilation_failure: true
 
 # domain to which this site is deployed
-base_url: http://davishq.com/karl
+base_url: http://justdavis.com/karl
 
 # number of full featured posts to display on front
 featured_count: 0
@@ -85,3 +85,9 @@ excerpt_count: 6
 
 # number of other articles to reference at bottom of each article
 other_articles_max: 3
+
+deploy:
+  public:
+    kind: rsync
+    dst:  "eddings.justdavis.com:/var/apache2/justdavis.com/www/karl"
+

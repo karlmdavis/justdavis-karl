@@ -14,13 +14,13 @@
 #   because “*” matches zero or more characters.
 
 preprocess do
-	# Topics, blog articles, etc. may be unpublished by setting the following meta attribute:
-	# publish: false
-	items.delete_if { |item| item[:publish] == false }
+  # Topics, blog articles, etc. may be unpublished by setting the following meta attribute:
+  # publish: false
+  items.delete_if { |item| item[:publish] == false }
 
-	#copy_static
-	create_tag_pages
-	add_update_item_attributes
+  #copy_static
+  create_tag_pages
+  add_update_item_attributes
 
 end
 
@@ -41,6 +41,7 @@ end
 compile '/css/*' do
   filter :less
   filter :rainpress
+  filter :relativize_paths, :type => :css
 end
 
 route '/css/*' do
@@ -98,28 +99,31 @@ compile '*' do
     filter :kramdown
     filter :colorize_syntax
   elsif ext == 'erb'
-		filter :erb
+    filter :erb
   elsif ext.nil?
-		# This will be the case for auto-generated tag items.
-		filter :erb
+    # This will be the case for auto-generated tag items.
+    filter :erb
   else
     raise "No filter configured for '#{item.identifier}' with extension of '#{item[:extension]}' in the Rules file."
   end
 
-  # Apply layout(s).
-	if !item[:layout].nil?
-		layout item[:layout]
-	elsif item[:kind] == "topic"
-		layout 'default'
-	elsif item[:kind] == "article"
-		layout 'article'
-	else
-		# No layout for .xml files, etc.
-	end
+  # Apply layout(s) and the .
+  if !item[:layout].nil?
+    layout item[:layout]
+  elsif item[:kind] == "topic"
+    layout 'default'
+  elsif item[:kind] == "article"
+    layout 'article'
+  else
+    # No layout for .xml files, etc.
+  end
+
+  # Always apply the :relativize_paths filter
+  filter :relativize_paths, :type => :xhtml
 end
 
 route '*' do
-	route_path(item)
+  route_path(item)
 end
 
 layout '*', :erb
