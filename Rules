@@ -18,7 +18,7 @@ preprocess do
   # publish: false
   items.delete_if { |item| item[:publish] == false }
 
-  #copy_static
+  copy_static
   create_tag_pages
   add_update_item_attributes
 

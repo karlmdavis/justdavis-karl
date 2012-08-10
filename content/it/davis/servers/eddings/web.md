@@ -77,7 +77,7 @@ Create the site configuration in `/etc/apache2/sites-available/justdavis.com`:
 	# Redirects from http://madrivercode.com/blog/ to http://justdavis.com/karl/blog/
 	RewriteEngine on
 	# Redirect: resume:
-	RewriteRule ^/blog/wp-content/uploads/2009/03/karlmdavis-resume.pdf(.*) http://justdavis.com/karl/assets/karlmdavis-resume.pdf [R=permanent,L]
+	RewriteRule ^/blog/wp-content/uploads/2009/03/karlmdavis-resume.pdf(.*) http://justdavis.com/karl/downloads/karlmdavis-swEngineer-resume.pdf [R=permanent,L]
 	# Redirect: 2009-03-21 article:
 	RewriteRule ^/blog/coding/native-libraries-vcs-and-maven(.*) http://justdavis.com/karl/blog/2009/03/21/intrepid_vpn_troubles.html [R=permanent,L]
 	# Redirect: 2009-09-05 article:

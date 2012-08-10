@@ -17,3 +17,4 @@ I can also be found on the following sites:
 * [Karl on Google+](https://plus.google.com/112104342326107257987)
 * [Karl on Hacker News](http://news.ycombinator.com/user?id=karlmdavis)
 
+My résumé: [Karl M. Davis, Software Engineer](/downloads/karlmdavis-swEngineer-resume.pdf)
