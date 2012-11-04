@@ -132,7 +132,7 @@ After that, the `JUSTDAVIS.COM` realm should be set as the workstation's default
 
 ~~~~
 [libdefaults]
-	default_realm = DAVISONLINEHOME.NAME
+	default_realm = JUSTDAVIS.COM
 ~~~~
 
 Test that, as follows:
@@ -169,8 +169,8 @@ At this point, users should be able to query the LDAP directory if they specify 
 For convenience, the OpenLDAP client tools should be configured with the LDAP server's address and the directory's base search DN. This can be accomplished by editing the `/etc/ldap/ldap.conf` file and ensuring the following options are configured correctly:
 
 ~~~~
-URI     ldaps://ldap.justdavis.com
 BASE    dc=justdavis,dc=com
+URI     ldaps://ldap.justdavis.com
 ~~~~
 
 At this point, users should be able to query the LDAP directory if they specify the authentication DN, as follows:
@@ -199,6 +199,10 @@ You will be prompted to enter values for the following settings:
 * client cache size: `500000`
 * db server host names: `eddings.justdavis.com`
 * run client at boot: yes
+
+**Troubleshooting note:** Minimal Ubuntu installs, e.g. JeOS, may not have the kernel headers required to build the OpenAFS kernel module. If the install above ends with a message indicating the DKMS build couldn't be performed, the headers likely need to be installed. For example, on JeOS machines, the `linux-headers-virtual` package is needed:
+
+    $ sudo apt-get install linux-headers-virtual
 
 
 ### NSS and PAM Configuration
@@ -361,6 +365,11 @@ root    ALL=(ALL) ALL
 karl    ALL=(ALL) ALL
 erica   ALL=(ALL) ALL
 ~~~~
+
+**Post-12.04 Upgrade Note:** If this computer is running Ubuntu 12.04 or later, it is instead recommended that the above entries be added to a new `/etc/sudoers.d/justdavis` file. This will prevent conflicts during package manager upgrades. Be sure to set the permissions for that file correctly:
+
+    $ sudo chown root:root /etc/sudoers.d/justdavis
+    $ sudo chmod 0440 /etc/sudoers.d/justdavis
 
 **Troubleshooting Note:** While testing network logins on `pratchett`, I was unable to login and had the following error in `/var/auth.log`: "`Jul 29 22:52:03 pratchett sshd[30251]: pam_krb5(sshd:auth): (user karl) credential verification failed: Server krbtgt/DAVISONLINEHOME.NAME@JUSTDAVIS.COM not found in Kerberos database`". Turns out, this error was due to the old `DAVISONLINEHOME.NAME` host principal still being stored in `/etc/krb5.keytab`. I discovered this by running `ktlist -k` and resolved it by deleting the keytab and re-creating it using `kadmin` and `ktadd`.
 

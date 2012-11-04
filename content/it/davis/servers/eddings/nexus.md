@@ -38,12 +38,16 @@ Because it's likely that this computer will end up hosting other Java web applic
 
 Jetty requires some additional configuration before it can be started up. Edit the `/etc/default/jetty` file as follows:
 
-* Set `NO_START` to `1`.
+* Set `NO_START` to `0`.
 * Set `JETTY_PORT` to `8080`.
 
 Please note that, with this configuration, Jetty will only be accessible at <http://localhost:8080/> on the server; it will not be accessible from any external IPs. This is just fine for our purposes, as we'll be using an Apache proxy to make Jetty's applications available on port `80`, anyways. However, if you'd like to change that, you'll need to also do the following in `/etc/default/jetty`:
 
 * Set `JETTY_HOST` to `0.0.0.0`.
+
+**Post-12.04 Upgrade Note:** If this server is running Ubuntu 12.04 or later, the following entry must also be added to the `/etc/default/jetty` file:
+
+* Set `JAVA_HOME` to `/usr/lib/jvm/java-7-openjdk-amd64` (or whatever the path to the JDK is).
 
 Start Jetty by running:
 

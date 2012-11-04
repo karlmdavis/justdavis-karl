@@ -319,8 +319,11 @@ The following commands were run on `eddings` (starting from the cell setup creat
     $ pts adduser -user karl.admin karl -group sysadmins
     $ pts creategroup -name karlanderica -owner karl
     $ pts adduser -user karl erica -group karlanderica
+    $ fs setacl /afs/justdavis.com/ -acl system:administrators all system:anyuser read -clear
+    $ fs setacl /afs/justdavis.com/group -acl system:administrators all system:anyuser read -clear
     $ find /afs/justdavis.com/group/karlanderica -type d -exec fs setacl {} \-acl system:administrators all karlanderica all \-clear \;
     $ find /afs/justdavis.com/group/sysadmin -type d -exec fs setacl {} \-acl system:administrators all sysadmins all system:authuser read \-clear \;
+    $ fs setacl /afs/justdavis.com/user -acl system:administrators all system:anyuser read -clear
     $ find /afs/justdavis.com/user/erica -type d -exec fs setacl {} \-acl system:administrators all erica all \-clear \;
     $ find /afs/justdavis.com/user/karl -type d -exec fs setacl {} \-acl system:administrators all karl all \-clear \;
     $ vos release -id root.cell -cell justdavis.com

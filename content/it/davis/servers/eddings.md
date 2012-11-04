@@ -234,16 +234,16 @@ After modifying `/etc/network/interfaces`, the following had to be done to resta
 
 ### Upgrade to 64bit Ubuntu 12.04.1 (Precise), Server Edition
 
-Ubuntu 12.04 was released in April of 2012. The first point release, 12.04.1, was released in July of 2012.
+Ubuntu 12.04 was released in April of 2012. The first point release, 12.04.1, was released in August of 2012.
 
 **Please note:** I intended to perform this upgrade (as described below) on 2012-05-11. However, I discovered that this is against recommended practice: it is recommended that users wait for the first point release (12.04.1, in this case) before upgrading from LTS to LTS. See the following links for more information:
 
 * [Why is “No new release found” when upgrading 10.04 to 12.04 LTS?](http://askubuntu.com/questions/125392/why-is-no-new-release-found-when-upgrading-10-04-to-12-04-lts)
 * [Upgrading LTS to LTS (server) — why wait for the first point release?](http://askubuntu.com/questions/125825/upgrading-lts-to-lts-server-why-wait-for-the-first-point-release)
 
-The `eddings` server was upgraded in May of 2012 to that new [LTS](https://wiki.ubuntu.com/LTS) release.
+The `eddings` server was upgraded in October of 2012 to that new [LTS](https://wiki.ubuntu.com/LTS) release.
 
-First, I connected to the server over SSH:
+First, I connected to the server over SSH, using a local account (rather than an LDAP/Kerberos one):
 
     $ ssh localuser@192.168.1.100
 
@@ -266,4 +266,37 @@ I then restarted the server to ensure everything came back up correctly:
 The actual upgrade is quite simple to start:
 
     $ sudo do-release-upgrade
+
+When prompted, select the following options:
+
+* Restart services during package upgrades without asking? **Yes**
+
+You will receive warnings that a number of configuration files have new versions, but been modified since installation. For all of these files, the safest option is to overwrite the changes with the new version, as it's best to just manually re-create those changes after the upgrade has finished. The following is a list of the files such warnings were received for on the 2012-10-13 upgrade of `eddings`:
+
+* `/etc/security/group.conf`
+    * See <%= topic_link("/it/davis/misc/netclients/") %> after the upgrade to re-do the changes.
+* `/etc/ldap/ldap.conf`
+    * See <%= topic_link("/it/davis/misc/netclients/") %> after the upgrade to re-do the changes.
+* `/etc/apparmor.d/usr.sbin.slapd`
+    * See <%= topic_link("/it/davis/servers/eddings/ldap/") %> after the upgrade to re-do the changes.
+* `/etc/default/slapd`
+    * See <%= topic_link("/it/davis/servers/eddings/ldap/") %> after the upgrade to re-do the changes.
+* `/etc/pam.d/common-*`
+    * See <%= topic_link("/it/davis/misc/netclients/") %> after the upgrade to re-do the changes: specifically, the section on using `auth-client-config`.
+* `/etc/pam.d/login`
+    * See <%= topic_link("/it/davis/misc/netclients/") %> after the upgrade to re-do the changes: specifically, the section on using `auth-client-config`.
+* `/etc/sudoers`
+    * See <%= topic_link("/it/davis/misc/netclients/") %> after the upgrade to re-do the changes.
+* `/etc/default/saslauthd`
+    * See <%= topic_link("/it/davis/servers/eddings/ldap/") %> after the upgrade to re-do the changes.
+* `/etc/msmtprc`?
+    * See <%= topic_link("/it/davis/servers/eddings/spideroak/") %> after the upgrade to re-do the changes.
+* `/etc/default/jetty`
+    * See <%= topic_link("/it/davis/servers/eddings/nexus/") %> after the upgrade to re-do the changes.
+
+Once the upgrade has completed, it's strongly recommended that the server be restarted. Once restarted, log back in with a non-LDAP/Kerberos account (e.g. `localuser`), and fix up all of the configuration files that were overwritten during the upgrade.
+
+If OpenJDK was installed before the upgrade, it will also need to be reinstalled:
+
+    $ sudo apt-get install openjdk-7-jdk
 

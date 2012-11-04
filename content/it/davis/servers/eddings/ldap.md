@@ -478,6 +478,8 @@ Modify the AppArmor profile for OpenLDAP to give it access to the files in `/usr
   /usr/local/share/ca-certificates/* r,
 ~~~~
 
+**Post-12.04 Upgrade Note:** If this server is running Ubuntu 12.04 or later, it is instead recommended that the above entry be added to the `/etc/apparmor.d/local/usr.sbin.slapd` file. This will prevent conflicts during package manager upgrades.
+
 Apply the change by reloading the AppArmor profiles with the following command:
 
     $ sudo /etc/init.d/apparmor reload
