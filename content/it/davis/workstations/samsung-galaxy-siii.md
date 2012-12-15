@@ -85,12 +85,12 @@ References:
 
 * [Samsung Galaxy S III (T-Mobile): Full Update Guide](http://wiki.cyanogenmod.com/wiki/Samsung_Galaxy_S_III_%28T-Mobile%29:_Full_Update_Guide)
 
-Please note that, as of this writing (2012-10-06), there is not a final release of CyanogenMod for the S III yet, either in the 9.x or 10.x series. There is, however, a stable milestone/monthly 10.x release available: "cm-10-20120911-EXPERIMENTAL-d2tmo-M1". This guide covers the installation of that release; the instructions for the first "complete" 10.x release may be different, though that's unlikely.
+Please note that, as of this writing (2012-12-08), the the latest final release of CyanogenMod for the S III was "`cm-10.0.0-d2tmo.zip`". This guide covers the installation of that release; the instructions for later releases may be different.
 
 Because ClockworkMod was flashed using `dd`, rather than Odin, the Android [ROM Manager](https://play.google.com/store/apps/details?id=com.koushikdutta.rommanager&hl=en) application can't be used to install CyanogenMod; it will have to be installed in recovery, instead. First download the latest stable CyanogenMod release from [CyanogenMod Files for Samsung Galaxy S III (TMUS) - d2tmo](http://download.cyanogenmod.com/?device=d2tmo&type=) and the latest Google apps bundle from [CyanogenMod: Google Apps](http://wiki.cyanogenmod.com/wiki/Latest_Version#Google_Apps). Copy these files to the phone using `adb push`, e.g.:
 
-    $ adb push ~/Downloads/cm-10-20120911-EXPERIMENTAL-d2tmo-M1.zip /sdcard/
-    $ adb push ~/Downloads/gapps-jb-20120726-signed.zip /sdcard/
+    $ adb push ~/Downloads/cm-10.0.0-d2tmo.zip /sdcard/
+    $ adb push ~/Downloads/gapps-jb-20121011-signed.zip /sdcard/
 
 Once these have been copied to the phone, reboot into recovery using `adb`, e.g.:
 
@@ -104,11 +104,11 @@ In Clockwork Recovery, do the following to install both CyanogenMod and the Goog
 1. Install CyanogenMod:
     1. **install zip from sdcard**
     1. **choose zip from sdcard**
-    1. Select the `cm-10-20120911-EXPERIMENTAL-d2tmo-M1.zip` file. Wait for the installation to complete, which should only take a minute or so.
+    1. Select the `cm-10.0.0-d2tmo.zip` file. Wait for the installation to complete, which should only take a minute or so.
 1. Install the Google apps bundle:
     1. **install zip from sdcard**
     1. **choose zip from sdcard**
-    1. Select the `gapps-jb-20120726-signed.zip` file. Wait for the installation to complete, which should only take a minute or so.
+    1. Select the `gapps-jb-20121011-signed.zip` file. Wait for the installation to complete, which should only take a minute or so.
 
 Once all of the installations have been completed, select **Go Back > reboot system now** to reboot into CyanogenMod.
 
