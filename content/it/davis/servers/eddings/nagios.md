@@ -111,6 +111,51 @@ authorized_for_all_host_commands=nagiosadmin,karl@JUSTDAVIS.COM
 ~~~~
 
 
+## Nagios Graphs
+
+References:
+
+* The docs in `/usr/share/doc/nagiosgrapher/` from the `nagiosgrapher` package.
+* The sample graphing configurations in `/usr/share/nagiosgrapher/debian/cfg/ngraph.d/` from the `nagiosgrapher` package.
+* [Install NagiosGrapher On Ubuntu](http://www.ftmon.org/blog/install-nagiosgrapher-ubuntu/)
+
+By default, the only graphs Nagios produces are "Good/Warning/Critical" trends of monitors over time. However, plugins are available that can graph fine-grained data.
+
+First, install the relevant Nagios plugin:
+
+    $ sudo apt-get install nagiosgrapher
+
+Set Nagios to process performance data and route that processing through the grapher by editing `/etc/nagios3/nagios.cfg` and setting the following options:
+
+~~~~
+process_performance_data=1
+service_perfdata_command=ngraph-process-service-perfdata-pipe
+~~~~
+
+Give users access to the graphs by editing the `` file and modifying the following option:
+
+~~~~
+    fe_use_browser_for      nagiosadmin,karl@JUSTDAVIS.COM
+~~~~
+
+Individual monitors may or may not have graphs at this point. Monitor-specific configuration is needed to enable graphing for each. For some reason, the Ubuntu version of this package disables some of the standard Debian configurations. They can be enabled, as follows:
+
+    $ sudo cp /usr/share/nagiosgrapher/debian/cfg/ngraph.d/standard/check_disk.ncfg /etc/nagiosgrapher/ngraph.d/standard/
+    $ sudo cp /usr/share/nagiosgrapher/debian/cfg/ngraph.d/standard/check_load.ncfg /etc/nagiosgrapher/ngraph.d/standard/
+    $ sudo cp /usr/share/nagiosgrapher/debian/cfg/ngraph.d/standard/check_ping.ncfg /etc/nagiosgrapher/ngraph.d/standard/
+    $ sudo cp /usr/share/nagiosgrapher/debian/cfg/ngraph.d/standard/check_procs.ncfg /etc/nagiosgrapher/ngraph.d/standard/
+    $ sudo cp /usr/share/nagiosgrapher/debian/cfg/ngraph.d/standard/check_users.ncfg /etc/nagiosgrapher/ngraph.d/standard/
+
+Restart Nagios and the grapher:
+
+    $ sudo service nagiosgrapher restart
+    $ sudo service nagios3 restart
+
+After a few minutes, restart Nagios again so that it picks up the new graph data:
+
+    $ sudo service nagios3 restart
+
+
 ## Common Service Monitors: Disable HTTP Monitor
 
 The default Nagios service definitions (used for all hosts) included a call to the [check_http](http://nagiosplugins.org/man/check_http) plugin. This is problematic as a) not all monitored systems are web servers and b) those systems that are don't necessarily serve HTTP on the IP Nagios uses to reach them.
@@ -120,7 +165,7 @@ To resolve this, the "`HTTP`" service definition was commented out in `/etc/nagi
 
 ## Host Monitors: eddings
 
-The following monitors were added to the default set for `eddings` (the Nagios server).
+The following monitors were added to the default set for `eddings` (called `localhost` by the Nagios server).
 
 
 ### Disk Space on eddings
@@ -190,6 +235,34 @@ Nagios needs to be restarted after adding these definitions:
 
     $ sudo service nagios3 restart
 
+The following graphing definitions were added to `/etc/nagiosgrapher/ngraph.d/extra/check_ping_remote.ncfg`:
+
+~~~~
+define ngraph{
+	service_name		Ping Google
+	graph_log_regex		loss = (\d+)
+	graph_value		Loss
+	graph_units		%
+	graph_legend		Loss
+	graph_legend_eol	none
+	page			2 Loss
+	rrd_plottype		LINE2
+	rrd_color		ff0000
+}
+
+define ngraph{
+	service_name		Ping OpenDNS
+	graph_log_regex		loss = (\d+)
+	graph_value		Loss
+	graph_units		%
+	graph_legend		Loss
+	graph_legend_eol	none
+	page			2 Loss
+	rrd_plottype		LINE2
+	rrd_color		ff0000
+}
+~~~~
+
 
 ### HTTPS Server on eddings
 
@@ -214,6 +287,109 @@ define service{
 	service_description	Check Apache        ; The service description
 	check_command		check_https_remote!174.79.40.37!/karl/!HTTP/1.1 200 OK
 	}
+~~~~
+
+Nagios needs to be restarted after adding these definitions:
+
+    $ sudo service nagios3 restart
+
+
+## Host Monitors: dumas
+
+References:
+
+* [Monitoring Windows with Nagios](http://awaseroot.wordpress.com/2012/11/23/monitoring-windows-with-nagios/)
+
+Erica's Windows desktop, `dumas`, was also added to Nagios monitoring. This is mostly to track the health of the wireless ethernet connectoin it uses.
+
+Download and install the latest version of [NSClient++](http://nsclient.org/nscp/) on the Windows system. When prompted during install, enter the following options:
+
+* *Allowed hosts*: `192.168.1.100` (the IP of `eddings` on the LAN)
+* *NSClient password*: (leave blank)
+* *Modules to install*: (select all but **Enable NSCA client**)
+
+There are a couple of bugs with the default [check_nt]() command templates distributed by Ubuntu. Edit the `/etc/nagios-plugins/config/nt.cfg` file and modify the command definition to match the following (note the lack of single quotes, the additional port parameter, and the addition of `$ARG2$`):
+
+~~~~
+# 'check_nt' command definition
+define command {
+	command_name	check_nt
+	command_line	/usr/lib/nagios/plugins/check_nt -H $HOSTADDRESS$ -p 12489 -v $ARG1$ $ARG2$
+}
+
+~~~~
+
+Save the following template for Windows hosts as `/etc/nagios3/conf.d/generic-windows_nagios2.cfg`:
+
+~~~~
+define host{
+	name                    windows-server
+	use                     generic-host
+	check_period            24x7
+	check_interval          5
+	retry_interval          1
+	max_check_attempts      10
+	check_command           check-host-alive
+	notification_period     24x7
+	notification_interval   30
+	notification_options    d,r
+	contact_groups          admins
+	register                0
+	}
+~~~~
+
+The following host definition was created as `/etc/nagios3/conf.d/dumas_nagios2.cfg`:
+
+~~~~
+define host{
+	use			windows-server
+	host_name		dumas.justdavis.com
+	alias			dumas.justdavis.com
+	address			192.168.1.8
+	}
+
+define service{
+	use			generic-service
+	host_name		dumas.justdavis.com
+	service_description	PING
+	check_command		check_ping!200.0,2%!500.0,5%
+	normal_check_interval	5
+	retry_check_interval	1
+	}
+
+define service{
+	use			generic-service
+	host_name		dumas.justdavis.com
+	service_description	NSClient++ Version
+	check_command		check_nt!CLIENTVERSION
+}
+
+define service{
+	use			generic-service
+	host_name		dumas.justdavis.com
+	service_description	Uptime
+	check_command		check_nt!UPTIME
+}
+
+define service{
+	use			generic-service
+	host_name		dumas.justdavis.com
+	service_description	CPU Load
+	check_command		check_nt!CPULOAD!-l 5,80,90
+}
+define service{
+	use			generic-service
+	host_name		dumas.justdavis.com
+	service_description	Memory Usage
+	check_command		check_nt!MEMUSE!-w 80 -c 90
+}
+
+define service{
+	use			generic-service
+	host_name		dumas.justdavis.com
+	service_description	C:\ Drive Space
+	check_command		check_nt!USEDDISKSPACE!-l C -w 80 -c 90
+}
 ~~~~
 
 Nagios needs to be restarted after adding these definitions:
