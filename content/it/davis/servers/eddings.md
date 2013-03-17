@@ -39,6 +39,7 @@ The content on this page covers the base OS install and configuration; it doesn'
 * <%= topic_summary_link("/it/davis/servers/eddings/web/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/nexus/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/spideroak/") %>
+* <%= topic_summary_link("/it/davis/servers/eddings/nagios/") %>
 
 
 ### Install 64bit Ubuntu 10.04.03 (Lucid), Server Edition

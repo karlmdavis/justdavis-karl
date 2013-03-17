@@ -43,6 +43,21 @@ The Apache web server supports [virtual hosts](http://httpd.apache.org/docs/2.2/
     $ sudo /etc/init.d/apache2 reload
 
 
+## SSL Encryption
+
+References:
+
+* [Apache: Force HTTPS Connections](http://www.cyberciti.biz/tips/howto-apache-force-https-secure-connections.html)
+
+By default, Apache uses unencrypted HTTP for all traffic. This means that all of the traffic, including any usernames and passwords entered, are sent out as (essentially) clear text, viewable by anyone who happens to be listening. For security, it's best to force all traffic to instead use encrypted HTTPS.
+
+First, enable Apache's [mod_ssl](http://httpd.apache.org/docs/2.2/mod/mod_ssl.html) module:
+
+    $ sudo a2enmod ssl
+
+The rest of the SSL configuration is provided below, as part of the `justdavis.com` site configuration.
+
+
 ### Create Site: justdavis.com
 
 References:
@@ -63,7 +78,7 @@ Create the folders that will be used to store the content, logs, etc. for the si
 Create the site configuration in `/etc/apache2/sites-available/justdavis.com`:
 
 ~~~~
-<VirtualHost 174.79.40.37:80>
+<VirtualHost 174.79.40.37:443>
 	DocumentRoot /var/apache2/justdavis.com/www/
 	ErrorLog /var/apache2/justdavis.com/logs/error_log
 	LogLevel warn
@@ -74,16 +89,38 @@ Create the site configuration in `/etc/apache2/sites-available/justdavis.com`:
 
 	Options FollowSymLinks
 
-	# Redirects from http://madrivercode.com/blog/ to http://justdavis.com/karl/blog/
+	# Configure SSL for this virtual host (derived from /etc/apache2/sites-available/default-ssl)
+	SSLEngine on
+	SSLCertificateFile /etc/ssl/certs/www.justdavis.com.crt
+	SSLCertificateKeyFile /etc/ssl/private/www.justdavis.com.key
+	<FilesMatch "\.(cgi|shtml|phtml|php)$">
+		SSLOptions +StdEnvVars
+	</FilesMatch>
+	<Directory /usr/lib/cgi-bin>
+		SSLOptions +StdEnvVars
+	</Directory>
+	BrowserMatch "MSIE [2-6]" \
+		nokeepalive ssl-unclean-shutdown \
+		downgrade-1.0 force-response-1.0
+	# MSIE 7 and newer should be able to use keepalive
+	BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
+
+	# Redirects from http://madrivercode.com/blog/ to https://justdavis.com/karl/blog/
 	RewriteEngine on
 	# Redirect: resume:
-	RewriteRule ^/blog/wp-content/uploads/2009/03/karlmdavis-resume.pdf(.*) http://justdavis.com/karl/downloads/karlmdavis-swEngineer-resume.pdf [R=permanent,L]
+	RewriteRule ^/blog/wp-content/uploads/2009/03/karlmdavis-resume.pdf(.*) https://justdavis.com/karl/downloads/karlmdavis-swEngineer-resume.pdf [R=permanent,L]
 	# Redirect: 2009-03-21 article:
-	RewriteRule ^/blog/coding/native-libraries-vcs-and-maven(.*) http://justdavis.com/karl/blog/2009/03/21/intrepid_vpn_troubles.html [R=permanent,L]
+	RewriteRule ^/blog/coding/native-libraries-vcs-and-maven(.*) https://justdavis.com/karl/blog/2009/03/21/intrepid_vpn_troubles.html [R=permanent,L]
 	# Redirect: 2009-09-05 article:
-	RewriteRule ^/blog/uncategorized/a-sad-tale-of-vpn-troubles-on-intrepid/(.*) http://justdavis.com/karl/blog/2009/09/05/native_libraries_maven.html [R=permanent,L]
+	RewriteRule ^/blog/uncategorized/a-sad-tale-of-vpn-troubles-on-intrepid/(.*) https://justdavis.com/karl/blog/2009/09/05/native_libraries_maven.html [R=permanent,L]
 	# Redirect: everything else:
-	RewriteRule ^/blog(.*) http://justdavis.com/karl/blog/ [R=permanent,L]
+	RewriteRule ^/blog(.*) https://justdavis.com/karl/blog/ [R=permanent,L]
+</VirtualHost>
+<VirtualHost 174.79.40.37:80>
+	# Redirect all HTTP (port 80) traffic for this virtual host to HTTPS.	
+	RewriteEngine on
+	RewriteCond %{HTTPS} off
+	RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
 </VirtualHost>
 ~~~~
 
@@ -91,6 +128,72 @@ Enable the site as follows:
 
     $ sudo a2enmod rewrite
     $ sudo a2ensite justdavis.com
-    $ sudo /etc/init.d/apache2 restart
+    $ sudo service apache2 restart
 
+
+### Creating the HTTPS Service Certificate
+
+Note that the configuration above references an SSL certificate and key file. We'll use the CA from <%= topic_link("/it/davis/servers/eddings/ldap/") %> to create these for the HTTPS `justdavis.com` site.
+
+First, create a private key for the site, secure it, and store it in the server's central `/etc/ssl/private/` directory:
+
+    $ sudo certtool --generate-privkey --outfile /etc/ssl/private/www.justdavis.com.key
+    $ sudo chmod u=rw,g=r,o= /etc/ssl/private/justdavis.com.key
+    $ sudo chown root:ssl-cert /etc/ssl/private/justdavis.com.key
+
+When using a commercial CA, a "certificate signing request" is needed. However, when using a local CA, this step can be skipped. Instead, we'll directly use our CA's private key, public certificate, and the private key for the service to generate the public certificate for the service. A configuration template file for the service's public certificate should be created as `/etc/ssl/certs/www.justdavis.com.cfg` with the following contents:
+
+~~~~
+# X.509 Certificate options
+#
+# DN options
+
+# The organization of the subject.
+organization = "Davis Family"
+
+# The organizational unit of the subject.
+#unit = "sleeping dept."
+
+# The state of the certificate owner.
+state = "Arizona"
+
+# The country of the subject. Two letter code.
+country = US
+
+# The common name of the certificate owner.
+cn = "Karl M. Davis"
+
+# The serial number of the certificate. Should be incremented each time a new certificate is generated.
+serial = 001
+
+# In how many days, counting from today, this certificate will expire.
+expiration_days = 3650
+
+# X.509 v3 extensions
+
+# DNS name(s) of the server
+dns_name = "justdavis.com"
+dns_name = "www.justdavis.com"
+#dns_name = "server_alias.example.com"
+
+# (Optional) Server IP address
+#ip_address = "192.168.1.1"
+
+# Whether this certificate will be used for a TLS client
+#tls_www_client
+
+# Whether this certificate will be used for a TLS server
+tls_www_server
+
+# Whether this certificate will be used to encrypt data (needed
+# in TLS RSA ciphersuites). Note that it is preferred to use different
+# keys for encryption and signing.
+encryption_key
+~~~~
+
+Generate the public certificate for the service, placing it into the `/etc/ssl/certs/` directory:
+
+    $ sudo certtool --generate-certificate --load-privkey /etc/ssl/private/www.justdavis.com.key --load-ca-certificate /usr/local/share/ca-certificates/ca.justdavis.com.crt --load-ca-privkey /etc/ssl/private/ca.justdavis.com.key --template /etc/ssl/certs/www.justdavis.com.cfg --outfile /etc/ssl/certs/www.justdavis.com.crt
+    $ sudo chmod u=rw,g=r,o=r /etc/ssl/certs/www.justdavis.com.crt
+    $ sudo chown root:root /etc/ssl/certs/www.justdavis.com.crt
 
