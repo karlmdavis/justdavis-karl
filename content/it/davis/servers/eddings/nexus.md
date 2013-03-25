@@ -7,7 +7,10 @@ summary: "Describes the steps necessary to make eddings a Nexus repository manag
 
 # <%= @item[:title] %>
 
-This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the steps necessary to make the computer a [Nexus](http://www.sonatype.org/nexus/) [Maven](http://maven.apache.org/) repository manager server.
+This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the steps necessary to make the computer a [Nexus](http://www.sonatype.org/nexus/) [Maven](http://maven.apache.org/) repository manager server. It assumes that the following guides have already been followed:
+
+* <%= topic_summary_link("/it/davis/servers/eddings/kerberos/") %>
+* <%= topic_summary_link("/it/davis/servers/eddings/ldap/") %>
 
 Previously, I'd been using `tolkien` as a Nexus server, which has now been decommissioned. The documentation for the old `tolkien` Nexus server is archived in: <%= wiki_entry_link("TolkienSetupNexus") %>.
 
@@ -94,6 +97,7 @@ References:
 
 * <http://wiki.eclipse.org/Jetty/Tutorial/Apache>
 * <http://httpd.apache.org/docs/2.2/mod/mod_proxy.html>
+* [Nexus FAQ: How can I integrate Nexus with Apache Httpd and Mod_Proxy?](https://docs.sonatype.com/display/SPRTNXOSS/Nexus+FAQ#NexusFAQ-Q.HowcanIintegrateNexuswithApacheHttpdandModProxy)
 
 Because Jetty is running on the non-standard `8080` port and *can't* run on the same port `80` already being used by Apache on this server, we'll configure Apache to forward/proxy requests for certain URLs to Jetty. For this particular configuration, we'll be modifying the `justdavis.com` virtual site in Apache, as configured in: <%= topic_link("/it/davis/servers/eddings/") %>.
 
@@ -118,6 +122,7 @@ Add the following configuration to the end of the `VirtualHost` block in `/etc/a
 	# Proxy the Java web application running at http://localhost:8080/nexus
 	<Location /nexus/>
 		ProxyPass http://localhost:8080/nexus/
+		ProxyPassReverse http://localhost:8080/nexus/
 		SetEnv proxy-nokeepalive 1
 	</Location>
 ~~~~
@@ -125,6 +130,17 @@ Add the following configuration to the end of the `VirtualHost` block in `/etc/a
 Restart Apache to apply the module and configuration changes:
 
     $ sudo /etc/init.d/apache2 restart
+
+Configure the proxy URL as the base URL in Nexus, as follows:
+
+1. Open [Nexus](https://madrivercode.com/nexus/) in a browser.
+1. Login as the built-in `admin` user.
+1. Open the **Administration > Server** panel.
+1. Set the following options:
+    * Application Server Settings (optional): true/enabled
+    * Base URL: `https://madrivercode.com/nexus/`
+    * Force Base URL: true/enabled
+1. Click **Save**.
 
 
 ## Migrating Nexus Data from Old Server
@@ -151,4 +167,70 @@ Then, disable the old Nexus server so it never runs again and start the new one 
     $ ssh -t karl@tolkien.madrivercode.com 'sudo rm /etc/init.d/nexus'
     $ ssh -t karl@tolkien.madrivercode.com 'sudo update-rc.d nexus remove'
     $ sudo /etc/init.d/jetty start
+
+
+## Upgrading Nexus from 2.0.4-1 to 2.3.1-01
+
+Stop the Jetty service hosting Nexus:
+
+    $ sudo service jetty stop
+
+Download the Nexus WAR. The link can be found at: [Download and Install Nexus](http://www.sonatype.org/nexus/go). For example, the following will download the 2.3.1-01 release:
+
+    $ wget http://www.sonatype.org/downloads/nexus-2.3.1-01.war
+
+"Install" the WAR to the `/usr/local/` folder and "publish" it to Jetty's `webapps` folder:
+
+    $ sudo mv nexus-2.3.1-01.war /usr/local/manual-installs/sonatype-nexus/
+    $ sudo chown jetty:adm /usr/local/manual-installs/sonatype-nexus/nexus-2.3.1-01.war
+    $ sudo ln -sf /usr/local/manual-installs/sonatype-nexus/nexus-2.3.1-01.war /var/lib/jetty/webapps/nexus.war
+
+Start the Jetty service hosting Nexus:
+
+    $ sudo service jetty start
+
+Access the [Nexus webapp](https://madrivercode.com/nexus/) and make sure everything started correctly (may take a few minutes before it's available).
+
+
+## Configuring LDAP Authentication
+
+References:
+
+* [Nexus Book: Chapter 8. Nexus LDAP Integration](http://www.sonatype.com/books/nexus-book/reference/ldap.html)
+
+Nexus can be set to use the LDAP users from the server described in <%= topic_link("/it/davis/servers/eddings/ldap/") %>. It could also be configured to use LDAP groups, though that's not particularly useful for the small `justdavis.com` domain.
+
+LDAP authentication can be configured through the Nexus GUI, as follows:
+
+1. Open [Nexus](https://madrivercode.com/nexus/) in a browser.
+1. Login as the built-in `admin` user.
+1. Open the **Administration > Server** panel.
+1. In *Security Settings*, add **OSS LDAP Authentication Realm** as the last entry in the *Selected Realms* list.
+1. Click **Save**.
+1. Open the **Security > LDAP Configuration** panel.
+1. Set the options, as follows:
+    * Protocol: **ldaps**
+    * Hostname: `ldap.justdavis.com`
+    * Search Base: `dc=justdavis,dc=com`
+    * Authentication Method: **Anonymous Authentication**
+    * Base DN: `ou=people`
+    * User Subtree: false
+    * Object Class: `inetOrgPerson`
+    * User Filter: (leave blank)
+    * User ID Attribute: `uid`
+    * Real Name Attribute: `cn`
+    * E-Mail Attribute: `mail`
+    * Password Attribute: (leave blank)
+    * Group Element Mapping: false/disabled
+1. Click **Save**.
+
+Add the LDAP user `karl` to the *Nexus Administrator Role*, as follows:
+
+1. Open the **Security > Users** panel.
+1. Switch the **All Configured Users** dropdown to **LDAP**.
+1. Click **Refresh** (to the left of that dropdown).
+1. Select the **karl** user.
+1. Under *Role Management*, click **Add**.
+1. Select the **Nexus Administrator Role** and click **OK**.
+1. Click **Save**.
 
