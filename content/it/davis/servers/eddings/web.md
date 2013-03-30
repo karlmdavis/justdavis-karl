@@ -115,8 +115,10 @@ Create the SSL site configuration in `/etc/apache2/sites-available/justdavis.com
 
 	# Configure SSL for this virtual host (derived from /etc/apache2/sites-available/default-ssl)
 	SSLEngine on
-	SSLCertificateFile /etc/ssl/certs/www.justdavis.com.crt
-	SSLCertificateKeyFile /etc/ssl/private/www.justdavis.com.key
+	SSLCertificateFile /etc/ssl/certs/justdavis.com-wildcard.crt
+	SSLCertificateKeyFile /etc/ssl/private/justdavis.com-wildcard.key
+	SSLCertificateChainFile /etc/ssl/certs/justdavis.com-wildcard-ca-intermediate.pem
+	SSLCACertificateFile /etc/ssl/certs/justdavis.com-wildcard-ca-root.pem
 	<FilesMatch "\.(cgi|shtml|phtml|php)$">
 		SSLOptions +StdEnvVars
 	</FilesMatch>
@@ -229,69 +231,26 @@ Enable the site as follows:
     $ sudo service apache2 restart
 
 
-### Creating the HTTPS Service Certificate
+### SSL Certificate
 
-Note that the configuration above references an SSL certificate and key file. We'll use the CA from <%= topic_link("/it/davis/servers/eddings/ldap/") %> to create these for the HTTPS `justdavis.com` site.
+Note that the configuration above references an SSL certificate and key file. Originally, this site used a certificate generated from a self-signed CA. However, this got to be annoying as most browsers require users to accept a click-through warning when using such certificates.
 
-First, create a private key for the site, secure it, and store it in the server's central `/etc/ssl/private/` directory:
+To solve this annoyance, the site now uses a commercial SSL certificate with `justdavis.com` and `*.justdavis.com` as DNS names. This certificate was obtained from [StartSSL](http://www.startssl.com/), which provides reasonably priced certificates.
 
-    $ sudo certtool --generate-privkey --outfile /etc/ssl/private/www.justdavis.com.key
-    $ sudo chmod u=rw,g=r,o= /etc/ssl/private/justdavis.com.key
-    $ sudo chown root:ssl-cert /etc/ssl/private/justdavis.com.key
+After purchase, the certificates were stored in the following AFS directory: `/afs/justdavis.com/user/karl/id/startcom/justdavis.com-wildcardCert-2013-03-30`. The following commands were then run on `eddings` to copy the certificate files to the directories used by Apache and other services:
 
-When using a commercial CA, a "certificate signing request" is needed. However, when using a local CA, this step can be skipped. Instead, we'll directly use our CA's private key, public certificate, and the private key for the service to generate the public certificate for the service. A configuration template file for the service's public certificate should be created as `/etc/ssl/certs/www.justdavis.com.cfg` with the following contents:
-
-~~~~
-# X.509 Certificate options
-#
-# DN options
-
-# The organization of the subject.
-organization = "Davis Family"
-
-# The organizational unit of the subject.
-#unit = "sleeping dept."
-
-# The state of the certificate owner.
-state = "Arizona"
-
-# The country of the subject. Two letter code.
-country = US
-
-# The common name of the certificate owner.
-cn = "Karl M. Davis"
-
-# The serial number of the certificate. Should be incremented each time a new certificate is generated.
-serial = 001
-
-# In how many days, counting from today, this certificate will expire.
-expiration_days = 3650
-
-# X.509 v3 extensions
-
-# DNS name(s) of the server
-dns_name = "justdavis.com"
-dns_name = "www.justdavis.com"
-#dns_name = "server_alias.example.com"
-
-# (Optional) Server IP address
-#ip_address = "192.168.1.1"
-
-# Whether this certificate will be used for a TLS client
-#tls_www_client
-
-# Whether this certificate will be used for a TLS server
-tls_www_server
-
-# Whether this certificate will be used to encrypt data (needed
-# in TLS RSA ciphersuites). Note that it is preferred to use different
-# keys for encryption and signing.
-encryption_key
-~~~~
-
-Generate the public certificate for the service, placing it into the `/etc/ssl/certs/` directory:
-
-    $ sudo certtool --generate-certificate --load-privkey /etc/ssl/private/www.justdavis.com.key --load-ca-certificate /usr/local/share/ca-certificates/ca.justdavis.com.crt --load-ca-privkey /etc/ssl/private/ca.justdavis.com.key --template /etc/ssl/certs/www.justdavis.com.cfg --outfile /etc/ssl/certs/www.justdavis.com.crt
-    $ sudo chmod u=rw,g=r,o=r /etc/ssl/certs/www.justdavis.com.crt
-    $ sudo chown root:root /etc/ssl/certs/www.justdavis.com.crt
+    $ kinit karl
+    $ aklog
+    $ mkdir ~/justdavis.com-wildcard-staging
+    $ cp /afs/justdavis.com/user/karl/id/startcom/justdavis.com-wildcardCert-2013-03-30/* ~/justdavis.com-wildcard-staging
+    $ cd ~/justdavis.com-wildcard-staging
+    $ sudo cp justdavis.com-wildcardCert-2013-03-30-keyWithoutPassword.key /etc/ssl/private/justdavis.com-wildcard.key
+    $ shred -u justdavis.com-wildcardCert-2013-03-30-keyWithoutPassword.key
+    $ sudo chmod u=rw,g=r,o= /etc/ssl/private/justdavis.com-wildcard.key
+    $ sudo chown root:ssl-cert /etc/ssl/private/justdavis.com-wildcard.key
+    $ sudo cp justdavis.com-wildcardCert-2013-03-30-ca-root.pem /etc/ssl/certs/justdavis.com-wildcard-ca-root.pem
+    $ sudo cp justdavis.com-wildcardCert-2013-03-30-ca-intermediate.pem /etc/ssl/certs/justdavis.com-wildcard-ca-intermediate.pem
+    $ sudo cp justdavis.com-wildcardCert-2013-03-30.crt /etc/ssl/certs/justdavis.com-wildcard.crt
+    $ cd ~
+    $ rm -rf ~/justdavis.com-wildcard-staging
 
