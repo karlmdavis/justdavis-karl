@@ -99,14 +99,14 @@ References:
 * <http://httpd.apache.org/docs/2.2/mod/mod_proxy.html>
 * [Nexus FAQ: How can I integrate Nexus with Apache Httpd and Mod_Proxy?](https://docs.sonatype.com/display/SPRTNXOSS/Nexus+FAQ#NexusFAQ-Q.HowcanIintegrateNexuswithApacheHttpdandModProxy)
 
-Because Jetty is running on the non-standard `8080` port and *can't* run on the same port `80` already being used by Apache on this server, we'll configure Apache to forward/proxy requests for certain URLs to Jetty. For this particular configuration, we'll be modifying the `justdavis.com` virtual site in Apache, as configured in: <%= topic_link("/it/davis/servers/eddings/") %>.
+Because Jetty is running on the non-standard `8080` port and *can't* run on the same port `80` already being used by Apache on this server, we'll configure Apache to forward/proxy requests for certain URLs to Jetty. For this particular configuration, we'll be modifying the `justdavis.com-ssl` virtual site in Apache, as configured in: <%= topic_link("/it/davis/servers/eddings/") %>.
 
 Enable Apache's `mod_proxy` and `mod_proxy_http` modules, which will be needed for this:
 
     $ sudo a2enmod proxy
     $ sudo a2enmod proxy_http
 
-Add the following configuration to the end of the `VirtualHost` block in `/etc/apache2/sites-available/justdavis.com`:
+Add the following configuration to the end of the `VirtualHost` block in `/etc/apache2/sites-available/justdavis.com-ssl`:
 
 ~~~~
 	# Configure mod_proxy to be used for proxying URLs on this site to other URLs/ports on this server.
