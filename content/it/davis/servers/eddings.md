@@ -38,6 +38,7 @@ The content on this page covers the base OS install and configuration; it doesn'
 * <%= topic_summary_link("/it/davis/servers/eddings/openafs/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/web/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/nexus/") %>
+* <%= topic_summary_link("/it/davis/servers/eddings/jenkins/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/spideroak/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/nagios/") %>
 
