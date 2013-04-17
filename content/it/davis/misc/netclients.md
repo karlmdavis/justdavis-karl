@@ -109,11 +109,11 @@ Finally, download and install the latest release of OpenAFS for Windows for the 
 TODO: This guide may be incomplete, as it has not been tested yet.
 
 
-## Ubuntu 12.04
+## Ubuntu 12.04 and 12.10
 
 Ubuntu can be configured as a Kerberos and LDAP client, able to interact with both services on the command line. It can also be configured to use Kerberos for login authentication and LDAP for all directory services (e.g. "what users are available?").
 
-**Note:** This section was written based on guides for the now-decommissioned `davisonlinehome.name` network and was tested on a computer that had previously been configured as a workstation on that network (`pratchett`). Accordingly, some of the instructions here may be incorrect, as a "clean" install of Ubuntu may not have dependencies that are assumed here. These defects will be corrected if and when found.
+This section details the portion of that configuration common to both 12.04 and 12.10.
 
 
 ### Kerberos Client
@@ -141,6 +141,42 @@ Test that, as follows:
     $ kinit karl
 
 If everything's working, the `kinit` command should list the newly obtained ticket.
+
+The system will need to be configured to allow background services on it to make requests to the Kerberos server on behalf of the users. For this to work, the system's fully qualified domain name (FQDN) must first be configured correctly. To ensure this is the case, two files have to be setup correctly:
+
+1. `/etc/hostname`: This file should have the non-qualified hostname.
+1. `/etc/hosts`: This file should have the fully qualified hostname, as well as the non-qualified hostname as an alias assigned to `127.0.0.1`.
+
+Specifically, the first three entries in `/etc/hosts` should read as follows (replace "`compname`" with the short name for the workstation, e.g. "`pratchett`"):
+
+~~~~
+127.0.0.1       localhost.localdomain   localhost
+::1     compname.justdavis.com compname       localhost6.localdomain6 localhost6
+127.0.1.1       compname.justdavis.com compname
+~~~~
+
+The hostname configuration can be tested with the `hostname` command. The first command should return the unqualified name and the second command should return the fully qualified name:
+
+    $ hostname
+    $ hostname -f
+
+Once the hostname is configured correctly, the workstation will need a Kerberos principal created for it, and to add that principal to the system's default keytab file (`/etc/krb5.keytab`). The simplest way to do this is to run the `kadmin` tool on the local workstation, as follows (replace "`compname`" with the short name for the workstation, e.g. "`pratchett`"):
+
+~~~~
+# sudo kadmin -p karl/admin@JUSTDAVIS.COM
+kadmin:  addprinc -policy hosts -randkey host/compname.justdavis.com
+kadmin:  ktadd host/compname.justdavis.com
+kadmin:  quit
+~~~~
+
+**Troubleshooting Note:** If you receive an error stating "`kadmin: Missing parameters in krb5.conf required for kadmin client while initializing kadmin interface`", this is because the MIT Kerberos client does not yet support looking up the Kerberos "admin" server via DNS. In that case, add the following entry to the `[realms]` section of the `/etc/krb5.conf` file:
+
+~~~~
+[realms]
+        JUSTDAVIS.COM = {
+                admin_server = kerberos.justdavis.com
+        }
+~~~~
 
 
 ### LDAP Client
@@ -205,6 +241,11 @@ You will be prompted to enter values for the following settings:
     $ sudo apt-get install linux-headers-virtual
 
 
+## Ubuntu 12.04-Specific Configuration
+
+This section details the portions of the configuration that are specific to Ubuntu 12.04.
+
+
 ### NSS and PAM Configuration
 
 References:
@@ -222,43 +263,7 @@ Ubuntu uses [PAM](http://en.wikipedia.org/wiki/Pluggable_authentication_module) 
 
 Both NSS and PAM can be configured on Ubuntu using the [AuthClientConfig](https://wiki.ubuntu.com/AuthClientConfig) tool. This tool will take a "profile" created for it and use that profile to configure both services. This is recommended over editing the configuration files by hand, as it allows the configuration to be managed centrally and re-applied when necessary for upgrades of the system.
 
-Before proceeding, the system will need to be configured to allow background services on it to make requests to the Kerberos server on behalf of the users. For this to work, the system's fully qualified domain name (FQDN) must first be configured correctly. To ensure this is the case, two files have to be setup correctly:
-
-1. `/etc/hostname`: This file should have the non-qualified hostname.
-1. `/etc/hosts`: This file should have the fully qualified hostname, as well as the non-qualified hostname as an alias assigned to `127.0.0.1`.
-
-Specifically, the first three entries in `/etc/hosts` should read as follows (replace "`compname`" with the short name for the workstation, e.g. "`pratchett`"):
-
-~~~~
-127.0.0.1       localhost.localdomain   localhost
-::1     compname.justdavis.com compname       localhost6.localdomain6 localhost6
-127.0.1.1       compname.justdavis.com compname
-~~~~
-
-The hostname configuration can be tested with the `hostname` command. The first command should return the unqualified name and the second command should return the fully qualified name:
-
-    $ hostname
-    $ hostname -f
-
-Once the hostname is configured correctly, the workstation will need a Kerberos principal created for it, and to add that principal to the system's default keytab file (`/etc/krb5.keytab`). The simplest way to do this is to run the `kadmin` tool on the local workstation, as follows (replace "`compname`" with the short name for the workstation, e.g. "`pratchett`"):
-
-~~~~
-# sudo kadmin -p karl/admin@JUSTDAVIS.COM
-kadmin:  addprinc -policy hosts -randkey host/compname.justdavis.com
-kadmin:  ktadd host/compname.justdavis.com
-kadmin:  quit
-~~~~
-
-**Troubleshooting Note:** If you receive an error stating "`kadmin: Missing parameters in krb5.conf required for kadmin client while initializing kadmin interface`", this is because the MIT Kerberos client does not yet support looking up the Kerberos "admin" server via DNS. In that case, add the following entry to the `[realms]` section of the `/etc/krb5.conf` file:
-
-~~~~
-[realms]
-        JUSTDAVIS.COM = {
-                admin_server = kerberos.justdavis.com
-        }
-~~~~
-
-Once the keytab has been created, the `libnss-ldapd` and `nslcd` packages should be installed and configured:
+The `libnss-ldapd` and `nslcd` packages should be installed and configured:
 
     $ sudo apt-get install libnss-ldapd
 
@@ -356,6 +361,9 @@ Add the following to the end of `/etc/security/group.conf`:
 * ; *; *;Al0000-2400; adm, dialout, cdrom, plugdev, lpadmin, admin, sambashare, disk
 ~~~~
 
+
+### Sudo Configuration
+
 Add users (as necessary) to the sudoers file by running `sudo visudo`:
 
 ~~~~
@@ -366,15 +374,173 @@ karl    ALL=(ALL) ALL
 erica   ALL=(ALL) ALL
 ~~~~
 
-**Post-12.04 Upgrade Note:** If this computer is running Ubuntu 12.04 or later, it is instead recommended that the above entries be added to a new `/etc/sudoers.d/justdavis` file. This will prevent conflicts during package manager upgrades. Be sure to set the permissions for that file correctly:
+
+## Ubuntu 12.10
+
+This section details the portions of the configuration that are specific to Ubuntu 12.10.
+
+
+### NSS Configuration
+
+References:
+
+* <https://help.ubuntu.com/community/SingleSignOn#Client_Configuration>
+
+Ubuntu uses [NSS](http://en.wikipedia.org/wiki/Name_Service_Switch) to configure the lookup of accounts for the workstation, amongst other things. In order to login to network accounts, NSS needs to be conifgured to make use of the LDAP server.
+
+There are several options on how to go about this:
+
+* Either the `libnss-ldap` or `libnss-ldapd` package can be used to connect NSS to LDAP. As `libnss-ldapd` is a fork of the original `libnss-ldap` and seems to be regarded as an improvement, that's the recommened option.
+* The LDAP server can be contacted synchronously for every lookups, or can be cached asynchronously using `nscd` and `libnss-db`, instead. As laptops *can't* always contact the server and synchronous lookups are slow, it's recommended to cache the lookups.
+
+NSS can be configured on Ubuntu using the [AuthClientConfig](https://wiki.ubuntu.com/AuthClientConfig) tool. This tool will take a "profile" created for it and use that profile to configure NSS. This is recommended over editing the configuration files by hand, as it allows the configuration to be managed centrally and re-applied when necessary for upgrades of the system.
+
+The `libnss-ldapd` and `nslcd` packages should be installed and configured:
+
+    $ sudo apt-get install libnss-ldapd
+
+If prompted by the installation, answer the questions as follows:
+
+* LDAP server URI: `ldaps://ldap.justdavis.com`
+* Search Base BN: `dc=justdavis,dc=com`
+* Check server's SSL certificate: demand
+* Name services to configure: (none)
+
+If not prompted during the installation, those settings should be configured by setting the following options in the `/etc/nslcd.conf` file:
+
+~~~~
+uri ldaps://ldap.justdavis.com
+base dc=justdavis,dc=com
+tls_reqcert hard
+~~~~
+
+Either way, the `/etc/nslcd.conf` file will also need the following option to be set:
+
+~~~~
+tls_cacertfile /etc/ssl/certs/ca-certificates.crt
+~~~~
+
+Restart the `nslcd` service:
+
+    $ sudo service nslcd restart
+
+To reduce the load on the LDAP server, improve workstation performance, and enable disconnected operation, the `libnss-db` service will be used to cache LDAP lookups. The service should be installed, as follows:
+
+    $ sudo apt-get install libnss-db nss-updatedb
+
+The cache database can be populated/updated, as follows:
+
+    $ sudo nss_updatedb ldap
+
+A `cron` job should be added to update this database automatically every hour. Create a new `/etc/cron.hourly/nss-updatedb-ldap` script with the following contents:
+
+~~~~
+#!/bin/bash
+
+/usr/sbin/nss_updatedb ldap
+~~~~
+
+Mark the new script as executable:
+
+    $ sudo chmod a+x /etc/cron.hourly/nss-updatedb-ldap
+
+Once this is completed, the additional PAM modules that are needed and AuthClientConfig should be installed, as follows:
+
+    $ sudo apt-get install libpam-krb5 libpam-afs-session libpam-ccreds libpam-foreground auth-client-config
+
+Create a new AuthClientConfig profile in the file `/etc/auth-client-config/profile.d/justdavis_network`:
+
+~~~~
+[justdavis_network]
+nss_passwd=passwd: compat db
+nss_group=group: compat db
+nss_shadow=shadow: compat
+nss_netgroup=netgroup: nis
+~~~~
+
+Enable the `justdavis_network` profile and restart `nscd` to clear its cache:
+
+    $ sudo auth-client-config -t nss -p justdavis_network
+    $ sudo /etc/init.d/nscd restart
+
+
+### PAM Configuration
+
+References:
+
+* [Ubuntu Wiki: LDAPClientAuthentication](https://help.ubuntu.com/community/LDAPClientAuthentication): this page provided the syntax for `pam-auth-update` profiles.
+
+Ubuntu uses [PAM](http://en.wikipedia.org/wiki/Pluggable_authentication_module) to configure the "chain" of services and calls to be made during login. This will allow for the use of both Kerberos and LDAP during logins, as appropriate. In addition, by using PAM with the `pam_ccreds` package, the workstation can be configured to cache logins, allowing for use when the network servers are unavailable or the workstation is disconnected.
+
+In Ubuntu 12.10, PAM is most easily configured using the [pam-auth-update](https://wiki.ubuntu.com/PAMConfigFrameworkSpec) tool/framework. Rather than the monolithic profile required by `auth-client-config`, `pam-auth-update` breaks profiles into smaller package-specific modules, e.g. one for Kerberos, one for OpenAFS, etc. In fact, most of the PAM configuration for Ubuntu 12.10 is already done at this point in the guide, as most of the packages installed came with the profiles needed.
+
+The following profile will provide the only needed PAM configuration that is still missing. Save the following as `/usr/share/pam-configs/justdavis`:
+
+~~~~
+Name: Enable justdavis.com Modules
+Default: yes
+Priority: 900
+Session-Type: Additional
+Session:
+	required			pam_mkhomedir.so umask=0022 skel=/etc/skel
+Auth-Type: Primary
+Auth:
+	required			pam_group.so use_first_pass
+~~~~
+
+Once the new profile is in place, run `pam-auth-update` as follows:
+
+    $ sudo pam-auth-update
+
+In the UI, do the following:
+
+* Enable all of the profiles.
+* Disable the **LDAP Authentication** profile (it is provided with one of the LDAP client or NSS packages installed above).
+* Select **Ok** to apply the changes and exit.
+
+Add the following to the end of `/etc/security/group.conf`:
+
+~~~~
+# Ensure that network-authenticated users are added to the standard user groups
+* ; *; *;Al0000-2400; adm, dialout, cdrom, plugdev, lpadmin, admin, sambashare, disk
+~~~~
+
+
+### Sudo Configuration
+
+Give users admin permissions via the use of `sudo` by creating a new `/etc/sudoers.d/justdavis` file:
+
+~~~~
+...
+# User privilege specification
+karl    ALL=(ALL) ALL
+erica   ALL=(ALL) ALL
+~~~~
+
+Be sure to set the permissions for that file correctly:
 
     $ sudo chown root:root /etc/sudoers.d/justdavis
-    $ sudo chmod 0440 /etc/sudoers.d/justdavis
-
-**Troubleshooting Note:** While testing network logins on `pratchett`, I was unable to login and had the following error in `/var/auth.log`: "`Jul 29 22:52:03 pratchett sshd[30251]: pam_krb5(sshd:auth): (user karl) credential verification failed: Server krbtgt/DAVISONLINEHOME.NAME@JUSTDAVIS.COM not found in Kerberos database`". Turns out, this error was due to the old `DAVISONLINEHOME.NAME` host principal still being stored in `/etc/krb5.keytab`. I discovered this by running `ktlist -k` and resolved it by deleting the keytab and re-creating it using `kadmin` and `ktadd`.
+    $ sudo chmod 0440 /etc/sudoers.d/justdavis, which allows them Add users (as necessary) to the sudoers file by running `sudo visudo`:
 
 
-### SSH Configuration
+### LightDM Network User Logins
+
+References:
+
+* [Ask Ubuntu: How do I enable the “Other” user for login with Active Directory?](http://askubuntu.com/questions/121124/how-do-i-enable-the-other-user-for-login-with-active-directory)
+
+By default, the login screen/application used by Ubuntu, [LightDM](http://www.freedesktop.org/wiki/Software/LightDM), will only allow local users to login.
+
+To resolve this, edit  the `/etc/lightdm/lightdm.conf` and add the following line:
+
+~~~~
+greeter-show-manual-login=true
+~~~~
+
+After restarting the system, users willbe able to login by selecting their account from the list (if they've logged in before) or by entering the network username manually.
+
+
+## SSH Configuration
 
 SSH can also be configured to accept existing Kerberos ticket/credentials via GSSAPI. This will allow users with valid tickets to connect to this workstation over SSH without having to enter a password. Please note that, because this login bypasses PAM, the user will not have a valid Kerberos ticket or AFS token in the new remote session; users will have to manually run `kinit` and `aklog` after connecting, if needed. To temporarily disable GSSAPI, and instead use PAM authentication, when connecting as a client, the `ssh -k` flag can be used.
 
@@ -387,4 +553,6 @@ GSSAPIAuthentication yes
 Then, restart the `ssh` service:
 
     $ sudo service ssh restart
+
+**Troubleshooting Note:** While testing network logins on `pratchett`, I was unable to login and had the following error in `/var/auth.log`: "`Jul 29 22:52:03 pratchett sshd[30251]: pam_krb5(sshd:auth): (user karl) credential verification failed: Server krbtgt/DAVISONLINEHOME.NAME@JUSTDAVIS.COM not found in Kerberos database`". Turns out, this error was due to the old `DAVISONLINEHOME.NAME` host principal still being stored in `/etc/krb5.keytab`. I discovered this by running `ktlist -k` and resolved it by deleting the keytab and re-creating it using `kadmin` and `ktadd`.
 
