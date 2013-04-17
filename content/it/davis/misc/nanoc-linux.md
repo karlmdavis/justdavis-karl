@@ -35,6 +35,6 @@ Run the following commands to install `nanoc` and its dependencies:
 
     $ sudo apt-get install ruby ruby1.9.1-dev
     $ sudo apt-get install build-essential libxml2-dev libxslt-dev
-    $ gem install nanoc kramdown adsf less rainpress coderay nokogiri therubyracer builder mime-types
+    $ gem install nanoc kramdown adsf less rainpress coderay nokogiri therubyracer builder mime-types systemu
 
 
