@@ -6,6 +6,8 @@ summary: Describes the installation of Ubuntu 12.10 on jordan-u.
 
 # <%= @item[:title] %>
 
+This <%= topic_link("/it/davis/workstations/jordan/") %> sub-guide descibes the installation of Ubuntu 12.10 on `jordan-u`.
+
 `jordan-u` is the Ubuntu Linux install on <%= topic_link("/it/davis/workstations/jordan/") %>, Karl's primary workstation. This install is stored on the system's primary drive: a 256 GB SSD.
 
 Installation of Ubuntu is covered in the following sub-sections.
@@ -29,6 +31,27 @@ References:
 * [How to create a bootable USB stick](http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-windows)
 
 In order to install Ubuntu, a bootable DVD or USB drive needs to be imaged. For this system, a USB drive was used. The [How to create a bootable USB stick](http://www.ubuntu.com/download/help/create-a-usb-stick-on-windows) wiki page explains how to create such a drive. From Windows, it's as simple as downloading and using the [Universal USB Installer ](http://www.pendrivelinux.com/universal-usb-installer-easy-as-1-2-3/), which can even download the appropriate ISO image file (`ubuntu-12.10-desktop-amd64.iso`).
+
+
+## Setting BIOS Options
+
+Before starting the Ubuntu installation, some of the system's BIOS options should be configured. Enter the BIOS Setup Utility by pressing the thin rectangular button at the top of the ThinkPad keyboard right after powering on the system. When prompted, press the `F1` key to enter the BIOS Setup Utility.
+
+Make the following configuration changes:
+
+* Config
+    * Display
+        * Boot Display Device: **Digital 1 on dock**
+        * Graphics Device: **Discrete Graphics**
+        * OS Detection for NVIDIA Optimus: **Disabled**
+* Security
+    * Virtualization
+        * Intel (R) Virtualization Technology: **Enabled**
+        * Intel (R) VT-d Feature: **Enabled**
+* Restart
+    * Exit Saving Changes: **Yes**
+
+Please note that I was able to leave both Secure Boot and Rapid Restart enabled, though I haven't bothered to make the partitioning changes required for Rapid Restart to work.
 
 
 ## Installing Ubuntu
@@ -174,4 +197,60 @@ The hostname configuration can be tested with the `hostname` command. The first 
 
     $ hostname
     $ hostname -f
+
+
+### Configuration: Displays
+
+My ThinkPad is connected to a docking station with two DVI monitors attached to it. The laptop itself is left closed and out of reach. The following configuration changes were made for this setup:
+
+1. Launch the **System Settings** application.
+1. Open the **Displays** applet.
+1. Select the **Laptop** device.
+    * This may require clicking a bit above the actual icon for this device, seems to be a bug in the applet.
+1. Switch the display device to **Off**.
+1. Set the *Launcher placement* option to the first DVI-attached monitor.
+1. Click **Apply**.
+1. When prompted, select **Keep this configuration**.
+
+**Troubleshooting note**: After applying these changes, my two external displays were mirrored and the launcher wasn't visible. This seems to have just been a temporary glitch, though, as moving my mouse all the way to the upper left of the displays resolved the problem: the screen blinked for a moment and then everything was configured correctly.
+
+
+## Power Management Configuration
+
+References:
+
+* [Ubuntu Help: How do I hibernate my computer?](https://help.ubuntu.com/12.04/ubuntu-help/power-hibernate.html)
+
+Per the above article, verify that hibernate works correctly by running the following command:
+
+    $ sudo pm-hibernate
+
+This will cause the system to enter hibernation (hopefully). Powering on the system should restore the computer to its previous state: with all applications still running. Please note that the system will prompt for the disk encryption password when restoring from hibernation.
+
+If hibernation worked correctly, it should be enabled as an option by creating a new `/etc/polkit-1/localauthority/50-local.d/com.ubuntu.enable-hibernate.pkla` file with the following content:
+
+~~~~
+[Re-enable hibernate by default]
+Identity=unix-user:*
+Action=org.freedesktop.upower.hibernate
+ResultActive=yes
+~~~~
+
+The following configuration changes were made to the system's power management options:
+
+1. Launch the **System Settings** application.
+1. Open the **Power** applet.
+1. Set the *Suspend when inactive for* option to **30 minutes** for the *On battery power* state.
+1. Set the *When power is critically low* option to **Hibernate**.
+1. Set the *When the lid is closed* option to **Do nothing** for both states.
+1. Set the *Show battery status in the menu bar* option to **When battery is charging/in use**.
+
+
+## Security Configuration
+
+The following configuration changes were made to the system's security options:
+
+1. Launch the **System Settings** application.
+1. Open the **Brightness and Lock** applet.
+1. Set the *Turn screen off when inactive for* option to **1 hour**.
 
