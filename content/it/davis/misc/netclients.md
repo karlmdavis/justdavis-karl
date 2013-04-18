@@ -362,19 +362,6 @@ Add the following to the end of `/etc/security/group.conf`:
 ~~~~
 
 
-### Sudo Configuration
-
-Add users (as necessary) to the sudoers file by running `sudo visudo`:
-
-~~~~
-...
-# User privilege specification
-root    ALL=(ALL) ALL
-karl    ALL=(ALL) ALL
-erica   ALL=(ALL) ALL
-~~~~
-
-
 ## Ubuntu 12.10
 
 This section details the portions of the configuration that are specific to Ubuntu 12.10.
@@ -506,23 +493,6 @@ Add the following to the end of `/etc/security/group.conf`:
 ~~~~
 
 
-### Sudo Configuration
-
-Give users admin permissions via the use of `sudo` by creating a new `/etc/sudoers.d/justdavis` file:
-
-~~~~
-...
-# User privilege specification
-karl    ALL=(ALL) ALL
-erica   ALL=(ALL) ALL
-~~~~
-
-Be sure to set the permissions for that file correctly:
-
-    $ sudo chown root:root /etc/sudoers.d/justdavis
-    $ sudo chmod 0440 /etc/sudoers.d/justdavis, which allows them Add users (as necessary) to the sudoers file by running `sudo visudo`:
-
-
 ### LightDM Network User Logins
 
 References:
@@ -538,6 +508,15 @@ greeter-show-manual-login=true
 ~~~~
 
 After restarting the system, users willbe able to login by selecting their account from the list (if they've logged in before) or by entering the network username manually.
+
+
+## Granting Users Administrative Privileges
+
+Users who need administrative privileges should be made members of the `sudo` group on the system. This will give those users permission to use the `sudo` command, and also the ability to perform administrative functions in any GUI applications that require them.
+
+Users can be added to the group, as follows (replace "`someuser`" with the username to be granted administrative privileges):
+
+    $ sudo usermod -a -G sudo someuser
 
 
 ## SSH Configuration
