@@ -241,6 +241,32 @@ You will be prompted to enter values for the following settings:
     $ sudo apt-get install linux-headers-virtual
 
 
+### Granting Users Administrative Privileges
+
+Users who need administrative privileges should be made members of the `sudo` group on the system. This will give those users permission to use the `sudo` command, and also the ability to perform administrative functions in any GUI applications that require them.
+
+Users can be added to the group, as follows (replace "`someuser`" with the username to be granted administrative privileges):
+
+    $ sudo usermod -a -G sudo someuser
+
+
+### SSH Configuration
+
+SSH can also be configured to accept existing Kerberos ticket/credentials via GSSAPI. This will allow users with valid tickets to connect to this workstation over SSH without having to enter a password. Please note that, because this login bypasses PAM, the user will not have a valid Kerberos ticket or AFS token in the new remote session; users will have to manually run `kinit` and `aklog` after connecting, if needed. To temporarily disable GSSAPI, and instead use PAM authentication, when connecting as a client, the `ssh -k` flag can be used.
+
+To enable this, set the following option in the SSH server's `/etc/ssh/sshd_config` file:
+
+~~~~
+GSSAPIAuthentication yes
+~~~~
+
+Then, restart the `ssh` service:
+
+    $ sudo service ssh restart
+
+**Troubleshooting Note:** While testing network logins on `pratchett`, I was unable to login and had the following error in `/var/auth.log`: "`Jul 29 22:52:03 pratchett sshd[30251]: pam_krb5(sshd:auth): (user karl) credential verification failed: Server krbtgt/DAVISONLINEHOME.NAME@JUSTDAVIS.COM not found in Kerberos database`". Turns out, this error was due to the old `DAVISONLINEHOME.NAME` host principal still being stored in `/etc/krb5.keytab`. I discovered this by running `ktlist -k` and resolved it by deleting the keytab and re-creating it using `kadmin` and `ktadd`.
+
+
 ## Ubuntu 12.04-Specific Configuration
 
 This section details the portions of the configuration that are specific to Ubuntu 12.04.
@@ -508,30 +534,4 @@ greeter-show-manual-login=true
 ~~~~
 
 After restarting the system, users willbe able to login by selecting their account from the list (if they've logged in before) or by entering the network username manually.
-
-
-## Granting Users Administrative Privileges
-
-Users who need administrative privileges should be made members of the `sudo` group on the system. This will give those users permission to use the `sudo` command, and also the ability to perform administrative functions in any GUI applications that require them.
-
-Users can be added to the group, as follows (replace "`someuser`" with the username to be granted administrative privileges):
-
-    $ sudo usermod -a -G sudo someuser
-
-
-## SSH Configuration
-
-SSH can also be configured to accept existing Kerberos ticket/credentials via GSSAPI. This will allow users with valid tickets to connect to this workstation over SSH without having to enter a password. Please note that, because this login bypasses PAM, the user will not have a valid Kerberos ticket or AFS token in the new remote session; users will have to manually run `kinit` and `aklog` after connecting, if needed. To temporarily disable GSSAPI, and instead use PAM authentication, when connecting as a client, the `ssh -k` flag can be used.
-
-To enable this, set the following option in the SSH server's `/etc/ssh/sshd_config` file:
-
-~~~~
-GSSAPIAuthentication yes
-~~~~
-
-Then, restart the `ssh` service:
-
-    $ sudo service ssh restart
-
-**Troubleshooting Note:** While testing network logins on `pratchett`, I was unable to login and had the following error in `/var/auth.log`: "`Jul 29 22:52:03 pratchett sshd[30251]: pam_krb5(sshd:auth): (user karl) credential verification failed: Server krbtgt/DAVISONLINEHOME.NAME@JUSTDAVIS.COM not found in Kerberos database`". Turns out, this error was due to the old `DAVISONLINEHOME.NAME` host principal still being stored in `/etc/krb5.keytab`. I discovered this by running `ktlist -k` and resolved it by deleting the keytab and re-creating it using `kadmin` and `ktadd`.
 
