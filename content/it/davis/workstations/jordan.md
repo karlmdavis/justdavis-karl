@@ -41,6 +41,7 @@ The setup of this system is covered in the following sub-guides:
 * `jordan-u`: Ubuntu Linux System
     * <%= topic_summary_link("/it/davis/workstations/jordan/ubuntu/install-12-10/") %>
     * <%= topic_summary_link("/it/davis/workstations/jordan/ubuntu/gnome-shell/") %>
+    * <%= topic_summary_link("/it/davis/workstations/jordan/ubuntu/java/") %>
     * <%= topic_summary_link("/it/davis/misc/netclients/") %>
     * <%= topic_summary_link("/it/davis/misc/nanoc-linux/") %>
     * <%= topic_summary_link("/it/davis/misc/git/") %>
