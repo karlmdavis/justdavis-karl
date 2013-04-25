@@ -47,6 +47,7 @@ The setup of this system is covered in the following sub-guides:
     * <%= topic_summary_link("/it/davis/misc/git/") %>
     * <%= topic_summary_link("/it/davis/misc/tmux/") %>
     * <%= topic_summary_link("/it/davis/misc/keepass/") %>
+    * <%= topic_summary_link("/it/davis/misc/eclipse/") %>
 * `jordan-w`: Windows 8 System
     * No guides for this system have been written yet, as I haven't really used it at all.
 
