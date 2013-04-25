@@ -1,12 +1,12 @@
 --- 
 title: Install Java JDKs
 kind: topic
-summary: Describes how to install the available Java JDKs on the system.
+summary: Describes how to install the Java JDKs.
 ---
 
 # <%= @item[:title] %>
 
-This <%= topic_link("/it/davis/workstations/jordan/") %> sub-guide describes how to install the available [Java JDKs](http://en.wikipedia.org/wiki/Java_Development_Kit) on the system.
+This guide describes how to install the available [Java JDKs](http://en.wikipedia.org/wiki/Java_Development_Kit) on Ubuntu.
 
 There are two primary variants of Java JDK available for use in Ubuntu: those provided by the [OpenJDK](http://openjdk.java.net/) project, and those provided by [Oracle](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
 

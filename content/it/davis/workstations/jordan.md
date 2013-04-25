@@ -41,13 +41,13 @@ The setup of this system is covered in the following sub-guides:
 * `jordan-u`: Ubuntu Linux System
     * <%= topic_summary_link("/it/davis/workstations/jordan/ubuntu/install-12-10/") %>
     * <%= topic_summary_link("/it/davis/workstations/jordan/ubuntu/gnome-shell/") %>
-    * <%= topic_summary_link("/it/davis/workstations/jordan/ubuntu/java/") %>
     * <%= topic_summary_link("/it/davis/misc/netclients/") %>
-    * <%= topic_summary_link("/it/davis/misc/nanoc-linux/") %>
-    * <%= topic_summary_link("/it/davis/misc/git/") %>
-    * <%= topic_summary_link("/it/davis/misc/tmux/") %>
     * <%= topic_summary_link("/it/davis/misc/keepass/") %>
+    * <%= topic_summary_link("/it/davis/misc/tmux/") %>
+    * <%= topic_summary_link("/it/davis/misc/git/") %>
+    * <%= topic_summary_link("/it/davis/misc/nanoc-linux/") %>
     * <%= topic_summary_link("/it/davis/misc/eclipse/") %>
+    * <%= topic_summary_link("/it/davis/misc/java/") %>
 * `jordan-w`: Windows 8 System
     * No guides for this system have been written yet, as I haven't really used it at all.
 
