@@ -40,6 +40,7 @@ mkdir -p $installationDirectoryRoot/
 # Download, extract, and relocate the installation bundle.
 wget $installationUrl
 tar -xzf $installationFile
+rm $installationFile
 mv eclipse/ $installationDirectory/
 
 # Create the application launcher.
