@@ -48,6 +48,7 @@ The setup of this system is covered in the following sub-guides:
     * <%= topic_summary_link("/it/davis/misc/nanoc-linux/") %>
     * <%= topic_summary_link("/it/davis/misc/eclipse/") %>
     * <%= topic_summary_link("/it/davis/misc/java/") %>
+    * <%= topic_summary_link("/it/davis/misc/maven/") %>
 * `jordan-w`: Windows 8 System
     * No guides for this system have been written yet, as I haven't really used it at all.
 
