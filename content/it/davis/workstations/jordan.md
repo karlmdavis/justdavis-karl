@@ -43,6 +43,7 @@ The setup of this system is covered in the following sub-guides:
     * <%= topic_summary_link("/it/davis/workstations/jordan/ubuntu/gnome-shell/") %>
     * <%= topic_summary_link("/it/davis/misc/netclients/") %>
     * <%= topic_summary_link("/it/davis/misc/keepass/") %>
+    * <%= topic_summary_link("/it/davis/misc/chromium/") %>
     * <%= topic_summary_link("/it/davis/misc/tmux/") %>
     * <%= topic_summary_link("/it/davis/misc/git/") %>
     * <%= topic_summary_link("/it/davis/misc/nanoc-linux/") %>
