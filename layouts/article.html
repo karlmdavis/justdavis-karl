@@ -36,6 +36,7 @@
 				</div>
 				<%= yield %>
 				<%= render('_other_articles_nav', { :reference_item => @item }) %>
+				<%= render('parts/disqus', :item => item) %>
 			</div>
 		</div>
 		<%= render('parts/footer', :item => item) %>
