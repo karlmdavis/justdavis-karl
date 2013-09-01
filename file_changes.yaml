@@ -1,9 +1,14 @@
---- 
-:"content/blog/2009/03-21-intrepid_vpn_troubles.md": 
+---
+:content/blog/2009/03-21-intrepid_vpn_troubles.md:
   :digest: 529efef87bd57eccc8371143d84085691dd1a486
-  :updated_at: 2012-01-28 19:46:48 -07:00
+  :updated_at: 2012-01-28 21:46:48.000000000 -05:00
   :created_at: 2009/03/21
-:"content/blog/2009/09-05-native_libraries_maven.md": 
+:content/blog/2009/09-05-native_libraries_maven.md:
   :digest: 4f9a2d526c571168ac7751cbf3120bfd5a8a5afd
-  :updated_at: 2012-01-28 19:46:43 -07:00
+  :updated_at: 2012-01-28 21:46:43.000000000 -05:00
   :created_at: 2009/09/05
+:content/blog/2013/09-01-puppet_getting_started.md:
+  :created_at: 2013/09/01
+  :updated_at: 2013-09-01 18:15:37.212310260 -04:00
+  :digest: !binary |-
+    ODZjM2U4OGI3YWFmZjBjZDhiZGE4YzBhOTdlNmE4YTIwNmVlMGNjYQ==

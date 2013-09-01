@@ -53,7 +53,7 @@ def topics(parent_topic_id)
   topics
 end
 
-def topic_link(topic)
+def topic_link(topic, link_text = nil)
   if topic.is_a?(String)
 		topic_id = topic
 		topic = @items.find { |item| item.identifier == topic_id }
@@ -62,7 +62,10 @@ def topic_link(topic)
 
   raise ArgumentError, "Cannot create a link to #{topic.inspect} because it is not of :kind 'topic': #{topic[:kind]}." if topic[:kind] != 'topic'
   
-  link_to(topic[:title], topic)
+  if !(link_text.is_a?(String))
+    link_text = topic[:title]
+  end
+  link_to(link_text, topic)
 end
 
 def topic_summary_link(topic)
