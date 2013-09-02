@@ -72,7 +72,7 @@ Here's the thing: I can pretty much guarantee that every Puppet module you consi
 
 Librarian will check out/install modules right from their Git repositories. This is distinct from the typical installation mechanism, which just installs modules as a static bundle. Having them checked out from Git makes it possible to enhance the modules on your own, without sacrificing the ability to upgrade to later versions.
 
-Unfortunately my current employer, IBM, makes open sourcing any of my work output quite difficult. For anyone else, though, Librarian should also make it much easier to push improvements back to the original modules, improving the Puppet ecosystem.
+Unfortunately my current employer makes open sourcing any of my work output quite difficult. For anyone else, though, Librarian should also make it much easier to push improvements back to the original modules, improving the Puppet ecosystem.
 
 
 ## Conclusion
