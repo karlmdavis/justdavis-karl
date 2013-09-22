@@ -69,3 +69,14 @@ Run the following commands to mark the script as executable and then run it:
     $ sudo ./eclipse-juno-install.sh
 
 That's it. There should now be an **Eclipse Juno** application launcher available.
+
+
+### Troubleshooting: JavaDoc Rendering
+
+References:
+
+* [Stack Overflow: Eclipse Javadoc not rendering correctly](http://stackoverflow.com/questions/14491296/eclipse-javadoc-not-rendering-correctly)
+
+If the JavaDoc displays in Eclipse are rendering everything as plain text with the HTML stripped out, rather than rendering the HTML properly, install the `libwebkitgtk-1.0-0` package as follows and then restart Eclipse:
+
+$ sudo apt-get install libwebkitgtk-1.0-0
