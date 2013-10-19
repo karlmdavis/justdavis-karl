@@ -112,8 +112,9 @@ Add the following configuration to the end of the `VirtualHost` block in `/etc/a
 
 	# Proxy the Java web application running at http://localhost:8081/
 	<Location /jenkins/>
-		ProxyPass http://localhost:8081/jenkins/
-		ProxyPassReverse http://localhost:8081/jenkins/
+		ProxyPass http://localhost:8081/jenkins
+		ProxyPassReverse http://localhost:8081/jenkins
+		ProxyPassReverse http://justdavis.com/jenkins
 		SetEnv proxy-nokeepalive 1
 	</Location>
 ~~~~
