@@ -258,3 +258,109 @@ Access the Zimbra web application in a browser, e.g. at <http://mail.davisonline
     $ sudo ufw delete deny smtp
     $ sudo ufw disable
 
+
+## Switching to Commercial SSL Certificate
+
+References:
+
+* [ZCS Certificate CLI](http://wiki.zimbra.com/wiki/Administration_Console_and_CLI_Certificate_Tools#Installing_Certificates)
+* [Zimbra Forums: Renaming server domain, but keeping it](http://www.zimbra.com/forums/administrators/56502-renaming-server-domain-but-keeping.html)
+
+### Switching Server Name & Domain
+
+Before switching the certificate to use the same wildcard cert discussed in <%= topic_link("/it/davis/servers/eddings/web/") %>, the Zimbra server's hostname and default domain name need to be changed. This is made somewhat easier here since the new domain that the server's hostname will be "part of", `justdavis.com` already exists in DNS and in Zimbra.
+
+First, put the server's domains into maintenance mode, which will prevent new mail delivery/receipt and also users from logging in:
+
+    $ sudo su - zimbra
+    $ zmprov modifydomain davisonlinehome.name zimbraDomainStatus maintenance
+    $ zmprov modifydomain justdavis.com zimbraDomainStatus maintenance
+    $ zmprov modifydomain madrivercode.com zimbraDomainStatus maintenance
+    $ zmprov modifydomain madriverdevelopment.com zimbraDomainStatus maintenance
+    $ zmprov modifydomain simplepersistence.com zimbraDomainStatus maintenance
+    $ exit
+
+Then make a backup:
+
+    $ sudo su - zimbra
+    $ zmcontrol stop
+    $ exit
+    $ sudo rsync -ah /opt/zimbra/ /opt/zimbra-backupBeforeRename-2013-10-18/
+    $ sudo mkdir /opt/zimbra-backupBeforeRename-2013-10-18/ldap-dump
+    $ sudo chown zimbra:zimbra /opt/zimbra-backupBeforeRename-2013-10-18/ldap-dump
+    $ sudo su - zimbra
+    $ /opt/zimbra/libexec/zmslapcat -c /opt/zimbra-backupBeforeRename-2013-10-18/ldap-dump
+    $ /opt/zimbra/libexec/zmslapcat /opt/zimbra-backupBeforeRename-2013-10-18/ldap-dump
+    $ zmcontrol start
+    $ exit
+
+Now, rename the server within Zimbra:
+
+    $ sudo su - zimbra
+    $ /opt/zimbra/libexec/zmsetservername --verbose --newServerName piers.justdavis.com
+    $ exit
+
+Then rename the server at the OS level by editing the following line in `/etc/hosts`, as follows:
+
+    127.0.1.1 piers.justdavis.com piers
+
+Verify the OS hostname by running the following command:
+
+    $ hostname -f
+
+Reboot the server:
+
+    $ sudo reboot
+
+
+#### Troubleshooting: Errors from `zmsetservername`
+
+References:
+
+* [Zimbra Forums: Change Zimbra Hostname](http://www.zimbra.com/forums/administrators/53575-change-hostname-zimbra-7-0-a.html)
+
+When running the above `zmsetservername` command, I received the following errors towards the end:
+
+    Unable to contact ldap://piers.davisonlinehome.name:389: Connection refused
+    Unable to contact ldap://piers.davisonlinehome.name:389: Connection refused
+
+To resolve those, the following commands were ran after the reboot:
+
+    $ sudo su - zimbra
+    $ zmcontrol stop
+    $ /opt/zimbra/libexec/zmsetservername --verbose --force --newServerName piers.justdavis.com
+    $ /opt/zimbra/libexec/zmsetservername --verbose --newServerName piers.davisonlinehome.name --newServerName piers.justdavis.com
+    $ exit
+
+The first `zmsetservername` command there generated a "`Failed to get server config for piers.justdavis.com.`" error. This was ignored. The second command didn't really do much of anything, but didn't produce any errors, either.
+
+Unfortunately, running a `zmcontrol start` here still generated a bunch of failures.
+
+
+### Deploying SSL Certificate to Zimbra
+
+References:
+
+* [Zimbra Wiki: Administration Console and CLI Certificate Tools](http://wiki.zimbra.com/wiki/Administration_Console_and_CLI_Certificate_Tools#Single-Node_Commercial_Certificate)
+
+The following commands were run from `eddings` to copy the certificates over to `piers`:
+
+    $ kinit karl
+    $ aklog
+    $ scp -r /afs/justdavis.com/user/karl/id/startcom/justdavis.com-wildcardCert-2013-03-30/ piers.justdavis.com:/home/karl/
+
+The following was then run on `piers` to concatenate the CA and intermediate certs:
+
+    $ cat justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-root.pem justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-intermediate.pem > justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-chain.pem
+
+The certificate was verified with the following command:
+
+    $ sudo /opt/zimbra/bin/zmcertmgr verifycrt comm justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-keyWithoutPassword.key justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30.crt justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-chain.pem
+
+Finally, the certificate was deployed, as follows:
+
+    $ sudo cp justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-keyWithoutPassword.key /opt/zimbra/ssl/zimbra/commercial/commercial.key
+    $ sudo /opt/zimbra/bin/zmcertmgr deploycrt comm justdavis.com-wildcardCert-2013-03-30/justdavis.com-wi
+ldcardCert-2013-03-30.crt justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-chain.pem
+
+

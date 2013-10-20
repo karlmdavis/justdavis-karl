@@ -143,3 +143,14 @@ After restarting Jenkins, it should now be accessible from <https://justdavis.co
 
     $ sudo service jenkins restart
 
+
+## Build Settings/Configuration
+
+The following settings were configured on <https://justdavis.com/jenkins/configure> to get Jenkins ready to build things:
+
+1. **Jenkins Location**
+    1. System Admin e-mail address: `Jenkins Admin <admin.jenkins@justdavis.com>`
+1. **E-mail Notification**
+    1. SMTP server: `mail.justdavis.com`
+    1. Click **Advanced...**
+    1. Use SSL: true/enabled
