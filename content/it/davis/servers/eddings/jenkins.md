@@ -13,17 +13,11 @@ This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the ste
 * <%= topic_summary_link("/it/davis/servers/eddings/ldap/") %>
 
 
-## Installing a Java JDK
+## Installing the Java JDKs
 
-Jenkins is a Java web application, that can be run via an embedded application server. This requires a JRE. As Jenkins will be used to build Java projects, it also requires a Java JDK.
+Jenkins is a Java web application, that can be run via an embedded application server. This requires a JRE. As Jenkins will be used to build Java projects, it also requires a Java JDK. Install the JDKs that it will use as follows:
 
-To check to see if a JDK is already installed, run the following command:
-
-    $ javac -version
-
-If that comes back with an error or a version less than 1.7, install OpenJDK as follows:
-
-    $ sudo apt-get install openjdk-7-jdk
+    $ sudo apt-get install openjdk-7-jdk openjdk-6-jdk
 
 
 ## Installing Jenkins
@@ -146,11 +140,102 @@ After restarting Jenkins, it should now be accessible from <https://justdavis.co
 
 ## Build Settings/Configuration
 
-The following settings were configured on <https://justdavis.com/jenkins/configure> to get Jenkins ready to build things:
+The following Jenkins-wide settings were configured on <https://justdavis.com/jenkins/configure>:
 
+1. **JDK**
+    1. Click **JDK installations...**.
+    1. Click **Delete JDK**.
+    1. Click **Add JDK**.
+        1. Name: `java-7-openjdk`
+        1. Install automatically: false/disabled
+        1. JAVA_HOME: `/usr/lib/jvm/java-7-openjdk-amd64`
+    1. Click **Add JDK**.
+        1. Name: `java-6-openjdk`
+        1. Install automatically: false/disabled
+        1. JAVA_HOME: `/usr/lib/jvm/java-6-openjdk-amd64`
+1. **Git**
+    1. Click **Git installations...**.
+        1. Name: `Default`
+        1. Installation directory: `git`
+1. **Maven**
+    1. Click **Maven installations...**.
+    1. Click **Delete Maven**.
+    1. Click **Add Maven**.
+        1. Name: `maven-3.1.1`
+        1. Install automatically: true/enabled
+        1. Version: `3.1.1`
 1. **Jenkins Location**
     1. System Admin e-mail address: `Jenkins Admin <admin.jenkins@justdavis.com>`
 1. **E-mail Notification**
     1. SMTP server: `mail.justdavis.com`
     1. Click **Advanced...**
     1. Use SSL: true/enabled
+1. **GitHub Web Hook**
+    1.  Let Jenkins auto-manage hook URLs: true/enabled
+        1. API key: (created at <https://github.com/settings/applications>)
+
+**Note:** For GitHub integration to work, I had to update to version 1.8 of the Jenkins GitHub plugin.
+
+The following node-specific settings were configured on <https://justdavis.com/jenkins/computer/%28master%29/configure>:
+
+1. \# of executors: `1`
+1. Labels: `linux`
+
+
+## Configuring SSH Access for Git
+
+References:
+
+* [Stack Overflow: Jenkins Host key verification failed](http://stackoverflow.com/a/15196114)
+* [GitHub Help: Generating SSH Keys](https://help.github.com/articles/generating-ssh-keys)
+
+Generate an SSH keypair for the `jenkins` user (just leaving the options blank, as below):
+
+    $ sudo su - jenkins
+    $ ssh-keygen -t rsa -C "admin.jenkins@justdavis.
+    Enter file in which to save the key (/var/lib/jenkins/.ssh/id_rsa): 
+    Enter passphrase (empty for no passphrase): 
+    Enter same passphrase again: 
+    $ exit
+
+Configure Git for the `jenkins` user:
+
+    $ sudo su - jenkins
+    $ git config --global user.email "admin.jenkins@justdavis.com"
+    $ git config --global user.name "https://justdavis.com/jenkins/"
+    $ exit
+
+Authorize the GitHub host key, enter `yes` when prompted to accept it:
+
+    $ sudo su - jenkins
+    $ git ls-remote -h git@github.com:karlmdavis/jessentials.git HEAD
+    $ exit
+
+Authorize the SSH public key for the `jenkins` user on GitHub. Run the following commands to write out the public key to the terminal:
+
+    $ sudo su - jenkins
+    $ cat ~/.ssh/id_rsa.pub
+    $ exit
+
+Copy-paste the output from `cat` into <https://github.com/settings/ssh>.
+
+
+### Troubleshooting: GitHub Web Hooks Not Working
+
+Due to [JENKINS-20140](https://issues.jenkins-ci.org/browse/JENKINS-20140), I had to do the following:
+
+1. Go to <https://justdavis.com/jenkins/configureSecurity/?>.
+1. Set **Prevent Cross Site Request Forgery exploits** to disabled.
+
+
+### Troubleshooting: SSL Errors When Sending Test Email
+
+References:
+
+* [StartCom Forums: How to make Java trust StartCom CA at Runtime](https://forum.startcom.org/viewtopic.php?f=15&t=1815)
+* [Ubuntu Launchpad Bug #983302: ca-certificates-java fails to install java cacerts on oneiric](https://bugs.launchpad.net/ubuntu/+source/ca-certificates-java/+bug/983302)
+
+This is really frustrating, but apparently StartSSL's CA certificate is not trusted by Java by default. However, Ubuntu should import the system's CA trust store into the Java trust store. For whatever reason, that hadn't happened correctly on `eddings`. The problem was fixed by running the following:
+
+    $ sudo dpkg --purge --force-depends ca-certificates-java; sudo apt-get install ca-certificates-java
+
