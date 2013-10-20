@@ -261,17 +261,19 @@ Access the Zimbra web application in a browser, e.g. at <http://mail.davisonline
 
 ## Switching to Commercial SSL Certificate
 
+### Switching Server Name & Domain
+
 References:
 
-* [ZCS Certificate CLI](http://wiki.zimbra.com/wiki/Administration_Console_and_CLI_Certificate_Tools#Installing_Certificates)
 * [Zimbra Forums: Renaming server domain, but keeping it](http://www.zimbra.com/forums/administrators/56502-renaming-server-domain-but-keeping.html)
-
-### Switching Server Name & Domain
 
 Before switching the certificate to use the same wildcard cert discussed in <%= topic_link("/it/davis/servers/eddings/web/") %>, the Zimbra server's hostname and default domain name need to be changed. This is made somewhat easier here since the new domain that the server's hostname will be "part of", `justdavis.com` already exists in DNS and in Zimbra.
 
 First, put the server's domains into maintenance mode, which will prevent new mail delivery/receipt and also users from logging in:
 
+    $ sudo ufw default allow
+    $ sudo ufw deny smtp
+    $ sudo ufw enable
     $ sudo su - zimbra
     $ zmprov modifydomain davisonlinehome.name zimbraDomainStatus maintenance
     $ zmprov modifydomain justdavis.com zimbraDomainStatus maintenance
@@ -294,13 +296,17 @@ Then make a backup:
     $ zmcontrol start
     $ exit
 
+Temporarily add a `/etc/hosts` alias/entry for both the old and new fully-qualified name, as follows:
+
+    127.0.1.1 piers.justdavis.com piers piers.davisonlinehome.name
+
 Now, rename the server within Zimbra:
 
     $ sudo su - zimbra
     $ /opt/zimbra/libexec/zmsetservername --verbose --newServerName piers.justdavis.com
     $ exit
 
-Then rename the server at the OS level by editing the following line in `/etc/hosts`, as follows:
+Edit `/etc/hosts` to remove the old hostname, as follows:
 
     127.0.1.1 piers.justdavis.com piers
 
@@ -308,9 +314,26 @@ Verify the OS hostname by running the following command:
 
     $ hostname -f
 
+Regenerate the SSH keys used by Zimbra:
+
+    $ zmsshkeygen
+    $ zmupdateauthkeys
+
 Reboot the server:
 
     $ sudo reboot
+
+Set the domains active again:
+
+    $ sudo ufw delete deny smtp
+    $ sudo ufw disable
+    $ sudo su - zimbra
+    $ zmprov modifydomain davisonlinehome.name zimbraDomainStatus active
+    $ zmprov modifydomain justdavis.com zimbraDomainStatus active
+    $ zmprov modifydomain madrivercode.com zimbraDomainStatus active
+    $ zmprov modifydomain madriverdevelopment.com zimbraDomainStatus active
+    $ zmprov modifydomain simplepersistence.com zimbraDomainStatus active
+    $ exit
 
 
 #### Troubleshooting: Errors from `zmsetservername`
@@ -319,22 +342,25 @@ References:
 
 * [Zimbra Forums: Change Zimbra Hostname](http://www.zimbra.com/forums/administrators/53575-change-hostname-zimbra-7-0-a.html)
 
-When running the above `zmsetservername` command, I received the following errors towards the end:
+When first running the above `zmsetservername` command, I received the following errors towards the end:
 
     Unable to contact ldap://piers.davisonlinehome.name:389: Connection refused
     Unable to contact ldap://piers.davisonlinehome.name:389: Connection refused
 
-To resolve those, the following commands were ran after the reboot:
+To resolve these, I added a step above before the `zmsetservername`, to edit `/etc/hosts` and ensure that aliases exist for both the old and new server name. I had to restore from backup, but after doing so, the rest of the rename worked as expected.
+
+
+#### Troubleshooting: Old Server Still Displayed In Admin Console Server Status
+
+References:
+
+* [Zimbra Forums: 'Data is stale' for old server name, after renaming server](http://www.zimbra.com/forums/administrators/49622-data-stale-old-server-name-after-renaming-server-print.html)
+
+After changing the server name, the Admin Console's Server Status page was still listing the old server. The following commands resolved that:
 
     $ sudo su - zimbra
-    $ zmcontrol stop
-    $ /opt/zimbra/libexec/zmsetservername --verbose --force --newServerName piers.justdavis.com
-    $ /opt/zimbra/libexec/zmsetservername --verbose --newServerName piers.davisonlinehome.name --newServerName piers.justdavis.com
+    $ zmloggerhostmap -d piers.davisonlinehome.name piers.davisonlinehome.name
     $ exit
-
-The first `zmsetservername` command there generated a "`Failed to get server config for piers.justdavis.com.`" error. This was ignored. The second command didn't really do much of anything, but didn't produce any errors, either.
-
-Unfortunately, running a `zmcontrol start` here still generated a bunch of failures.
 
 
 ### Deploying SSL Certificate to Zimbra
@@ -360,7 +386,6 @@ The certificate was verified with the following command:
 Finally, the certificate was deployed, as follows:
 
     $ sudo cp justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-keyWithoutPassword.key /opt/zimbra/ssl/zimbra/commercial/commercial.key
-    $ sudo /opt/zimbra/bin/zmcertmgr deploycrt comm justdavis.com-wildcardCert-2013-03-30/justdavis.com-wi
-ldcardCert-2013-03-30.crt justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-chain.pem
-
+    $ sudo chmod 740 /opt/zimbra/ssl/zimbra/commercial/commercial.key
+    $ sudo /opt/zimbra/bin/zmcertmgr deploycrt comm justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30.crt justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-chain.pem
 
