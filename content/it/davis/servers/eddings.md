@@ -42,6 +42,7 @@ The content on this page covers the base OS install and configuration; it doesn'
 * <%= topic_summary_link("/it/davis/servers/eddings/spideroak/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/nagios/") %>
 * <%= topic_summary_link("/it/davis/servers/eddings/puppet/") %>
+* <%= topic_summary_link("/it/davis/servers/eddings/sonarqube/") %>
 
 
 ### Install 64bit Ubuntu 10.04.03 (Lucid), Server Edition
