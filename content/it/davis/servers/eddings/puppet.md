@@ -92,7 +92,17 @@ See the reference link above for instructions on how to use Librarian-puppet now
 
 The rest of the Puppet configuration from here on out is covered in the actual commits to the repository: <https://github.com/karlmdavis/justdavis-puppet>.
 
+
 ## Puppet Agent/Client Setup
 
 Installation and initial configuration of Puppet agents/clients is covered in <%= topic_link("/it/davis/misc/puppet-agent/") %>.
+
+
+## Puppet References
+
+The following references, tutorials, etc. have proven very useful when working with Puppet:
+
+* [Puppet Docs: The Learning Puppet series](http://docs.puppetlabs.com/learning)
+* [Puppet Docs: Type Reference](http://docs.puppetlabs.com/references/latest/type.html)
+* [Puppet Docs: Hiera 1: Overview](http://docs.puppetlabs.com/hiera/1/)
 
