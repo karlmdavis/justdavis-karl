@@ -113,7 +113,7 @@ The SonarQube plugin for Jenkins was installed, as follows:
 1. Click the **Download now and install after restart** button.
 1. Restart Jenkins, as follows:
 
-        $ sudo service jenkins restart
+       $ sudo service jenkins restart
 
 1. Open the [Manage Jenkins > Configure System](https://justdavis.com/jenkins/configure) page in Jenkins.
 1. Scroll down to the *sonar > Sonar installations* section (not the *Sonar Runner* section).
