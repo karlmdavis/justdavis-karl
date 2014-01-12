@@ -54,7 +54,7 @@ After starting the `jenkins` service, it should be available at the following UR
     $ sudo service jenkins start
 
 
-# Configuring Jenkins Authentication
+## Configuring Jenkins Authentication
 
 By default, Jenkins is configured to be entirely open: anyone can modify the configuration, create/manage jobs, etc. Obviously, this isn't a great idea for a publicly-accessible web application. To solve this, Jenkins will be modified to use the LDAP server detailed in <%= topic_link("/it/davis/servers/eddings/ldap/") %>.
 
@@ -218,6 +218,41 @@ Authorize the SSH public key for the `jenkins` user on GitHub. Run the following
     $ exit
 
 Copy-paste the output from `cat` into <https://github.com/settings/ssh>.
+
+
+## Configuring PostgreSQL Access for Jenkins
+
+This section assumes the following pre-requisites have been completed:
+
+* <%= topic_summary_link("/it/davis/servers/eddings/sonarqube/") %>
+
+Some of the Jenkins builds will need access to a PostgreSQL database server as part of their automated tests. While the installation of PostgreSQL was handled via Puppet as part of the Sonar configuration (as referenced just above), a separate role/user was also created for Jenkins.
+
+The following was run to create that role:
+
+    $ sudo -u postgres createuser --createdb --no-createrole --no-superuser jenkins --pwprompt
+
+The following was then added to the Global Maven `settings.xml` for Jenkins, via the [Config File Management plugin](https://justdavis.com/jenkins/configfiles/) (the password was set to the correct one):
+
+    <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+      <profiles>
+        <profile>
+          <!-- This profile sets the properties needed for integration tests that use the 
+             com.justdavis.karl.misc.datasources.provisioners API. -->
+          <id>justdavis-integration-tests</id>
+          <properties>
+            <com.justdavis.karl.datasources.provisioner.postgresql.server.url>jdbc:postgresql:postgres</com.justdavis.karl.datasources.provisioner.postgresql.server.url>
+            <com.justdavis.karl.datasources.provisioner.postgresql.server.user>jenkins</com.justdavis.karl.datasources.provisioner.postgresql.server.user>
+            <com.justdavis.karl.datasources.provisioner.postgresql.server.password>secretpw</com.justdavis.karl.datasources.provisioner.postgresql.server.password>
+          </properties>
+        </profile>
+      </profiles>
+      <activeProfiles>
+        <activeProfile>justdavis-integration-tests</activeProfile>
+      </activeProfiles>
+    </settings>
 
 
 ### Troubleshooting: GitHub Web Hooks Not Working
