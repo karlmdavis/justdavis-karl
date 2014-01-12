@@ -220,6 +220,52 @@ Authorize the SSH public key for the `jenkins` user on GitHub. Run the following
 Copy-paste the output from `cat` into <https://github.com/settings/ssh>.
 
 
+## Configuring Maven Settings
+
+The [Config File Provider Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Config+File+Provider+Plugin) for Jenkins was installed.
+
+A Global Maven `settings.xml` was then created:
+
+1. Open the [Config File Management](https://justdavis.com/jenkins/configfiles/) page.
+1. Click [Add a new Config](https://justdavis.com/jenkins/configfiles/selectProvider).
+1. Select **Global Maven settings.xml**.
+1. Click **Submit**.
+1. Set *Name* to `Settings for justdavis.com`.
+1. Click **Submit**.
+
+This `settings.xml` was set as the default for builds:
+
+1. Open the [Configure System](https://justdavis.com/jenkins/configure) page.
+1. Set *Maven Configuration > Default global settings provider* to **provided global settings.xml**.
+1. Set *Maven Configuration > Provided Global Settings* to **Settings for justdavis.com**.
+1. Click **Save**.
+
+Note: I'm not sure why, but I also had to separately set each Jenkins job to use this `settings.xml`.
+
+
+## Configuring Maven Mirror
+
+This section assumes the following pre-requisites have been completed:
+
+* <%= topic_summary_link("/it/davis/servers/eddings/nexus/") %>
+
+The Jenkins builds should use the Nexus server that's been setup on the server. Aside from the caching/speed benefits, this will also give it access to the artifacts published to that Nexus instance.
+
+The following was added to the Global Maven `settings.xml` for Jenkins, via the [Config File Management](https://justdavis.com/jenkins/configfiles/) page (the password was set to the correct one):
+
+    <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+      <mirrors>
+        <mirror>
+          <id>justdavis.com-nexus</id>
+          <mirrorOf>*</mirrorOf>
+          <url>https://justdavis.com/nexus/content/groups/public/</url>
+        </mirror>
+      </mirrors>
+    </settings>
+
+
 ## Configuring PostgreSQL Access for Jenkins
 
 This section assumes the following pre-requisites have been completed:
@@ -231,8 +277,10 @@ Some of the Jenkins builds will need access to a PostgreSQL database server as p
 The following was run to create that role:
 
     $ sudo -u postgres createuser --createdb --no-createrole --no-superuser jenkins --pwprompt
+    $ sudo -u postgres psql
+    postgres=# GRANT CONNECT ON DATABASE postgres TO jenkins;
 
-The following was then added to the Global Maven `settings.xml` for Jenkins, via the [Config File Management plugin](https://justdavis.com/jenkins/configfiles/) (the password was set to the correct one):
+The following was then added to the Global Maven `settings.xml` for Jenkins, via the [Config File Management](https://justdavis.com/jenkins/configfiles/) page (the password was set to the correct one):
 
     <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" 
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
