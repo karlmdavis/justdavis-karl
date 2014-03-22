@@ -682,3 +682,121 @@ cn: karl
 gidNumber: 10000
 ~~~~
 
+
+## Configuring LDAP Security Controls
+
+References:
+
+* [Configuring OpenLDAP’s dynlist in cn=config](http://www.whitemiceconsulting.com/2010/02/configuring-openldaps-dynlist-in.html)
+
+With the configuration thus far, the security controls are set as follows:
+
+* The `EXTERNAL` mechanism can be used to access the `cn=config` subtree.
+
+        $ sudo ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=config
+
+* The `karl/admin` account cannot be used to access `cn=config`, even though it looks like it should be able to.
+* Only the built-in/fake `cn=admin,dc=justdavis,dc=com` user has access to modify the `dc=justdavis,dc=com` subtree.
+
+This is a confusing mess. 
+
+
+### Installing the `memberof` and `dynlist` Modules
+
+References:
+
+* [How To: Setup OpenLDAP with memberOf overlay | Ubuntu 12.04](http://www.schenkels.nl/2013/03/how-to-setup-openldap-with-memberof-overlay-ubuntu-12-04/)
+
+The `memberof` and `dynlist` modules will be used as part of the solution here, in order to prevent having to double-enter some objects. Save the following file as `~/ldap-entries/module-memberof-and-dynlist.ldif`:
+
+~~~~
+dn: cn=modules{0}, cn=config
+add: olcModuleLoad
+olcModuleLoad: dynlist
+olcModuleLoad: memberof
+~~~~
+
+Apply that config change:
+
+    $ sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ~/ldap-entries/module-memberof-and-dynlist.ldif
+
+That module requires the `groupOfURLs` object class from the `dyngroup` schema. Just install the whole schema, as follows:
+
+    $ sudo ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/dyngroup.ldif
+
+Then, enable the `memberof` and `dynlist` overlays in the DIT. Save the following file as `~/ldap-entries/olcoverlay-justdavis`:
+
+~~~~
+dn: olcOverlay=memberof,olcDatabase={1}hdb,cn=config
+objectClass: olcOverlayConfig
+objectClass: olcConfig
+objectClass: olcMemberOf
+objectClass: top
+olcOverlay: memberof
+
+dn: olcOverlay=dynlist,olcDatabase={1}hdb,cn=config
+objectClass: olcOverlayConfig
+objectClass: olcDynamicList
+olcOverlay: dynlist
+olcDlAttrSet: groupOfNames memberURL
+~~~~
+
+Add that object:
+
+    $ sudo ldapadd -Y EXTERNAL -H ldapi:/// -f ~/ldap-entries/olcoverlay-justdavis.ldif
+
+The `dynlist` module is now ready for use.
+
+
+### Installing the `dynlist` Module
+
+The `dynlist` module will be used as part of the solution here, in order to prevent having to double-enter some objects. Save the following file as `~/ldap-entries/module-dynlist.ldif`:
+
+~~~~
+dn: cn=modules{0}, cn=config
+add: olcModuleLoad
+olcModuleLoad: dynlist
+~~~~
+
+Install that module:
+
+    $ sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ~/ldap-entries/module-dynlist.ldif
+
+That module requires the `groupOfURLs` object class from the `dyngroup` schema. Just install the whole schema, as follows:
+
+    $ sudo ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/dyngroup.ldif
+
+Then, enable `dynlist` overlays for `groupOfNames` objects in the DIT. Save the following file as `~/ldap-entries/olcoverlay-justdavis`:
+
+~~~~
+dn: olcOverlay=dynlist,olcDatabase={1}hdb,cn=config
+objectClass: olcOverlayConfig
+objectClass: olcDynamicList
+olcOverlay: dynlist
+olcDlAttrSet: groupOfNames memberURL
+~~~~
+
+Add that object:
+
+    $ sudo ldapadd -Y EXTERNAL -H ldapi:/// -f ~/ldap-entries/olcoverlay-justdavis.ldif
+
+The `dynlist` module is now ready for use.
+
+
+### Creating Administrative Groups
+
+Create an `administrators` group that will be given permissions to modify the LDAP data (and other systems). Also create a dynamic `administrators-names` group that will always have the same members. Save the following as `~/ldap-entries/group-administrators`:
+
+~~~~
+dn: cn=administrators,ou=groups,dc=justdavis,dc=com
+objectClass: posixGroup
+cn: administrators
+gidNumber: 10000
+memberUid: karl
+
+dn: cn=administrators-names,ou=groups,dc=justdavis,dc=com
+objectClass: groupOfNames
+cn: administrators-names
+memberURL: ldap:///ou=people,dc=justdavis,dc=com??sub?(objectClass=person)
+~~~~
+
