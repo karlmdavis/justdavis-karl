@@ -255,3 +255,33 @@ After purchase, the certificates were stored in the following AFS directory: `/a
     $ cd ~
     $ rm -rf ~/justdavis.com-wildcard-staging
 
+
+## Kerberos Authentication
+
+References:
+
+* [Ubuntu Wiki: Kerberos: Apache](https://help.ubuntu.com/community/Kerberos#Apache)
+* [Kerberos Module for Apache: Configuration](http://modauthkerb.sourceforge.net/configure.html)
+
+By default, Apache on Ubuntu will be installed with [mod_auth_kerb](http://modauthkerb.sourceforge.net/) available and enabled. This allows Kerberos to be used for Apache authentication where desired. First, though, a Kerberos principal keytab for Apache needs to be created and secured:
+
+    $ sudo kadmin -p karl/admin
+    kadmin>  addprinc -policy services -randkey HTTP/eddings.justdavis.com
+    kadmin>  ktadd -k /etc/apache2/apache2.keytab HTTP/eddings.justdavis.com
+    kadmin>  quit
+    $ sudo chown www-data:www-data /etc/apache2/apache2.keytab
+    $ sudo chmod u=r,g=,o= /etc/apache2/apache2.keytab
+
+With this in place, any `<Directory/>` or `<Location/>` entry in Apache could be secured, as follows:
+
+~~~~
+<Location /foo>
+	AuthType Kerberos
+	AuthName "Kerberos Login"
+	KrbAuthRealm JUSTDAVIS.COM
+	Krb5Keytab /etc/apache2/apache2.keytab
+	KrbMethodK5Passwd off #optional--makes GSSAPI SPNEGO a requirement
+	Require valid-user
+</Location>
+~~~~
+
