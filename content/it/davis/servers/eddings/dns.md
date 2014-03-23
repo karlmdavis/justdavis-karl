@@ -315,3 +315,24 @@ These changes should propagate to the wider internet within a day or so. You'll 
 
 You will need to contact Cox business support and request that they create reverse DNS entries for all '`A`' name records you've created, especially those used for email and DNS servers.
 
+
+## Suppressing "unexpected RCODE REFUSED" Log Errors
+
+For whatever reason, the syslog ends up full of log entries like the following:
+
+~~~~
+Mar 22 06:25:05 eddings named[2021]: error (unexpected RCODE REFUSED) resolving 'z.sh.multi.uribl.com/A/IN': 8.8.8.8#53
+Mar 22 06:25:05 eddings named[2021]: error (unexpected RCODE REFUSED) resolving 'abksprings.co.za.multi.uribl.com/A/IN': 8.8.4.4#53
+~~~~
+
+Adding the following configuration to `/etc/bind/named.conf.local` suppresses these log entries:
+
+~~~~
+# Suppress all of the "unexpected RCODE REFUSED" errors in syslog.
+logging {
+        category lame-servers {
+                null;
+        };
+};
+~~~~
+
