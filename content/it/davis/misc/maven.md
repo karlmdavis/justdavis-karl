@@ -1,7 +1,7 @@
 --- 
-title: Install Java JDKs
+title: Install Maven
 kind: topic
-summary: Describes how to install the Java JDKs.
+summary: Describes how to install the Maven build tool.
 ---
 
 # <%= @item[:title] %>
