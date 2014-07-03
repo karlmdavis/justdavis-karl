@@ -29,5 +29,35 @@ Here are the details of connection:
 
 ### Reverse DNS
 
-Reverse DNS for Optimum IPs can be managed at the following page: <https://business.optimum.net/internet/networkconfig>.
+Reverse DNS for Optimum static IPs can be managed at the following page: <https://business.optimum.net/internet/networkconfig>.
+
+
+## Verizon FiOS
+
+While living in the Baltimore area, my internet connection is on a [Verizon FiOS](http://fios.verizon.com/) business plan. This was activated on 2014-07-01.
+
+Here are the details of connection:
+
+* Speed: 50/25
+* IP Range: `96.244.76.234` through `96.244.76.238`
+* Subnet Mask: `255.255.255.0`
+* Default Gateway: `96.244.76.1`
+* DNS Servers: `71.242.0.12`, `71.252.0.12`
+* Static IPs (5):
+    * `96.244.76.234`: (home network/router)
+    * `96.244.76.235`: <%= topic_link("/it/davis/servers/eddings/") %>
+    * `96.244.76.236`: <%= topic_link("/it/davis/servers/piers/") %>
+    * `96.244.76.237`
+    * `96.244.76.238`
+
+### Reverse DNS
+
+Reverse DNS for FiOS static IPs can be managed via email at `help4u@verizon.com` or `dns@verizon.com`.
+
+### Changing IP Address
+
+The following topics have sections on how to handle the IP address changes necessary as part of the switch to FiOS:
+
+* <%= topic_link("/it/davis/servers/eddings/") %>
+
 

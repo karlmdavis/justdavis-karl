@@ -306,3 +306,20 @@ If OpenJDK was installed before the upgrade, it will also need to be reinstalled
 
     $ sudo apt-get install openjdk-7-jdk
 
+
+### Changing IP Addresses for FiOS
+
+When my internet connection changed to FiOS (as part of our move to the Baltimore area), the following had to be done to update various bits & bobs on `eddings` to cope with that:
+
+1. Update the `/etc/bind/db.*` DNS DBs.
+2. Update the `/etc/network/interfaces` file.
+3. Update the `/etc/hosts` file.
+4. Update OpenAFS (from `eddings`):
+
+       $ kdestroy
+       $ kinit karl/admin
+       $ aklog
+       $ bos removehost -server eddings.justdavis.com -host eddings.justdavis.com
+       $ bos addhost -server eddings.justdavis.com -host eddings.justdavis.com
+       $ sudo service openafs-fileserver restart
+
