@@ -389,3 +389,16 @@ Finally, the certificate was deployed, as follows:
     $ sudo chmod 740 /opt/zimbra/ssl/zimbra/commercial/commercial.key
     $ sudo /opt/zimbra/bin/zmcertmgr deploycrt comm justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30.crt justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-chain.pem
 
+
+## Firewalling Zimbra Services
+
+Zimbra runs a number of not-terribly-secure services on public IPs, such as [memcached](http://memcached.org/). It's best to restrict these services via the firewall, to prevent any security risks. The list of Zimbra ports can be found here: [Zimbra Wiki: Ports](https://wiki.zimbra.com/wiki/Ports).
+
+As a side note: I received a call from my ISP, Verizon FiOS, warning me about the open memcached ports on my Zimbra server on 2015-01-21. The heads-up was very much appreciated!
+
+The Zimbra ports I was concerned about were permanently firewalled, as follows:
+
+$ sudo ufw enable
+$ sudo ufw allow from 127.0.0.1 port 11211
+$ sudo ufw deny in to any port 11211
+
