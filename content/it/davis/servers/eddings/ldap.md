@@ -630,15 +630,25 @@ Then, start the `saslauthd` daemon:
 
     $ sudo /etc/init.d/saslauthd start
 
+Test that `saslauthd` works correctly via the `testsaslauthd` command (add a space before the command to keep your password from landing in the Bash history):
+
+    $ sudo testsaslauthd -u karl -p "my password"
+
 Then, create the SASL configuration for OpenLDAP's `slapd` by creating the `/etc/ldap/sasl2/slapd.conf` file and ensuring it contains the following:
 
 ~~~~
 pwcheck_method: saslauthd
 ~~~~
 
+Then, edit OpenLDAP's AppArmor profile to give it access to `saslauthd`. Edit the `/etc/apparmor.d/local/usr.sbin.slapd` file and add the following:
+
+    # Add read access to saslauthd.
+    /run/saslauthd/mux rw,
+
 Finally, restart the OpenLDAP server to apply the previous change and test everything out using `ldapsearch`:
 
-    $ sudo /etc/init.d/slapd restart
+    $ sudo service apparmor reload
+    $ sudo service slapd restart
     $ ldapsearch -x -D uid=karl,ou=people,dc=justdavis,dc=com -W -H ldapi:/// -b dc=justdavis,dc=com
 
 (Please note: the above `ldapsearch` command makes use of the `uid=karl,ou=people,dc=justdavis,dc=com` user account and will not succeed unless that account has been created in the LDAP directory. The creation of this account is described below.)
