@@ -99,7 +99,7 @@ Restart Apache to apply the module and configuration changes:
 
 Configure the proxy URL as the base URL in Nexus, as follows:
 
-1. Open [Nexus](https://madrivercode.com/nexus/) in a browser.
+1. Open [Nexus](https://justdavis.com/nexus/) in a browser.
 1. Login as the built-in `admin` user.
 1. Open the **Administration > Server** panel.
 1. Set the following options:
@@ -158,6 +158,66 @@ Restart Tomcat to ensure that Nexus gets redeployed:
 Access the [Nexus webapp](https://justdavis.com/nexus/) and make sure everything started correctly (may take a few minutes before it's available).
 
 
+## Upgrading Nexus from 2.3.1-01 to 2.11.1-01
+
+References:
+
+* [Where is the Nexus OSS war file?](https://support.sonatype.com/entries/84544447-Where-is-the-Nexus-OSS-war-file-)
+* [Installing and Running Nexus](http://books.sonatype.com/nexus-book/reference/install.html)
+* [How do I change the port or address that Nexus binds to?](https://support.sonatype.com/entries/21159382-How-do-I-change-the-port-or-address-that-Nexus-binds-to-)
+
+This upgrade is a bit tricky, as Nexus has deprecated their WAR-only distribution. Instead, they strongly recommend deploying the embedded Jetty servlet.
+
+First, disable the old Nexus version:
+
+    $ sudo service tomcat7 stop
+    $ sudo rm /var/lib/tomcat7/webapps/nexus.war
+    $ sudo service tomcat7 start
+
+Create a new `nexus` user (just accept all defaults, when prompted):
+
+    $ sudo adduser --system --home /var/sonatype/nexus --shell /bin/bash --disabled-password --group nexus
+
+Create a link for the Nexus data and reset its permissions:
+
+    $ sudo ln -s /var/sonatype/ /usr/local/manual-installs/sonatype-nexus/sonatype-work
+    $ sudo chown -R nexus:nexus /var/sonatype/nexus/
+
+Download the latest Nexus version. The link can be found at: [Download and Install Nexus](http://www.sonatype.org/nexus/go). For example, the following will download the 2.11.1-01 release:
+
+    $ wget http://download.sonatype.com/nexus/oss/nexus-2.11.1-01-bundle.tar.gz
+
+Unpack the bundle to the `/usr/local/` directory:
+
+    $ sudo tar --extract --gunzip --file nexus-2.11.1-01-bundle.tar.gz --directory /usr/local/manual-installs/sonatype-nexus/
+    $ sudo ln -s /usr/local/manual-installs/sonatype-nexus/nexus-2.11.1-01/bin/nexus /etc/init.d/nexus
+
+Make sure the `nexus` user owns the install's `logs` and `tmp` directories, which will be modified while the service is running:
+
+    $ sudo chown -R nexus:nexus /usr/local/manual-installs/sonatype-nexus/nexus-2.11.1-01/logs/
+    $ sudo chown -R nexus:nexus /usr/local/manual-installs/sonatype-nexus/nexus-2.11.1-01/tmp/
+
+Edit the `/etc/init.d/nexus` file and make the following changes:
+
+* `NEXUS_HOME`: set to `/usr/local/manual-installs/sonatype-nexus/nexus-2.11.1-01`
+* `RUN_AS_USER`: set to `nexus`
+* `PIDDIR`: set to `/var/sonatype/nexus`
+
+Edit the `/usr/local/manual-installs/sonatype-nexus/nexus-2.11.1-01/conf/nexus.properties` file and make the following changes:
+
+* `application-port`: set to `8082`
+
+Be sure to update the Apache proxy configuration in `/etc/apache2/sites-available/justdavis.com-ssl` to account for the new port number.
+
+Register the `nexus` service:
+
+    $ cd /etc/init.d
+    $ sudo update-rc.d nexus defaults
+    $ sudo service nexus start
+
+Access the [Nexus webapp](https://justdavis.com/nexus/) and make sure everything started correctly (may take a few minutes before it's available).
+
+
 ## Configuring LDAP Authentication
 
 References:
@@ -200,3 +260,17 @@ Add the LDAP user `karl` to the *Nexus Administrator Role*, as follows:
 1. Select the **Nexus Administrator Role** and click **OK**.
 1. Click **Save**.
 
+Change the `admin` user's password:
+
+1. Open the **Security > Users** panel.
+1. Right-click the **admin** user and select the **Set Password** option.
+1. Enter the new password, click **Set Password**, and then click **Save**.
+
+
+## Configuring Repository Permissions
+
+References:
+
+* [Sonatype Nexus Security Cookbook: Can I make a repository private without disabling anonymous access?](https://support.sonatype.com/entries/24901127-Sonatype-Nexus-Security-Cookbook)
+
+This Nexus repository contains both private repositories (the "Mad River Code" repos) and public/open source repositories (everything else). As such, the permissions for the `anonymous` user had to be adjusted a bit. By default, `anonymous` is given read access to all repos, including those that should be private on this server. Per the article above, new privileges and roles were created to replace this default "read everything" role. The steps in the article were followed, more or less exactly.
