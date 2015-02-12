@@ -25,6 +25,7 @@ To check to see if Java is already installed, run the following command:
 If that comes back with an error, install Java as follows:
 
     $ sudo apt-get install openjdk-7-jre-headless
+    $ sudo update-java-alternatives --set java-1.7.0-openjdk-amd64
 
 
 ## Installing Tomcat
