@@ -1,18 +1,12 @@
---- 
-title: "What On Earth Was I Thinking?"
-kind: article
-created_at: 2015/06/25
-tags: [coding, rps-tourney]
-excerpt: "What on earth was I thinking, deciding to spend my free time building a Rock-Paper-Scissors game, of all things?!"
----
+# What On Earth Was I Thinking?
 
 What on earth was I thinking, deciding to spend my free time building a Rock-Paper-Scissors game, of all things?!
 
-For well over a year now, I've been a good bit of my evening and weekend time to the most absurd side project I could invent: [RPS Tourney](https://github.com/karlmdavis/rps-tourney). Why would I spend my time on something so silly? Good question!
+For well over a year now, I've been spending a good bit of my evening and weekend time on the most absurd side project I could invent: [RPS Tourney](https://github.com/karlmdavis/rps-tourney). Why would I spend my time on something so silly? Good question!
 
 ## Silliness
 
-For one thing, I like silly. I try hard not to take myself too seriously, and adding a Rock-Paper-Scissors game to my portfolio definitely helps with that. You should see some of the looks I get when I try to explain to people what I've been spending my free time on lately. Priceless.
+For one thing, I like silly. I try hard not to take myself too seriously and adding a Rock-Paper-Scissors game to my portfolio definitely helps with that. You should see some of the looks I get when I try to explain to people what I've been spending my free time on lately. Priceless.
 
 When I say that I try hard not to take myself too seriously, I really mean that. It's hard sometimes. I take my job seriously, I take a lot of pride in what I do there, and that absolutely extends to my side projects. Really, it just extends to life in general. I'm one of those folks, who once they decide that the pile of papers on their desk is too dangerous to ignore (as in, it might fall over and crush me beneath its weight), will proceed not just to file the papers, but to go through each one, deal with whatever needs dealing with, and then scan and digitally file any of them I want to keep around. I'm the same way with email: once I start marching through it, I go for a while.
 
@@ -24,11 +18,11 @@ Working on it is also a great way to de-stress after a long day. Tinkering with 
 
 Back when I started this project, I'd found myself spending more time at work on management and sales tasks than on coding. This made me sad. Also, I wanted to be one of those cool kids with awesome-sauce code up on GitHub. I was jealous of their great fame and general excellence. Clearly, I needed a side project.
 
-Unfortunately though, my current employer has a rather regressive IP assignment agreement. Most of the actually interesting side project ideas I've come up with over the years have run afoul of it, and any work on those ideas could have ended up getting "donated" well after the fact. After spending a lot of time frustrated by this, I eventually embraced it: if I couldn't work on anything lucrative or important, I'd work on something completely absurd, instead.
+Unfortunately though, my current employer has a rather regressive IP assignment agreement. Most of the actually interesting side project ideas I've come up with over the years have run afoul of it, and any work on those ideas could have ended up getting "donated" well after the fact. After spending a lot of time frustrated by this, I eventually embraced it: if I couldn't work on anything lucrative or important, I'd work on something completely absurd instead.
 
-That was the real genesis for this whole thing. I recall having the idea in the shower one day, the morning after a frustrating didn't-get-to-code-again day at work. A few minutes later, [RPS Tourney](https://github.com/karlmdavis/rps-tourney) was born! This yet again proves that all of my best ideas happen during a shower.
+That was the real genesis for this whole thing. I recall having the idea in the shower one day, the morning after a frustrating "didn't-get-to-code-again" day at work. A few minutes later, [RPS Tourney](https://github.com/karlmdavis/rps-tourney) was born! This yet again proves that all of my best ideas happen during a shower.
 
-That was a while ago, and since then I've moved through different roles at work where I got to code regularly. I've also gone through other coding "dry spells." I've been able to keep poking at this silly little side project that whole time, though, and it's really helped keep me sane.
+That was a while ago and since then I've moved into different roles at work where I was able to code regularly. I've also gone through other coding "dry spells." I've been able to keep poking at this silly little side project that whole time, though, and it's really helped keep me sane.
 
 ## Happy Little Trees
 
