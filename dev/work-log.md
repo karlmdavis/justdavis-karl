@@ -29,3 +29,8 @@ This file should never be committed along with other files; it should always be 
     * Definitely need to rework my site's template to be more mobile friendly? Bootstrapify it?
     * Sent it out to Mark, Steve, and Dann for review. Will probably also ask someone from work to review it, too.
 
+### 2015-07-08, Wednesday
+
+* 0.3h (09:01-09:18): [Issue #1: Write a blog post explaining RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/1)
+* 0.25h (09:19-09:33): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+
