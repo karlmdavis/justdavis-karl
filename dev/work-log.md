@@ -34,3 +34,8 @@ This file should never be committed along with other files; it should always be 
 * 0.3h (09:01-09:18): [Issue #1: Write a blog post explaining RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/1)
 * 0.25h (09:19-09:33): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
 
+### 2015-07-10, Thursday
+
+* 0.5h (09:23-09:53): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+    * Started drafting a pivot, wherein I frame the conversation around how badly estimates are handled everywhere.
+
