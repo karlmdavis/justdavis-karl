@@ -49,3 +49,8 @@ This file should never be committed along with other files; it should always be 
 * 2.35h (09:54-10:03,11:24-13:37): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
     * Got a draft mostly completed, I think.
 
+### 2015-07-13, Monday
+
+* 0.35h (09:06-09:26): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+    * Started going through the RPS issues, looking for estimates and recording them in the work log spreadsheet.
+
