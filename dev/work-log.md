@@ -53,4 +53,11 @@ This file should never be committed along with other files; it should always be 
 
 * 0.35h (09:06-09:26): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
     * Started going through the RPS issues, looking for estimates and recording them in the work log spreadsheet.
+* 0.6h (20:09-20:46): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+    * Finished the RPS estimate collation. Only have nine useable estimates, unfortunately.
+* 0.75h (20:47-21:32): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+    * Spent some time trying to find references on estimation accuracy.
+        * This Wikipedia article is **excellent**: [Software development effort estimation](https://en.wikipedia.org/wiki/Software_development_effort_estimation)
+        * I read through the abstract and conclusion of this excellent paper (which was referenced from Wikipedia): [Forecasting of Software Development Work Effort: Evidence on Expert Judgment and Formal Models](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.387.5379&rep=rep1&type=pdf)
+            * It references an earlier 2004 paper by the same author that it sounds like I should track down and read as well.
 
