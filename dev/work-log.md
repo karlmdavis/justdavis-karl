@@ -60,4 +60,12 @@ This file should never be committed along with other files; it should always be 
         * This Wikipedia article is **excellent**: [Software development effort estimation](https://en.wikipedia.org/wiki/Software_development_effort_estimation)
         * I read through the abstract and conclusion of this excellent paper (which was referenced from Wikipedia): [Forecasting of Software Development Work Effort: Evidence on Expert Judgment and Formal Models](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.387.5379&rep=rep1&type=pdf)
             * It references an earlier 2004 paper by the same author that it sounds like I should track down and read as well.
+    * Some later thoughts:
+        * It would be better to introduce 3-point from a "first principles" perspective, i.e. tracking accuracy of your worst, best, and likely case estimates.
+        * Managers also need to acknowledge and cope with industry-wide estimation inaccuracies.
+
+### 2015-07-15, Wednesday
+
+* 0.45h (08:54-09:20): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+    * Read pages 1 through 8 of [A review of studies on expert estimation of software development effort](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.387.5976&rep=rep1&type=pdf). Mostly discusses how to make estimates better. Haven't yet seen any data here on how accurate they are.
 
