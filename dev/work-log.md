@@ -69,3 +69,18 @@ This file should never be committed along with other files; it should always be 
 * 0.45h (08:54-09:20): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
     * Read pages 1 through 8 of [A review of studies on expert estimation of software development effort](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.387.5976&rep=rep1&type=pdf). Mostly discusses how to make estimates better. Haven't yet seen any data here on how accurate they are.
 
+### 2015-07-15, Wednesday
+
+* 0.75h (07:21-07:32,07:52-08:27): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+    * Read to page 19 of [A review of studies on expert estimation of software development effort](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.387.5976&rep=rep1&type=pdf)
+        * Good quote on page 10: "The results from many human judgment studies indicate that people get over-optimistic when predicting own performance, i.e., they have problems separating "wish" and "realism"."
+        * Good quote on page 10: See the fake quote of the software estimation game near the end of the page.
+        * Good quote on page 11-12: "Jørgensen and Sjøberg (2002a) report that the information about the software development cost expected by the customer had a strong impact on the estimate even when the estimators were told that the customer knew nothing about the realistic costs and that the information should be regarded as irrelevant for the estimation task."
+        * Good quote on page 12: "Consequently, it is may not be sufficient to warn against irrelevant information or instruct people to consider information as unreliable. The only safe approach seems to avoid irrelevant and unreliable information."
+        * Good quote on page 12: "... software project cost overruns were associated with lack of documented data from previous tasks, i.e., high reliance on "personal memory"."
+        * Good description near the start of page 15 of an estimation checklist.
+        * Page 16: "it is reported that a group discussion-based combination of individual software development effort estimates was more accurate than the average of the individual estimates, because the group discussion led to new knowledge about the interaction between people in different roles."
+        * Page 16: "Connolly and Dean (1997) report that the hit rates of students’ effort predictions intervals were, on average, 60% when a 90% confidence level was required."
+        * Page 17: describes a three-point estimation strategy where the min and max estimates are fixed multiples of the "most likely" estimate (50% and 200%). Apparently, we all suck at determining realistic mins & maxes.
+        * Page 17: "... experience has been shown to be unrelated to the empirical accuracy of expert judgments."
+
