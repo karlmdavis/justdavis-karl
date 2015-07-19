@@ -69,7 +69,7 @@ This file should never be committed along with other files; it should always be 
 * 0.45h (08:54-09:20): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
     * Read pages 1 through 8 of [A review of studies on expert estimation of software development effort](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.387.5976&rep=rep1&type=pdf). Mostly discusses how to make estimates better. Haven't yet seen any data here on how accurate they are.
 
-### 2015-07-15, Wednesday
+### 2015-07-17, Friday
 
 * 0.75h (07:21-07:32,07:52-08:27): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
     * Read to page 19 of [A review of studies on expert estimation of software development effort](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.387.5976&rep=rep1&type=pdf)
@@ -83,4 +83,13 @@ This file should never be committed along with other files; it should always be 
         * Page 16: "Connolly and Dean (1997) report that the hit rates of students’ effort predictions intervals were, on average, 60% when a 90% confidence level was required."
         * Page 17: describes a three-point estimation strategy where the min and max estimates are fixed multiples of the "most likely" estimate (50% and 200%). Apparently, we all suck at determining realistic mins & maxes.
         * Page 17: "... experience has been shown to be unrelated to the empirical accuracy of expert judgments."
+
+### 2015-07-19, Sunday
+
+* 0.55h (17:03-17:35): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+    * Finished reading [A review of studies on expert estimation of software development effort](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.387.5976&rep=rep1&type=pdf).
+    * Need to read the following paper: [An empirical study of maintenance and development estimation accuracy, Kitchenham, 2002](http://www.sciencedirect.com/science/article/pii/S0164121202000213).
+    * Read to page 4 of [Better sure than safe? Over-confidence in judgement based software development effort prediction intervals, Jørgensen, 2004](http://www.researchgate.net/publication/222433989_Better_sure_than_safe_Over-confidence_in_judgement_based_software_development_effort_prediction_intervals).
+    * Need to go read his list of paper titles, to see if there are any major advances in this field of study in the last decade.
+
 
