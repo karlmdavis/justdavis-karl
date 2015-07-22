@@ -92,4 +92,15 @@ This file should never be committed along with other files; it should always be 
     * Read to page 4 of [Better sure than safe? Over-confidence in judgement based software development effort prediction intervals, Jørgensen, 2004](http://www.researchgate.net/publication/222433989_Better_sure_than_safe_Over-confidence_in_judgement_based_software_development_effort_prediction_intervals).
     * Need to go read his list of paper titles, to see if there are any major advances in this field of study in the last decade.
 
+### 2015-07-22, Wednesday
+
+* 0.4h (15:49-16:14): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+    * Skimmed/read through the rest of [Better sure than safe? Over-confidence in judgement based software development effort prediction intervals, Jørgensen, 2004](http://www.researchgate.net/publication/222433989_Better_sure_than_safe_Over-confidence_in_judgement_based_software_development_effort_prediction_intervals).
+        * Conclusion: people suck at estimation. Full stop.
+    * Read through all of [What We Do and Don't Know About Software Development Effort Estimation, Jørgensen, 2014](https://www.simula.no/file/simulasimula2440pdf/download?token=6-zem-VY).
+        * An excellent summary of where things stand.
+        * Spoiler: we still suck at estimation.
+* 0.55h (16:44-17:17): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+    * Started editing the draft again. Got up through the "Where Do Estimates Come From?" section.
+
 
