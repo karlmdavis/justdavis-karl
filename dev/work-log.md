@@ -102,5 +102,7 @@ This file should never be committed along with other files; it should always be 
         * Spoiler: we still suck at estimation.
 * 0.55h (16:44-17:17): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
     * Started editing the draft again. Got up through the "Where Do Estimates Come From?" section.
+* 0.5h (20:43-21:12): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+    * Continued editing the draft. Got up through to the last paragraph of the "Where Do Estimates Come From?" section.
 
 
