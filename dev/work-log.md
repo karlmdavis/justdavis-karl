@@ -105,4 +105,9 @@ This file should never be committed along with other files; it should always be 
 * 1.15h (20:43-21:12,22:01-22:42): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
     * Almost finished this draft. Need to drop a couple of quotes in, but think it's about done.
 
+### 2015-07-23, Thursday
+
+* 1.85h (05:58-07:50): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+    * Completed the draft.
+    * Put together the estimation template/sample.
 
