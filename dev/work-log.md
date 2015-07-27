@@ -118,3 +118,9 @@ This file should never be committed along with other files; it should always be 
     * Had Erica review it and applied her feedback.
     * Renamed the file, split the earlier contents into a new one, and renamed the GitHub issue.
 
+### 2015-07-27, Monday
+
+* 1.25h (08:16-09:32): [Issue #1: Write a blog post explaining RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/1)
+    * Applied Steve's feedback.
+    * Published it.
+
