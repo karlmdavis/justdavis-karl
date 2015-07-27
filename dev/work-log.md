@@ -111,3 +111,10 @@ This file should never be committed along with other files; it should always be 
     * Completed the draft.
     * Put together the estimation template/sample.
 
+### 2015-07-26, Sunday
+
+* 1.55h (21:15-22:49): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+    * Did another quick edit myself.
+    * Had Erica review it and applied her feedback.
+    * Renamed the file, split the earlier contents into a new one, and renamed the GitHub issue.
+
