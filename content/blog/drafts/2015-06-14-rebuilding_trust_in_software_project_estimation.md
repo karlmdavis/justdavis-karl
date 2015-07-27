@@ -1,37 +1,10 @@
---- 
-title: "RPS Tourney Work Log"
+---
+title: "Rebuilding Trust in Software Project Estimation"
 kind: article
 created_at: 2015/06/14
 tags: [coding]
-excerpt: "TODO"
+excerpt: "Let's be honest here: most developers have an incredibly unprofessional attitude towards project planning and estimation. They don't like it, they really wish it'd just go away, and they may even claim it's impossible."
 ---
-
-TODO: This needs a real title.
-
-This one Markdown file is the most interesting experiment I've ever run: [RPS Tourney: Work Log](https://github.com/karlmdavis/rps-tourney/blob/master/dev/work-log.md). It now contains a year and a half of time tracking data for my incredibly silly side project (an online Rock Paper Scissors game). My goal has been to work on this project every single day, even if it's only for a few minutes.
-
-I put together a simple little Python script that parses the data into a somewhat more structured CSV file. I then dumped those rows into a `XX` spreadsheet that I put together to do some simple analysis of the data. Even just that simple analysis provides a whole wealth of insights into the project's history:
-
-TODO: just use this table to list some of the basic statistics
-
-<table>
-	<thead>
-		<tr><th></th></tr>
-	</thead>
-	<tbody>
-	</tbody>
-</table>
-
-Enough background... let's look at the data!
-
-TODO: Finish the parsing Python script.
-
-```
-
-```
-
-
-NOTE: Attempting a pivot here-- new angle after this point
 
 # Rebuilding Trust in Software Project Estimation
 
@@ -39,7 +12,7 @@ Let's be honest here: most developers have an incredibly unprofessional attitude
 
 ## The Cycle of Estimation Despair
 
-I think almost every coder has the following conversation at some point early in their career:
+I think almost every coder has had the following conversation at some point early in their career:
 
 > Marty the Manager: "We need an estimate for when Project Foo will be completed."
 > 
@@ -73,7 +46,7 @@ From here on out, I'm going to use the following definitions:
 
 While commitments almost always require estimates before they can be made, an estimate is in no way the same thing as a commitment. A commitment is most typically a single point in time. For example, Marty might tell his boss that Project Foo will be delivered no later than June 30. That's a commitment.
 
-An estimate is best thought of as a _range_ of effort. For example: Christy might tell Marty that Project Foo has a 90% chance of being complete within 750 engineer-hours, but also has an 80% chance of being complete within 450 person-hours. Another way of framing that is if Christy and her team were asked to deliver projects similar in size and shape to Project Foo, eight out of times those projects would each complete in less than 450 person-hours, and the other two would be complete in less than 750 person-hours. Note that there isn't a linear relationship here: 10% more certainty may add far more than just 10% more person-hours. Estimates are a tool for expressing the uncertainties and variablilities inherent in every project, and those challenges vary wildly from one project to another.
+An estimate is best thought of as a _range_ of effort. For example: Christy might tell Marty that Project Foo has a 90% chance of being complete within 750 person-hours, but also has an 80% chance of being complete within 450 person-hours. Another way of framing that is if Christy and her team were asked to deliver projects similar in size and shape to Project Foo, eight out of ten times those projects would each complete in less than 450 person-hours, nine out of ten times they would complete in less than 750 person-hours , and one out of the ten times would fall outside of either of those ranges. Note that there isn't a linear relationship here: 10% more certainty may add far more than just 10% more person-hours. Estimates are a tool for expressing the uncertainties and variablilities inherent in every project, and those challenges vary wildly from one project to another.
 
 Note also that estimates are not framed in terms of days, or weeks, or other such units of measure; they should always be measures in person-effort-hours. It is up to Marty and the business to decide how many people to have working on Project Foo and to decide how much of their time will be spent on it. If they're smart, they'll ensure that the team is "fenced off" such that they're only working on this one project, as multitasking will slow them down, increasing the number of person-hours needed. Christy should produce an estimate with a certain staffing level in mind, but if that estimate is in terms of person-effort-hours, adjusting it for different staffing scenarios should be relatively straightforward.
 
@@ -83,17 +56,19 @@ Hopefully, Marty and Christy will also discuss the following:
 * There are probably dependencies between various parts of the project, such that _A_ must be completed before _B_, and such. It's probably not a great idea to have 15 engineers assigned to the project if 14 of them will be blocked most of the time, waiting for other parts to be ready.
 * Adding extra bodies to the project will increase the amount of communication needed within the project team: emails, hallway conversations, meetings, etc. Past a certain number of team members, this communication overhead may very well eat more time than it saves.
 
-It's ultimately up to Marty to manage all of this, and to make deadline commitments based on his appetite for risk. This is really a political decision: can Marty (or the business) afford to miss their commitment on Project Foo? What is Project Foo's priority relative to the other things that need to get done and which folks can be spared to work on it? Most commonly, projects are estimated to a 90% confidence interval.
+It's ultimately up to Marty to manage all of this, and to make deadline commitments based on his appetite for risk. This is really a political decision: can Marty (or the business) afford to miss their commitment on Project Foo? What is Project Foo's priority relative to the other things that need to get done and which folks can be spared to work on it? Most project management guidelines call for estimating projects at a 90% confidence interval.
 
 At the same time, though, it's Christy's job to discuss all of this with Marty and to help him understand how things might play out, based on the decisions that are made. Communication is a two-way street, and both parties are responsible for ensuring that they're on the same page.
 
 ## Where Do Estimates Come From? The Birds and the Bees of Estimation
 
-Communication is key, but Christy still needs to leverage something more concrete than her intuition and feelings when producing estimates. Those are good enough for very small tasks of a day or so but for anything substantial Christy needs to: produce a work breakdown, estimate all of the parts, and then combine those line-item estimates into a bottom-level estimate. For most moderately-sized projects, this estimation effort will probably include the creation of a basic design and architecture. For larger projects, the design and architecture will have to be completed before the estimate can be attempted. You have to know _what_ is being built and _how_ it's being built (at least to some extent) before you can start to figure out how long it will take.
+Communication is key, but Christy still needs to leverage something more concrete than her intuition and feelings when producing estimates. Those are good enough for very small tasks of a day or so but for anything substantial Christy needs to: 1) produce a work breakdown, 2) estimate all of the parts, and then 3) combine those line-item estimates into a bottom-level estimate. For most moderately-sized projects, this estimation effort will probably include the creation of a basic design and architecture. For larger projects, the design and architecture will have to be completed before the estimate can be attempted. You have to know _what_ is being built and _how_ it's being built (at least to some extent) before you can start to figure out how long it will take.
 
-There are many different formal estimation methods available. The one I prefer is pretty simple to put together and is called the [three-point estimation](https://en.wikipedia.org/wiki/Three-point_estimation) process. Basically, for each task in a work breakdown, go through and make three estimates: the best-case estimate, the worst-case estimate, and the most-likely estimate. Plug those numbers into some formulas, and you'll get back out a weighted average estimate and a standard deviation for it. Plug the estimates and deviations for all of the tasks into a different set of formulas, and you'll get an overall estimate and standard deviation for the project back out. These formulas are pretty flexible: they can produce an upper-bound estimate for whatever confidence level you'd like.
+There are many different formal estimation methods available. The one I prefer is pretty simple to put together and is called the [three-point estimation](https://en.wikipedia.org/wiki/Three-point_estimation) process. Basically, for each task in a work breakdown, go through and make three estimates: the best-case estimate, the worst-case estimate, and the most-likely estimate. Plug those numbers for each task into certain formulas, and you'll get back out weighted average estimates and standard deviations for each. Plug those estimates and deviations for all of the tasks into a different set of formulas, and you'll get an overall estimate and standard deviation for the project back out. These formulas are pretty flexible: they can produce an upper-bound estimate for whatever confidence level you'd like.
 
 The Wikipedia article on Three-Point Estimation provides all of the background and formulas you'll need to start running with this technique. It's a pretty quick read, and well worth the time it will take to familiarize yourself with it. As an example, I've put together a sample estimate for our hypothetical Project Foo, available here: [Software Project Estimation Template: Project Foo](https://docs.google.com/spreadsheets/d/1QEt9AWtXqIN-0O21MEzXL7Klg9UlI4z6hVmILZEtMHY/edit?usp=sharing).
+
+TODO: Suggestion: Include the formulas and more discussion of the sample.
 
 Moving beyond just the basic mechanics, though, there are a lot of additional best practices to try and implement when producing an estimate:
 
@@ -102,7 +77,7 @@ Moving beyond just the basic mechanics, though, there are a lot of additional be
 1. Getting estimates from more than one person is absolutely a great idea, but be sure to use some variant of [Planning Poker](https://en.wikipedia.org/wiki/Planning_poker) to ensure that each estimate is independent.
 1. Ask yourself: "How long would this task take the best overall engineer in our company to do well, assuming all the stars align and she doesn't run into any unforeseen problems?" That's your best-case estimate.
 1. Ask yourself: "What is likely to go sideways in the middle of working on this? Which library or tool is going to have a bug that has to be worked around and how long would that take one of our junior engineers to solve?" Feed that kind of thinking into your worst-case estimate.
-1. As a general rule of thumb, your worst case estimate should be least twice what your most-likely estimate is. If they aren't, go talk with someone more pessimistic and experienced than yourself about what might go wrong.
+1. As a general rule of thumb, your worst case estimate should be least twice what your most-likely estimate is. If they aren't, go talk with someone more pessimistic than yourself about what might go wrong.
 1. If you haven't broken your tasks down into about 4-hour chunks, you probably haven't thought hard enough about everything that needs to be done. This is in no way a hard-and-fast rule, but it's a very good mindset to be in.
 1. There's an old maxim that "the last 10% of the work takes 90% of the time." Think about why that is, and make sure your estimate includes the kind of work that appears in that last 10% of every project: documentation, release management, etc.
 1. Include a chunk of time to account for the number of defects you expect to find as you start internal testing and how long it might take to fix those.
@@ -118,7 +93,7 @@ Have you read through the [Agile Manifesto](http://agilemanifesto.org/)? Did you
 
 Agile makes things better. It really does. The problem with "going Agile" for Christy and most other coders, though, is that it isn't their call. Adopting any process – even an Agile one... no, **especially** an Agile one – requires commitment starting at the _top_ of an organization, all the way down. Much as she might like to, Christy can't just tell Marty that "her team is adopting Scrum for all projects going forwards." In my experience, though, that's exactly what folks like Christy try to do. Heck, I tried to pull that once earlier in my career. (Spoiler: It didn't go well.)
 
-Please! Go start a conversation with the Marty's in your life about how much better things would be if the business adopted a commitment to Agile principles and about how the business should switch to a particular Agile process. But recognize that for what it is: a recommendation that you're trying to make from the bottom of the org chart, in the hopes that your executive team will understand what it is you'r proposing, and agree to it.
+Please! Go start a conversation with the Marty's in your life about how much better things would be if the business adopted a commitment to Agile principles and about how the business should switch to a particular Agile process. But recognize that for what it is: a recommendation that you're trying to make from the bottom of the org chart, in the hopes that your executive team will understand what it is you're proposing, and agree to it.
 
 And if you're a Marty, recognize that a switch to Agile needs to happen way above the first-line manager level. If your boss, and their boss, and their boss, etc. don't understand what it is your team is doing and how it will play out, things will end badly. This can be tricky given how much of an industry buzzword Agile is these days. There are a lots of organizations out there where management mandates that things have to be _called_ agile, but are completely unwilling to accept the business process changes that Agile actually calls for. If you find yourself trying to both "be Agile" and also produce detailed project plans six months out... my condolences. It's a tough position to be in. Open up a conversation about it upline, but try to avoid tilting at any windmills. Sometimes it's better to just roll your eyes and accept that you still live in a waterfall world.
 
@@ -131,7 +106,9 @@ Ultimately, Agile processes don't make sense for every business. And even for bu
 The most important thing for coders, project managers, executives, etc. to understand and agree on is that estimates are uncertain. They're hard. The world is an unpredictable place and we all have to cope with that. Here are a couple of facts that everyone involved in requesting, producing, or relying on software project estimates should be familiar with:
 
 1. There is no hard evidence yet that engineers' 90% confidence effort prediction intervals will be correct more than 60-70% of the time. <a id="ref-1-source"><sup>[[1]](#ref-1-target)</sup></a>
+    * This indicates that many estimates have overly optimistic worst-case estimates for many tasks and fail to account for some tasks completely.
 2. Software projects are usually underestimated, and the overrun is on average around 30%. <a id="ref-2-source"><sup>[[2]](#ref-2-target)</sup></a>
+    * There are two components here: individual tasks that are underestimated and tasks that never make it into the estimate to begin with.
 
 So... estimates are useful, but have definite limitations. Remember: estimates are not the same as commitments. Your project management and business processes have to account for reality. That's only a problem if you try to pretend that it isn't.
 
