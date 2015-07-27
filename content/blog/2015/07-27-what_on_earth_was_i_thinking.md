@@ -1,6 +1,7 @@
 ---
 title: "What On Earth Was I Thinking?"
 kind: article
+publish: true
 created_at: 2015/07/27
 tags: [coding]
 excerpt: "What on earth was I thinking, deciding to spend my free time building a Rock-Paper-Scissors game, of all things‽ Good question!"

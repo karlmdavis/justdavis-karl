@@ -1,6 +1,7 @@
 ---
 title: "Rebuilding Trust in Software Project Estimation"
 kind: article
+publish: false
 created_at: 2015/06/14
 tags: [coding]
 excerpt: "Let's be honest here: most developers have an incredibly unprofessional attitude towards project planning and estimation. They don't like it, they really wish it'd just go away, and they may even claim it's impossible."

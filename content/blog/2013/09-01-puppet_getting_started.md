@@ -1,6 +1,7 @@
 --- 
 title: "Puppet: First Impressions"
 kind: article
+publish: true
 created_at: 2013/09/01
 tags: [it, puppet]
 excerpt: "Apache Maven is a wonderful tool for tracking, storing, and making use of compiled libraries, including native libraries (e.g. DLLs). Getting these libraries into Maven is simple."
