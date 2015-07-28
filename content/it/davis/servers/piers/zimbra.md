@@ -373,7 +373,7 @@ The following commands were run from `eddings` to copy the certificates over to 
 
     $ kinit karl
     $ aklog
-    $ scp -r /afs/justdavis.com/user/karl/id/startcom/justdavis.com-wildcardCert-2013-03-30/ piers.justdavis.com:/home/karl/
+    $ scp -r /afs/justdavis.com/user/karl/id/ssl-for-justdavis.com/2015-gandi-wildcard-for-justdavis.com/ piers.justdavis.com:/home/karl/
 
 The following was then run on `piers` to concatenate the CA and intermediate certs:
 
@@ -390,6 +390,38 @@ Finally, the certificate was deployed, as follows:
     $ sudo /opt/zimbra/bin/zmcertmgr deploycrt comm justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30.crt justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-chain.pem
 
 
+### Updating Zimbra SSL Certificate in 2015
+
+References:
+
+* [Zimbra Wiki: Administration Console and CLI Certificate Tools](http://wiki.zimbra.com/wiki/Administration_Console_and_CLI_Certificate_Tools#Single-Node_Commercial_Certificate)
+
+In 2015, after the original wildcard certificate for `justdavis.com` expired, a new one was purchased and had to be deployed.
+
+The following commands were run from `eddings` to copy the certificates over to `piers`:
+
+    $ kinit karl
+    $ aklog
+    $ scp -r /afs/justdavis.com/user/karl/id/ssl-for-justdavis.com/2015-gandi-wildcard-for-justdavis.com/ piers.justdavis.com:/home/karl/
+
+The following was then run on `piers` to concatenate the CA and intermediate certs:
+
+    $ cd 2015-gandi-wildcard-for-justdavis.com
+    $ cat GandiStandardSSLCA2.pem AddTrustExternalCARoot.pem > justdavis.com-wildcard-2015-04-13-ca-chain.pem
+
+The certificate was verified with the following command:
+
+    $ sudo /opt/zimbra/bin/zmcertmgr verifycrt comm justdavis.com-wildcard-2015-04-13.key justdavis.com-wildcard-2015-04-13.crt justdavis.com-wildcard-2015-04-13-ca-chain.pem
+
+Finally, the certificate was deployed, as follows:
+
+    $ sudo cp justdavis.com-wildcard-2015-04-13.key /opt/zimbra/ssl/zimbra/commercial/commercial.key
+    $ sudo chmod 740 /opt/zimbra/ssl/zimbra/commercial/commercial.key
+    $ sudo /opt/zimbra/bin/zmcertmgr deploycrt comm justdavis.com-wildcard-2015-04-13.crt justdavis.com-wildcard-2015-04-13-ca-chain.pem
+
+The server was then rebooted.
+
+
 ## Firewalling Zimbra Services
 
 Zimbra runs a number of not-terribly-secure services on public IPs, such as [memcached](http://memcached.org/). It's best to restrict these services via the firewall, to prevent any security risks. The list of Zimbra ports can be found here: [Zimbra Wiki: Ports](https://wiki.zimbra.com/wiki/Ports).
@@ -401,4 +433,22 @@ The Zimbra ports I was concerned about were permanently firewalled, as follows:
 $ sudo ufw enable
 $ sudo ufw allow from 127.0.0.1 port 11211
 $ sudo ufw deny in to any port 11211
+
+
+## Configuring DKIM for the Email Domains in Zimbra and DNS
+
+References:
+
+* [Wikipedia: DomainKeys Identified Mail](https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail)
+* [Zimbra Wiki: Zimbra Server with DKIM Signing](https://wiki.zimbra.com/wiki/Configuring_for_DKIM_Signing)
+
+DKIM is used to verify the origin of email addresses for a given `MX` email domain.
+
+The following commands were run on `piers` to generate and apply DKIM keys for each of the domains in Zimbra:
+
+    $ sudo su - zimbra
+    $ /opt/zimbra/libexec/zmdkimkeyutil -a -d davisonlinehome.name
+    $ /opt/zimbra/libexec/zmdkimkeyutil -a -d justdavis.com
+
+The output of those commands was then used to create new `TXT` records in the DNS domains on `eddings`, by editing `/etc/bind/db.justdavis.com`. That file is also used for the `davisonlinehome.name` domain, so both entries were added to it.
 
