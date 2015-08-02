@@ -124,10 +124,16 @@ This file should never be committed along with other files; it should always be 
     * Applied Steve's feedback.
     * Published it.
 
-### 2015-07-28, Tuesday
+### 2015-08-01, Saturday
 
 * 0.7h (23:21-00:02): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
     * Went through and applied Mark's feedback.
     * Went through and applied Dave's feedback.
     * Responded to Brett's feedback.
+
+### 2015-08-02, Sunday
+
+* 1.6h (09:46-11:23): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+    * Went through and applied Paul's feedback.
+    * Need to deal with that TODO.
 
