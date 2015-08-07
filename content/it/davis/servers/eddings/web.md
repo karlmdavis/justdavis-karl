@@ -256,6 +256,63 @@ After purchase, the certificates were stored in the following AFS directory: `/a
     $ rm -rf ~/justdavis.com-wildcard-staging
 
 
+#### SSL Certificate for `justdavis.com` in 2015
+
+References:
+
+* [gandi.net Wiki: Generating Your CSR](http://wiki.gandi.net/en/ssl/csr)
+
+When I went to renew my StartSSL certificate for `justdavis.com` in 2015, their site appeared to be down. As an alternative, I purchased a new wildcard certificate through [gandi.net](https://www.gandi.net/).
+
+A CSR for this certificate was generated on `eddings`, as follows:
+
+    $ kinit karl
+    $ aklog
+    $ cd /afs/justdavis.com/user/karl/id/ssl-for-justdavis.com
+    $ mkdir 2015-gandi-wildcard-for-justdavis.com && cd $_
+    $ openssl req -nodes -newkey rsa:2048 -sha256 -keyout justdavis.com-wildcard-2015-04-13.key -out justdavis.com-wildcard-2015-04-13.csr
+    Country Name (2 letter code) [AU]:US
+    State or Province Name (full name) [Some-State]:Maryland
+    Locality Name (eg, city) []:
+    Organization Name (eg, company) [Internet Widgits Pty Ltd]:Davis
+    Organizational Unit Name (eg, section) []:
+    Common Name (e.g. server FQDN or YOUR name) []:*.justdavis.com
+    Email Address []:karl.michael.davis@gmail.com
+    
+    Please enter the following 'extra' attributes
+    to be sent with your certificate request
+    A challenge password []:
+    An optional company name []:
+
+This CSR was then submitted to Gandi. Once the purchase and verification process was complete, the certificate files were downloaded and saved to the following locations:
+
+* The issued wildcard certificate: `/afs/justdavis.com/user/karl/id/ssl-for-justdavis.com/2015-gandi-wildcard-for-justdavis.com/justdavis.com-wildcard-2015-04-13.crt`
+* The intermediate certificate required for the wildcard certificate: `/afs/justdavis.com/user/karl/id/ssl-for-justdavis.com/2015-gandi-wildcard-for-justdavis.com/COMODOExtendedValidationSecureServerCA2.pem`
+
+The following was then done to deploy the new certificate to the appropriate locations on `eddings`:
+
+    $ sudo cp /afs/justdavis.com/user/karl/id/ssl-for-justdavis.com/2015-gandi-wildcard-for-justdavis.com/justdavis.com-wildcard-2015-04-13.key /etc/ssl/private/justdavis.com-wildcard-2015-04-13.key
+    $ sudo chmod u=r,g=r,o= /etc/ssl/private/justdavis.com-wildcard-2015-04-13.key
+    $ sudo chown root:ssl-cert /etc/ssl/private/justdavis.com-wildcard-2015-04-13.key
+    $ sudo cp /afs/justdavis.com/user/karl/id/ssl-for-justdavis.com/2015-gandi-wildcard-for-justdavis.com/COMODOExtendedValidationSecureServerCA2.pem /etc/ssl/certs/justdavis.com-wildcard-2015-04-13-ca-intermediate.pem
+    $ sudo cp /afs/justdavis.com/user/karl/id/ssl-for-justdavis.com/2015-gandi-wildcard-for-justdavis.com/justdavis.com-wildcard-2015-04-13.crt /etc/ssl/certs/justdavis.com-wildcard-2015-04-13.crt
+
+Apache's SSL configuration in `/etc/apache2/sites-available/justdavis.com-ssl` was then updated to reference these files:
+
+~~~~
+	# Configure SSL for this virtual host (derived from /etc/apache2/sites-available/default-ssl)
+	SSLEngine on
+	SSLCertificateFile /etc/ssl/certs/justdavis.com-wildcard-2015-04-13.crt
+	SSLCertificateKeyFile /etc/ssl/private/justdavis.com-wildcard-2015-04-13.key
+	SSLCertificateChainFile /etc/ssl/certs/justdavis.com-wildcard-2015-04-13-ca-intermediate.pem
+	SSLCACertificateFile /etc/ssl/certs/ca-certificates.crt
+~~~~
+
+This configuration change was then applied to Apache:
+
+    $ sudo service apache2 reload
+
+
 ## Kerberos Authentication
 
 References:
