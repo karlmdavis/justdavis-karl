@@ -137,3 +137,13 @@ This file should never be committed along with other files; it should always be 
     * Went through and applied Paul's feedback.
     * Need to deal with that TODO.
 
+### 2015-08-06, Thursday
+
+* 1.0h (20:45-21:45): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * (Also went through and committed misc content updates I had laying around.)
+    * Because nanoc-3 doesn't support file-with-same-names-but-different-extensions in the same directory, it is not compatible with Bootstrap.
+    * If I want to use nanoc-4 (beta), I'll need a newer version of Ruby than Ubuntu 14.04 has.
+        * I think I probably do want to spend the time it'll take to make the switch, but this could easily turn into a boondoggle.
+        * What if v4 doesn't yet support all of the same filters, or the blog extensions? What if I lose my old wiki content?
+    * Also took a look at other static site generators. Jekyll definitely seems to be winning, and easily has the best docs.
+
