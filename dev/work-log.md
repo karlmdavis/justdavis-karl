@@ -147,3 +147,11 @@ This file should never be committed along with other files; it should always be 
         * What if v4 doesn't yet support all of the same filters, or the blog extensions? What if I lose my old wiki content?
     * Also took a look at other static site generators. Jekyll definitely seems to be winning, and easily has the best docs.
 
+### 2015-08-09, Sunday
+
+* 0.5h (14:59-15:28): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Spent some time reading around. Think I will bite the bullet and try to move the blog to Jekyll.
+        * Jekyll 3.0 will be released soon, but it appears to be mostly backwards compatible.
+        * I don't really want to lose my old wiki, but I also don't want to have to find a plugin to support it. Might just be easier to manually convert it to Markdown.
+    * Need to do this in a branch.
+
