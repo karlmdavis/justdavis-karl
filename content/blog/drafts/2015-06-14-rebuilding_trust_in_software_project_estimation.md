@@ -67,7 +67,53 @@ There are many different formal estimation methods available. The one I prefer i
 
 The Wikipedia article on Three-Point Estimation provides all of the background and formulas you'll need to start running with this technique. It's a pretty quick read, and well worth the time it will take to familiarize yourself with it. As an example, I've put together a sample estimate for our hypothetical Project Foo, available here: [Software Project Estimation Template: Project Foo](https://docs.google.com/spreadsheets/d/1QEt9AWtXqIN-0O21MEzXL7Klg9UlI4z6hVmILZEtMHY/edit?usp=sharing).
 
-TODO: Suggestion: Include the formulas and more discussion of the sample.
+Each task's weighted average estimate and its standard deviation can be produced via the following formulas:
+
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+	<mi>E</mi> <mo>=</mo>
+	<mfrac>
+		<mrow><mi>a</mi> <mo>+</mo> <mn>4</mn> <mo>&#x2062;<!-- &InvisibleTimes; --></mo> <mi>m</mi> <mo>+</mo> <mi>b</mi></mrow>
+		<mrow><mn>6</mn></mrow>
+	</mfrac>
+</math>
+
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+	<mi>SD</mi> <mo>=</mo>
+	<mfrac>
+		<mrow><mi>b</mi> <mo>-</mo> <mn>a</mn></mrow>
+		<mrow><mn>6</mn></mrow>
+	</mfrac>
+</math>
+
+Those individual task estimates can then be plugged into the following formulas to obtain the overall estimate and its standard deviation:
+
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+	<msub><mi>E</mi><mi>project</mi></msub> <mo>=</mo> <mo>&sum;</mo> <mfenced><msub><mi>E</mi><mi>task</mi></msub></mfenced>
+</math>
+
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+	<msub><mi>SD</mi><mi>project</mi></msub> <mo>=</mo>
+	<msqrt>
+		<mo>&sum;</mo>
+		<mfenced>
+			<msup><msub><mi>SD</mi><mi>task</mi></msub><mn>2</mn></msup>
+		</mfenced>
+	</msqrt>
+</math>
+
+Finally, the estimate and standard devaition can be used to produce a prediction interval at a given confidence level. For a confidence level of 90%, this is simply 
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML">
+	<msub><mi>E</mi><mi>project</mi></msub>
+	<mo>&plusmn;</mo>
+	<mfenced>
+		<mrow>
+			<mn>1.645</mn>
+			<mo>&times;</mo>
+			<msub><mi>SD</mi><mi>project</mi></msub>
+		</mrow>
+	</mfenced>
+</math>
+.
 
 Moving beyond just the basic mechanics, though, there are a lot of additional best practices to try and implement when producing an estimate:
 
