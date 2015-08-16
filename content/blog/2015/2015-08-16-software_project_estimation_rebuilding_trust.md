@@ -1,13 +1,11 @@
 ---
-title: "Rebuilding Trust in Software Project Estimation"
+title: "Software Project Estimation: Rebuilding Trust"
 kind: article
-publish: false
-created_at: 2015/06/14
+publish: true
+created_at: 2015/08/16
 tags: [coding]
 excerpt: "Let's be honest here: most developers have an incredibly unprofessional attitude towards project planning and estimation. They don't like it, they really wish it'd just go away, and they may even claim it's impossible."
 ---
-
-# Rebuilding Trust in Software Project Estimation
 
 Let's be honest here: most developers have an incredibly unprofessional attitude towards project planning and estimation. They don't like it, they really wish it'd just go away, and they may even claim it's impossible. It's not. It *is* challenging to do right, but this just makes it an even more valuable skill for developers to have. Being able to properly estimate a project in advance can often mean the difference between getting it properly staffed or having it end with a [death march](https://en.wikipedia.org/wiki/Death_march_%28project_management%29).
 
