@@ -155,3 +155,11 @@ This file should never be committed along with other files; it should always be 
         * I don't really want to lose my old wiki, but I also don't want to have to find a plugin to support it. Might just be easier to manually convert it to Markdown.
     * Need to do this in a branch.
 
+### 2015-08-16, Sunday
+
+* 0.1h (14:16-14:21): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Created a new branch for the switch to Jekyll, and got it pushed to GitHub.
+* 1.15h (14:21-14:34,18:38-19:21,19:40-19:53): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+    * Added in the estimation formulas (via MathML), per the TODO. Committed.
+    * Published the post. Pushed and deployed.
+
