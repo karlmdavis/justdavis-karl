@@ -155,3 +155,8 @@ This file should never be committed along with other files; it should always be 
         * I don't really want to lose my old wiki, but I also don't want to have to find a plugin to support it. Might just be easier to manually convert it to Markdown.
     * Need to do this in a branch.
 
+### 2015-08-17, Monday
+
+* 0.5h (22:34-22:53): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Started installing `rvm`, which will be needed since Jekyll doesn't support Trusty's version of Ruby.
+
