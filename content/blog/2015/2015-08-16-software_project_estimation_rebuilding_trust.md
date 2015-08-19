@@ -99,8 +99,7 @@ Those individual task estimates can then be plugged into the following formulas 
 	</msqrt>
 </math>
 
-Finally, the estimate and standard devaition can be used to produce a prediction interval at a given confidence level. For a confidence level of 90%, this is simply 
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML">
+Finally, the estimate and standard devaition can be used to produce a prediction interval at a given confidence level. For a confidence level of 90%, this is simply <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML">
 	<msub><mi>E</mi><mi>project</mi></msub>
 	<mo>&plusmn;</mo>
 	<mfenced>
@@ -110,8 +109,7 @@ Finally, the estimate and standard devaition can be used to produce a prediction
 			<msub><mi>SD</mi><mi>project</mi></msub>
 		</mrow>
 	</mfenced>
-</math>
-.
+</math>.
 
 Moving beyond just the basic mechanics, though, there are a lot of additional best practices to try and implement when producing an estimate:
 
@@ -169,7 +167,7 @@ The most important thing for coders, project managers, executives, etc. to under
 
 So... estimates are useful, but have definite limitations. Remember: estimates are not the same as commitments. Your project management and business processes have to account for reality. That's only a problem if you try to pretend that it isn't.
 
-<a id="ref-1-target>[[1]](#ref-1-source)</a> Jørgensen, Magne, Karl Teigen, and Kjetil Moløkken-Østvold. "[Better sure than safe? Over-confidence in judgement based software development effort prediction intervals.](https://www.simula.no/publications/better-sure-safe-overconfidence-judgment-based-software-development-effort-prediction)" *Journal of Systems and Software*, February 2004.
+<a id="ref-1-target">[[1]](#ref-1-source)</a> Jørgensen, Magne, Karl Teigen, and Kjetil Moløkken-Østvold. "[Better sure than safe? Over-confidence in judgement based software development effort prediction intervals.](https://www.simula.no/publications/better-sure-safe-overconfidence-judgment-based-software-development-effort-prediction)" *Journal of Systems and Software*, February 2004.
 
-<a id="ref-2-target>[[2]](#ref-2-source)</a> Jørgensen, Magne. "[What We Do and Don’t Know about Software Development Effort Estimation](https://www.simula.no/publications/what-we-do-and-dont-know-about-software-development-effort-estimation)" *IEEE Software* 31, no. 2 (2014): 37-40.
+<a id="ref-2-target">[[2]](#ref-2-source)</a> Jørgensen, Magne. "[What We Do and Don’t Know about Software Development Effort Estimation](https://www.simula.no/publications/what-we-do-and-dont-know-about-software-development-effort-estimation)" *IEEE Software* 31, no. 2 (2014): 37-40.
 

@@ -10,11 +10,11 @@ body {
   background: @color_background;
 }
 
-p,math[display=block] {
+p, dl, dt, math[display=block] {
 	margin-top: 1.0em;
 }
 
-p, ul, ol, pre {
+p, ul, ol, pre, dl {
   line-height: 1.25em;
 }
 
@@ -119,4 +119,30 @@ code {
 	font-size: 1.2em;
 }
 
+
+/* BLOCKQUOTES */
+
+blockquote {
+	margin-left: 1.0em;
+	border-left: 3px solid #ccc;
+	padding-left: 1.0em;
+}
+
+/* DEFINITION LISTS */
+
+dt {
+	font-weight: bold;
+	font-style: italic;
+}
+
+dd {
+	margin: 0;
+	padding-left: 1.0em;
+}
+
+/* MATH */
+
+math[display=inline] {
+	display: inline;
+}
 
