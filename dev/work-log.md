@@ -168,3 +168,8 @@ This file should never be committed along with other files; it should always be 
 * 0.6h (10:25-10:50): [Issue #4: Write a blog post about library choice](https://github.com/karlmdavis/justdavis-karl/issues/4)
     * Started drafting it on my phone.
 
+### 2015-08-19, Wednesday
+
+* 0.3h (14:37-14:54): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
+    * Fixed the missing CSS styling, e.g. for `blockquote` that I happened to notice. Whoops.
+
