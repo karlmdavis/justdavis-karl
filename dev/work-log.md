@@ -163,3 +163,8 @@ This file should never be committed along with other files; it should always be 
     * Added in the estimation formulas (via MathML), per the TODO. Committed.
     * Published the post. Pushed and deployed.
 
+### 2015-08-18, Tuesday
+
+* 0.6h (10:25-10:50): [Issue #4: Write a blog post about library choice](https://github.com/karlmdavis/justdavis-karl/issues/4)
+    * Started drafting it on my phone.
+
