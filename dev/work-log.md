@@ -160,3 +160,8 @@ This file should never be committed along with other files; it should always be 
 * 0.5h (22:34-22:53): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
     * Started installing `rvm`, which will be needed since Jekyll doesn't support Trusty's version of Ruby.
 
+### 2015-08-21, Friday
+
+* 0.5h (23:32-23:53): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got RVM installed. Need to figure out gemsets next.
+
