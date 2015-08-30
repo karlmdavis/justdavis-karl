@@ -165,3 +165,9 @@ This file should never be committed along with other files; it should always be 
 * 0.5h (23:32-23:53): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
     * Got RVM installed. Need to figure out gemsets next.
 
+### 2015-08-29, Saturday
+
+* 0.75h (23:30-00:16): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got a gemset created and installed Jekyll into it.
+    * Played around a bit with a new Jekyll site. Need to figure out the simplest way to integrate Bootstrap.
+
