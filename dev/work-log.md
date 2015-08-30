@@ -171,3 +171,9 @@ This file should never be committed along with other files; it should always be 
     * Got a gemset created and installed Jekyll into it.
     * Played around a bit with a new Jekyll site. Need to figure out the simplest way to integrate Bootstrap.
 
+### 2015-08-30, Sunday
+
+* 0.4h (14:53-15:18): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * I might be able to use the [jekyll-assets](http://ixti.net/jekyll-assets/) plugin to integrate in Bootstrap.
+    * If not, I should just give up and use the pre-compiled version.
+
