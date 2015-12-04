@@ -1,0 +1,33 @@
+# Site settings
+title: Karl M. Davis
+email: karl@justdavis.com
+description: > # this means to ignore newlines until "baseurl:"
+  Write an awesome description for your new site here. You can edit this
+  line in _config.yml. It will appear in your document head meta (for
+  Google search results) and in your feed.xml site description.
+baseurl: "/karl" # the subpath of your site, e.g. /blog/
+url: "https://justdavis.com" # the base hostname & protocol for your site
+twitter_username: karlmdavis
+github_username:  karlmdavis
+
+# Build settings
+markdown: kramdown
+
+# Specify the not-a-blog collections that are also present in this site.
+# See docs: http://jekyllrb.com/docs/collections/
+collections:
+  it_docs:
+    output: true
+    permalink: /it/:path/
+
+# Configuration for jekyll-assets.
+assets:
+  debug: false
+  js_compressor:  uglifier
+  css_compressor: sass
+
+# Exclude some directories, to prevent builds looping endlessly.
+exclude: [".asset-cache", ".sass-cache"]
+
+gems:
+  - jekyll-assets

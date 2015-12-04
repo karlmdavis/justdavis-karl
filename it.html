@@ -1,0 +1,9 @@
+---
+layout: it_doc
+---
+
+<p>IT page</p>
+{% for it_doc in site.it_docs %}
+  <h2>Foo</h2>
+  <h2><a href="{{ it_doc.url | prepend: site.baseurl }}">{{ it_doc.title }}: {{ it_doc.description }}</a></h2>
+{% endfor %}
