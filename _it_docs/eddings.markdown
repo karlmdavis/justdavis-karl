@@ -22,6 +22,8 @@ Subpages (auto):
 Subpages (plugin):
 
 * [Link]({% collection_doc_url /it/eddings/eddings-tomcat baseurl:true foo:bar %}): < {% collection_doc_url /it/eddings/eddings-tomcat baseurl:true foo:bar %} >
+* {% collection_doc_link /it/eddings/eddings-tomcat baseurl:true %}
+* {% collection_doc_link_long /it/eddings/eddings-tomcat baseurl:true %}
 
 Doc:
 
