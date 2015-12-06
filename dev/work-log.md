@@ -177,3 +177,120 @@ This file should never be committed along with other files; it should always be 
     * I might be able to use the [jekyll-assets](http://ixti.net/jekyll-assets/) plugin to integrate in Bootstrap.
     * If not, I should just give up and use the pre-compiled version.
 
+### 2015-11-08, Sunday
+
+* 1.6h (11:43-13:19): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got things running again.
+    * Got the `jekyll-assets` plugin working, and pulling in Bootstrap 3 via `bootstrap-sass`.
+    * Need to start pulling apart the template and putting it back together how I want it.
+
+### 2015-11-09, Monday
+
+* 0.15h (21:44-21:54): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Looked through personal sites for design inspiration.
+
+### 2015-11-12, Thursday
+
+* 0.5h (08:11-8:41): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got the Bootstrap minimal sample in place.
+    * Got Bootstrap's JS working.
+
+### 2015-11-13, Friday
+
+* 0.1h (23:58-00:03): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Decided to use the Bootstrap blog template as a starting point.
+
+### 2015-11-14, Saturday
+
+* 0.2h (19:41-19:52): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Started pulling the template together. Didn't get too far: got bored.
+
+### 2015-11-15, Sunday
+
+* 0.45h (17:21-17:47): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Working on recreating Bootstrap's example "blog theme".
+
+### 2015-11-16, Monday
+
+* 0.15h (09:59-10:09): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got the nav and footer looking about right.
+* 0.25h (17:14-17:28): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Worked on the home page a bit. Added a jumbotron and 3-column feature.
+* 0.55h (20:35-21:08): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Spent some time trying to decide how hierarchical docs could work. No luck so far.
+
+### 2015-11-17, Tuesday
+
+* 0.25h (10:20-10:35): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Came across Jekyll's "collections" feature, which is *exactly* what I needed. Yay!: <http://jekyllrb.com/docs/collections/>
+
+### 2015-11-19, Thursday
+
+* 0.2h (21:54-22:05): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got my devenv running again.
+    * Got the `it_docs` collection itself working, but can't get the index for it right.
+
+### 2015-11-21, Saturday
+
+* 1.25h (17:02-18:16): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Figured out how to get the IT collection's index working.
+        * Key lesson #1: Don't have a root page with the same name as a collection.
+        * Key lesson #2: Any changes to the config require restarting `jekyll serve`.
+    * Also learned that the site's `baseurl` has to be prepended to every link. Dumb, but okay.
+
+### 2015-11-22, Sunday
+
+* 1.25h (14:44-15:59): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Hacked out a rough understanding of how to link to collection items in Liquid. Very painful learning experience.
+
+### 2015-11-23, Monday
+
+* 1.45h (19:19-20:02,21:35-22:20): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got a first Collections URL plugin written. Doesn't yet handle `baseurl`.
+
+### 2015-11-24, Tuesday
+
+* 0.2h (07:58-08:11): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * If I want to parse tag options, to enable `baseurl` handling, I'm going to have to do it via regex. Yuck.
+
+### 2015-11-25, Wednesday
+
+* 0.15h (19:39-19:49): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * The second parameter in tag constructors seems to be all of the parameters, combined as a single string. Yuck!
+
+### 2015-11-28, Saturday
+
+* 0.1h (16:30-16:36): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got my devenv back up (after a restart). Didn't feel like playing with regexes right now, though.
+
+### 2015-11-30, Monday
+
+* 0.45h (19:56-20:22): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Worked on creating a regex for a while. Still needs to handle item IDs with whitespace.
+
+### 2015-12-01, Tuesday
+
+* 0.7h (21:47-22:30): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Banged on the regex for a while.
+    * Think I have it handling quoted IDs.
+    * Will need a second-stage regex for breaking up the key-value pairs, using `scan` or somesuch. Can't be done with a single regex.
+
+### 2015-12-02, Wednesday
+
+* 0.55h (21:46-22:20): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got the properties parsing working, along with the `baseurl` support that required it.
+
+### 2015-12-03, Thursday
+
+* 0.3h (20:37-20:56): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * This seems like it's about where I need to branch in Git and start actually tracking my changes...
+        * I think I've proven now that all of the tricky stuff is possible.
+        * Just have to slog through all of it, I guess.
+        * Oh, I'm a goof: I already had branched. Silly me.
+    * Got things a bit cleaned up and committed to that branch. Feels good.
+
+### 2015-12-05, Saturday
+
+* 0.6h (23:03-23:39): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Added in the other `collection_doc_*` tag types. Yay!
+
