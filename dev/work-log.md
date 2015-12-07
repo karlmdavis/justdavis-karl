@@ -294,3 +294,8 @@ This file should never be committed along with other files; it should always be 
 * 0.6h (23:03-23:39): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
     * Added in the other `collection_doc_*` tag types. Yay!
 
+### 2015-12-06, Sunday
+
+* 0.95h (20:22-21:19): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Banged on the front page a good bit. Starting to look decent.
+
