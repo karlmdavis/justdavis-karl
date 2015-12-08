@@ -299,3 +299,9 @@ This file should never be committed along with other files; it should always be 
 * 0.95h (20:22-21:19): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
     * Banged on the front page a good bit. Starting to look decent.
 
+### 2015-12-07, Monday
+
+* 0.6h (20:41-21:17): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Worked on styling the front page a bit more. Pretty happy with it now, I think.
+    * Started building the `/projects` page.
+
