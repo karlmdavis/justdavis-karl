@@ -305,3 +305,28 @@ This file should never be committed along with other files; it should always be 
     * Worked on styling the front page a bit more. Pretty happy with it now, I think.
     * Started building the `/projects` page.
 
+### 2015-12-09, Wednesday
+
+* 0.65h (22:17-22:21,23:59-00:34): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Finished the `/project` page's layout.
+    * Bootstrap doesn't have good support for equal height columns, so each project needs to fill a whole row.
+
+### 2015-12-11, Friday
+
+* 0.15h (18:05-18:14): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Finished the copy on the `/projects` page.
+
+### 2015-12-12, Saturday
+
+* 0.65h (21:51-22:29): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Committed the work done so far.
+    * Fixed up the nav.
+    * Worked on the `/blog` page.
+    * Something's up with the URLs for `_posts` content. Whyfor?
+
+### 2015-12-13, Sunday
+
+* 0.75h (12:39-12:48,13:34-14:08): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Started trying to fix the nav's `active` setting. Looks like Jekyll doesn't really allow for custom functions, as such.
+    * Need to reimplement it as a custom tag.
+
