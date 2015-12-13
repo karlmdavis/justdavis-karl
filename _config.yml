@@ -10,6 +10,9 @@ url: "https://justdavis.com" # the base hostname & protocol for your site
 twitter_username: karlmdavis
 github_username:  karlmdavis
 
+# Default URLs for posts:
+permalink: /blog/:year/:title
+
 # Build settings
 markdown: kramdown
 
