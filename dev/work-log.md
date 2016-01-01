@@ -330,3 +330,8 @@ This file should never be committed along with other files; it should always be 
     * Started trying to fix the nav's `active` setting. Looks like Jekyll doesn't really allow for custom functions, as such.
     * Need to reimplement it as a custom tag.
 
+### 2016-01-01, Friday
+
+* 0.4h (16:38-17:03): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Fixed the navbar active/inactive badges. Committed.
+
