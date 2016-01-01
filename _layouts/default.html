@@ -24,10 +24,10 @@
 	<div class="masthead">
 		<div class="container">
 			<nav class="nav">
-				<a class="nav-item active" href="{{ '/' | prepend: site.baseurl }}">Home</a>
-				<a class="nav-item" href="{{ '/projects' | prepend: site.baseurl }}">Projects</a>
-				<a class="nav-item" href="{{ '/blog' | prepend: site.baseurl }}">Blog</a>
-				<a class="nav-item" href="{{ '/it' | prepend: site.baseurl }}">IT Docs</a>
+				<a class="nav-item {% nav_active '/' %}" href="{{ '/' | prepend: site.baseurl }}">Home</a>
+				<a class="nav-item {% nav_active '/projects' %}" href="{{ '/projects' | prepend: site.baseurl }}">Projects</a>
+				<a class="nav-item {% nav_active '/blog' %}" href="{{ '/blog' | prepend: site.baseurl }}">Blog</a>
+				<a class="nav-item {% nav_active '/it' %}" href="{{ '/it' | prepend: site.baseurl }}">IT Docs</a>
 			</nav>
 		</div>
 	</div>
