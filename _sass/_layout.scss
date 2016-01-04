@@ -13,9 +13,7 @@
 	.projects-intro-inner {
 		@include make-xs-column(12);
 
-		h2 {
-			margin-top: 0;
-			padding-top: 0;
+		h1 {
 		}
 	}
 }
