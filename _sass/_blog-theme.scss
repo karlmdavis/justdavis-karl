@@ -130,6 +130,51 @@ $headings-color:          #333;
   border-radius: 30px;
 }
 
+/*
+ * Blog Post List/Frontpage
+ */
+.blog-intro {
+  @include make-row;
+
+  .blog-intro-inner {
+    @include make-xs-column(12);
+
+    h1 {
+    }
+  }
+}
+
+ol.blog-posts {
+  @include make-row;
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+
+  li {
+    @include make-xs-column(12);
+    margin-top: 3em;
+    border-top: 1px solid $gray-lighter;
+    padding-top: 1em;
+    margin-left: 0;
+    padding-left: 0;
+
+    h2 {
+      margin-top: 0;
+      padding-top: 0;
+    }
+
+    a.blog-read-more {
+      font-size: 0.9em;
+    }
+  }
+}
+
+p.blog-rss-subscribe {
+  margin-top: 3em;
+  border-top: 1px solid $gray-lighter;
+  padding-top: 1em;
+}
+
 
 /*
  * Blog posts
