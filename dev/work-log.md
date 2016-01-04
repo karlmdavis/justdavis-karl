@@ -335,3 +335,8 @@ This file should never be committed along with other files; it should always be 
 * 0.4h (16:38-17:03): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
     * Fixed the navbar active/inactive badges. Committed.
 
+### 2016-01-03, Sunday
+
+* 0.65h (21:40-22:20): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Created the `/blog` frontpage/list. Reasonably happy with it; pretty much the same as the projects page.
+
