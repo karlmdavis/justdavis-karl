@@ -68,3 +68,10 @@ Parts of Jekyll also require Node.js to be available on the path. Install it fro
     $ sudo apt-get install nodejs
 
 
+## Serve the Site Locally
+
+Run this to start a local server at <http://localhost:4000/karl/>:
+
+    $ rvm 2.2.1@jekyll
+    $ bundle exec jekyll serve
+
