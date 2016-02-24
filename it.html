@@ -1,10 +1,22 @@
 ---
-layout: it_doc
+layout: default
 permalink: /it/
 ---
+	<div class="container">
 
-<p>IT page</p>
-{% for it_doc in site.it_docs %}
-  <h2>Foo</h2>
-  <h2><a href="{{ it_doc.url | prepend: site.baseurl }}">{{ it_doc.title }}: {{ it_doc.description }}</a></h2>
-{% endfor %}
+		<div class="it-intro"><div class="it-intro-inner">
+			<h1>IT Docs</h1>
+			<p>TODO</p>
+		</div></div>
+
+		<ol class="it-docs">
+			{% for it_doc in site.it_docs %}
+			<li>
+				<h2><a href="{{ it_doc.url | prepend: site.baseurl }}">{{ it_doc.title }}</a></h2>
+				<p>{{ it_doc.description }}</p>
+			</li>
+			{% endfor %}
+		</ol>
+
+	</div>
+

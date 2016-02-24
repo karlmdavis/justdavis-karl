@@ -34,3 +34,34 @@
 		}
 	}
 }
+
+.it-intro {
+	@include make-row;
+
+	.it-intro-inner {
+		@include make-xs-column(12);
+
+		h1 {
+		}
+	}
+}
+
+.it-docs {
+	@include make-row;
+	list-style: none;
+	margin-bottom: 3em;
+	padding-left: 0;
+
+	li {
+		@include make-xs-column(12);
+		margin-top: 3em;
+		border-top: 1px solid $gray-lighter;
+		padding-top: 1em;
+
+		h2 {
+			margin-top: 0;
+			padding-top: 0;
+		}
+	}
+}
+
