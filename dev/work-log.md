@@ -340,3 +340,12 @@ This file should never be committed along with other files; it should always be 
 * 0.65h (21:40-22:20): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
     * Created the `/blog` frontpage/list. Reasonably happy with it; pretty much the same as the projects page.
 
+### 2016-02-23, Tuesday
+
+* 0.55h (21:15-21:48): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got things fired up again.
+    * Documented how to run the site locally, since it'd fallen out of my Bash history.
+    * Fixed a link in the blog frontpage.
+    * Fixed the gutter at the bottom of pages.
+    * Tweaked the blog post layout some. Done? Not sure.
+
