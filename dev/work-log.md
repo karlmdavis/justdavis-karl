@@ -349,3 +349,9 @@ This file should never be committed along with other files; it should always be 
     * Fixed the gutter at the bottom of pages.
     * Tweaked the blog post layout some. Done? Not sure.
 
+### 2016-02-24, Wednesday
+
+* 0.25h (07:05-07:11,08:00-08:11): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * First pass at formatting the IT Docs frontpage.
+    * Hadn't I added some metadata to those pages that'd allow me to group them by category?
+
