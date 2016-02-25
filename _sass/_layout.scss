@@ -48,19 +48,15 @@
 
 .it-docs {
 	@include make-row;
-	list-style: none;
 	margin-bottom: 3em;
-	padding-left: 0;
 
-	li {
+	> div {
 		@include make-xs-column(12);
-		margin-top: 3em;
-		border-top: 1px solid $gray-lighter;
-		padding-top: 1em;
 
-		h2 {
-			margin-top: 0;
-			padding-top: 0;
+		> ol {
+			list-style: none;
+			margin-left: 0;
+			padding-left: 0;
 		}
 	}
 }

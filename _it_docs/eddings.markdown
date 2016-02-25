@@ -2,7 +2,6 @@
 layout: it_doc
 title:  "Eddings"
 date:   2015-11-17 10:27:00
-categories: eddings
 description: Describes the setup and configuration of eddings, my main server.
 ---
 

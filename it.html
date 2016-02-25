@@ -9,14 +9,31 @@ permalink: /it/
 			<p>TODO</p>
 		</div></div>
 
-		<ol class="it-docs">
-			{% for it_doc in site.it_docs %}
-			<li>
-				<h2><a href="{{ it_doc.url | prepend: site.baseurl }}">{{ it_doc.title }}</a></h2>
-				<p>{{ it_doc.description }}</p>
-			</li>
-			{% endfor %}
-		</ol>
+		<div class="it-docs">
+			<div><ol>
+				{% assign root_docs = site.it_docs | where:"parent",null %}
+				{% for root_doc in root_docs %}
+				<li>
+					<h2>{{ root_doc.title }}</h2>
+					<p>
+						<a href="{{ root_doc.url | prepend: site.baseurl }}">{{ root_doc.title }}</a>:
+						{{ root_doc.description }}
+					</p>
+					<ol>
+						{% assign sub_docs = site.it_docs | where:"parent",root_doc.id %}
+						{% for sub_doc in sub_docs %}
+						<li>
+							<p>
+								<a href="{{ sub_doc.url | prepend: site.baseurl }}">{{ sub_doc.title }}</a>:
+								{{ sub_doc.description }}
+							</p>
+						</li>
+						{% endfor %}
+					</ol>
+				</li>
+				{% endfor %}
+			</ol></div>
+		</div>
 
 	</div>
 
