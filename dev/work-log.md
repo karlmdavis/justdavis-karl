@@ -354,4 +354,8 @@ This file should never be committed along with other files; it should always be 
 * 0.25h (07:05-07:11,08:00-08:11): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
     * First pass at formatting the IT Docs frontpage.
     * Hadn't I added some metadata to those pages that'd allow me to group them by category?
+* 0.8h (21:49-22:37): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Had to leave things broken, due to lack of internet (on a plane):
+        * How to pass IDs using a variable in `collection_doc_link_long`?
+        * How to write an `if` block that verifies a field is missing?
 
