@@ -21,8 +21,18 @@ module Jekyll
       end
       #Jekyll.logger.error "properties: ", @properties
     end
+    
+    def retrieve_item_id(context)
+      if /\{\{([\w\-\.]+)\}\}/ =~ @item_id
+        raise ArgumentError.new("No variable #{$1} was found in tag") if context[$1].nil?
+        @item_id = context[$1]
+      end
+    end
 
     def find_doc(context)
+      # If the Item ID is '{{some_variable}}', deref the variable.    
+      retrieve_item_id(context)
+      
       site = context.registers[:site]
 
       site.collections.each do |_, collection|
