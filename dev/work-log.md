@@ -359,3 +359,8 @@ This file should never be committed along with other files; it should always be 
         * How to pass IDs using a variable in `collection_doc_link_long`?
         * How to write an `if` block that verifies a field is missing?
 
+### 2016-02-26, Friday
+
+* 0.7h (07:00-07:41): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Enhanced collection links to support variable item IDs.
+
