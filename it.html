@@ -6,19 +6,20 @@ permalink: /it/
 
 		<div class="it-intro"><div class="it-intro-inner">
 			<h1>IT Docs</h1>
-			<p>TODO</p>
+			<p>This site contains the IT documentation for various devices and networks I’ve worked on. The site is organized as a series of hierarchical topics, with the top-level topics listed below.</p>
+			<p>Please note that my very earliest IT documentation efforts made use of a Trac site that is no longer available. The unformatted content from that site can be found on GitHub, here: TODO.</p>
 		</div></div>
 
 		<div class="it-docs">
 			<div><ol>
-				{% assign root_docs = site.it_docs | where:"parent",null %}
+				{% assign root_docs = site.it_docs | where:"parent",null | sort:"date" %}
 				{% for root_doc in root_docs %}
 				<li>
 					<h2>{{ root_doc.title }}</h2>
 					<p>{% collection_doc_link_long {{root_doc.id}} baseurl:true %}</p>
 					<ol>
 						{% assign sub_docs = site.it_docs | where:"parent",root_doc.id %}
-						{% for sub_doc in sub_docs %}
+						{% for sub_doc in sub_docs | sort:"date" %}
 						<li>
 							<p>{% collection_doc_link_long {{sub_doc.id}} baseurl:true %}</p>
 						</li>
