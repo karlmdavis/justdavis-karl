@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "A sad tale of VPN troubles on Intrepid"
-date: 2015-08-29
+date: 2009-08-29
 categories: it linux vpn
 description: "I've now spent a few evenings this week debugging a VPN client error at home: \"LCP: timeout sending Config-Requests ... Connection terminated. ... Modem hangup\""
 ---
