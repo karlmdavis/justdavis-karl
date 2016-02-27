@@ -364,3 +364,10 @@ This file should never be committed along with other files; it should always be 
 * 0.7h (07:00-07:41): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
     * Enhanced collection links to support variable item IDs.
 
+### 2016-02-26, Friday
+
+* 0.5h (12:45-13:15): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Fixed a bug that had completely broken collection doc links. How had I missed that?! Been there forever, I think.
+    * Made the last tweaks (for now) to the layout and all that.
+    * Time for content!
+
