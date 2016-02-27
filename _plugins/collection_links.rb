@@ -87,7 +87,7 @@ eos
       #Jekyll.logger.error "doc.data: #{doc.data}"
       title = doc['title']
      
-      return "<a href='url'>#{title}</a>"
+      return "<a href='#{url}'>#{title}</a>"
     end
   end
 
@@ -104,7 +104,7 @@ eos
       title = doc['title']
       description = doc['description']
      
-      return "<a href='url'>#{title}</a>: #{description}"
+      return "<a href='#{url}'>#{title}</a>: #{description}"
     end
   end
 end
