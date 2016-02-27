@@ -53,6 +53,7 @@ DEPENDENCIES
   bootstrap-sass
   jekyll
   jekyll-assets (>= 2.0.0.pre.beta4)
+  rouge
 
 BUNDLED WITH
    1.10.6

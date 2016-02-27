@@ -15,6 +15,7 @@ permalink: /blog/:year/:title
 
 # Build settings
 markdown: kramdown
+highlighter: rouge
 
 # Specify the not-a-blog collections that are also present in this site.
 # See docs: http://jekyllrb.com/docs/collections/

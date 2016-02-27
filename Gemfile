@@ -13,3 +13,6 @@ gem 'jekyll-assets',  '>=2.0.0.pre.beta4'
 # Bring in the SASS fork of Bootstrap, which jekyll-assets has builtin support for.
 gem 'bootstrap-sass'
 
+# Used for code highlighting.
+gem 'rouge'
+
