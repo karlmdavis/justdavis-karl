@@ -1,10 +1,9 @@
---- 
+---
+layout: post
 title: "A sad tale of VPN troubles on Intrepid"
-kind: article
-publish: true
-created_at: 2009/03/21
-tags: [it, linux, vpn]
-excerpt: "I've now spent a few evenings this week debugging a VPN client error at home: \"LCP: timeout sending Config-Requests ... Connection terminated. ... Modem hangup\""
+date: 2015-08-29
+categories: it linux vpn
+description: "I've now spent a few evenings this week debugging a VPN client error at home: \"LCP: timeout sending Config-Requests ... Connection terminated. ... Modem hangup\""
 ---
 
 I've now spent a few evenings this week debugging a VPN client error at home.  I'm running Ubuntu Intrepid, whose VPN client [has](https://bugs.launchpad.net/ubuntu/+source/network-manager-pptp/+bug/278309) [had](https://bugs.launchpad.net/ubuntu/+source/network-manager-pptp/+bug/291895) [some](https://bugs.launchpad.net/ubuntu/+source/network-manager-pptp/+bug/259168) [issues](https://bugs.launchpad.net/ubuntu/+source/network-manager-pptp/+bug/284212), I've noticed.  So running into yet another problem was less "surprising" and more "depressing."  Whenever I tried to connect to a VPN server, I'd get an error and see the following in the messages log:

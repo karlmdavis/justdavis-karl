@@ -1,13 +1,12 @@
---- 
+---
+layout: post
 title: "Puppet: First Impressions"
-kind: article
-publish: true
-created_at: 2013/09/01
-tags: [it, puppet]
-excerpt: "Apache Maven is a wonderful tool for tracking, storing, and making use of compiled libraries, including native libraries (e.g. DLLs). Getting these libraries into Maven is simple."
+date: 2013-09-01
+categories: it puppet
+description: "Apache Maven is a wonderful tool for tracking, storing, and making use of compiled libraries, including native libraries (e.g. DLLs). Getting these libraries into Maven is simple."
 ---
 
-After years of <%= topic_link("/it/", "obsessive IT documentation") %>, I've finally decided to start exploring the world of automated configuration management tools. I figured that if I'm going to spend all this time writing stuff down, I might as well make my documentation executable from the get-go. After a brief bit of research, I decided to try out [Puppet](https://puppetlabs.com/) first.
+After years of [obsessive IT documentation]({{ '/it' | prepend: site.baseurl }}), I've finally decided to start exploring the world of automated configuration management tools. I figured that if I'm going to spend all this time writing stuff down, I might as well make my documentation executable from the get-go. After a brief bit of research, I decided to try out [Puppet](https://puppetlabs.com/) first.
 
 I've now been playing around with Puppet for a few months, using it to setup a build farm at work.
 

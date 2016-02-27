@@ -1,10 +1,9 @@
 ---
+layout: post
 title: "What On Earth Was I Thinking?"
-kind: article
-publish: true
-created_at: 2015/07/27
-tags: [coding]
-excerpt: "What on earth was I thinking, deciding to spend my free time building a Rock-Paper-Scissors game, of all things‽ Good question!"
+date: 2015-07-27
+categories: coding
+description: "What on earth was I thinking, deciding to spend my free time building a Rock-Paper-Scissors game, of all things‽ Good question!"
 ---
 
 For well over a year now, I've been spending a good bit of my evening and weekend time on the most absurd side project I could invent: [RPS Tourney](https://github.com/karlmdavis/rps-tourney). What on earth was I thinking, deciding to spend my free time building a Rock-Paper-Scissors game, of all things‽ Good question!
