@@ -370,4 +370,6 @@ This file should never be committed along with other files; it should always be 
     * Fixed a bug that had completely broken collection doc links. How had I missed that?! Been there forever, I think.
     * Made the last tweaks (for now) to the layout and all that.
     * Time for content!
+* 1.15h (15:22-16:31): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Migrated all of my blog posts from nanoc to Jekyll!
 
