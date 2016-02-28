@@ -364,7 +364,7 @@ This file should never be committed along with other files; it should always be 
 * 0.7h (07:00-07:41): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
     * Enhanced collection links to support variable item IDs.
 
-### 2016-02-26, Friday
+### 2016-02-27, Saturday
 
 * 0.5h (12:45-13:15): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
     * Fixed a bug that had completely broken collection doc links. How had I missed that?! Been there forever, I think.
@@ -372,4 +372,12 @@ This file should never be committed along with other files; it should always be 
     * Time for content!
 * 1.15h (15:22-16:31): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
     * Migrated all of my blog posts from nanoc to Jekyll!
+
+### 2016-02-28, Sunday
+
+* 3.25h (12:30-15:46): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Migrated draft blog posts.
+    * Migrated IT topics for `eddings`.
+        * Didn't yet link up the `misc` topic links.
+        * Didn't yet fix up the old Trac wiki content links.
 
