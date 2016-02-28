@@ -24,8 +24,10 @@ module Jekyll
     
     def retrieve_item_id(context)
       if /\{\{([\w\-\.]+)\}\}/ =~ @item_id
+        #Jekyll.logger.error "@item_id (pre): ", @item_id
         raise ArgumentError.new("No variable #{$1} was found in tag") if context[$1].nil?
         @item_id = context[$1]
+        #Jekyll.logger.error "@item_id (post): ", @item_id
       end
     end
 
@@ -92,18 +94,27 @@ eos
   end
 
   class CollectionDocLongLink < CollectionTag
+    # FIXME: workaround for https://github.com/Shopify/liquid/issues/698
+    attr_reader :args
+
     def initialize(tag_name, args, tokens)
       super
-      parse_liquid_args(args)
+      @args = args
+      # FIXME: workaround for https://github.com/Shopify/liquid/issues/698
+      #parse_liquid_args(args)
     end
 
     def render(context)
+      # FIXME: workaround for https://github.com/Shopify/liquid/issues/698
+      parse_liquid_args(@args)
+
+      #Jekyll.logger.error "@item_id (pre-render): ", @item_id
       doc = find_doc(context)
       url = build_doc_url(context, doc)
       #Jekyll.logger.error "doc.data: #{doc.data}"
       title = doc['title']
       description = doc['description']
-     
+      
       return "<a href='#{url}'>#{title}</a>: #{description}"
     end
   end
