@@ -1,10 +1,9 @@
 ---
+layout: post
 title: "RPS Tourney Work Log"
-kind: article
-publish: false
-created_at: 2015/06/14
-tags: [coding]
-excerpt: "TODO"
+date: 2015/06/14
+categories: coding
+description: "TODO"
 ---
 
 TODO: This needs a real title.
