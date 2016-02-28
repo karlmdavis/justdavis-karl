@@ -1,13 +1,11 @@
---- 
+---
 title: Eddings LDAP Server
-kind: topic
-summary: "Describes the steps necessary to make eddings an LDAP directory server."
+parent: /it/eddings
+layout: it_doc
+description: "Describes the steps necessary to make eddings an LDAP directory server."
 ---
 
-
-# <%= @item[:title] %>
-
-This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the steps necessary to make the computer an LDAP directory server, using [Open LDAP](http://www.openldap.org/).
+This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the steps necessary to make the computer an LDAP directory server, using [Open LDAP](http://www.openldap.org/).
 
 Previously, I'd been using `lewis` as an LDAP server (see <%= wiki_entry_link("LewisSetupLdapServer") %>). This functionality has now been moved to `eddings`. The LDAP domain formerly hosted by `lewis`, `dc=davisonlinehome,dc=name`, was decomissioned and replaced with the new `dc=justdavis,dc=com` domain on `eddings`.
 
@@ -509,7 +507,7 @@ Per [Bug #242313](https://bugs.launchpad.net/ubuntu/+source/openldap/+bug/242313
 
 ## Configuring Kerberos Authentication
 
-This section assumes that a Kerberos server has been setup for the `JUSTDAVIS.COM` realm as described in <%= topic_link("/it/davis/servers/eddings/kerberos/") %>.
+This section assumes that a Kerberos server has been setup for the `JUSTDAVIS.COM` realm as described in {% collection_doc_link /it/eddings/kerberos baseurl:true %}.
 
 Authentication to OpenLDAP with Kerberos is a complicated subject. There are two types of authentication to consider:
 

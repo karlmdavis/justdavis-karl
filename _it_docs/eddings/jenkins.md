@@ -1,16 +1,14 @@
---- 
+---
 title: Eddings Jenkins Server
-kind: topic
-summary: "Describes the steps necessary to make eddings a Jenkins CI server."
+parent: /it/eddings
+layout: it_doc
+description: "Describes the steps necessary to make eddings a Jenkins CI server."
 ---
 
+This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the steps necessary to make the computer a [Jenkins](http://jenkins-ci.org/) CI build server. It assumes that the following guides have already been followed:
 
-# <%= @item[:title] %>
-
-This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the steps necessary to make the computer a [Jenkins](http://jenkins-ci.org/) CI build server. It assumes that the following guides have already been followed:
-
-* <%= topic_summary_link("/it/davis/servers/eddings/web/") %>
-* <%= topic_summary_link("/it/davis/servers/eddings/ldap/") %>
+* {% collection_doc_link_long /it/eddings/web baseurl:true %}
+* {% collection_doc_link_long /it/eddings/ldap baseurl:true %}
 
 
 ## Installing the Java JDKs
@@ -56,7 +54,7 @@ After starting the `jenkins` service, it should be available at the following UR
 
 ## Configuring Jenkins Authentication
 
-By default, Jenkins is configured to be entirely open: anyone can modify the configuration, create/manage jobs, etc. Obviously, this isn't a great idea for a publicly-accessible web application. To solve this, Jenkins will be modified to use the LDAP server detailed in <%= topic_link("/it/davis/servers/eddings/ldap/") %>.
+By default, Jenkins is configured to be entirely open: anyone can modify the configuration, create/manage jobs, etc. Obviously, this isn't a great idea for a publicly-accessible web application. To solve this, Jenkins will be modified to use the LDAP server detailed in {% collection_doc_link /it/eddings/ldap baseurl:true %}.
 
 First, Jenkins' security mechanisms need to be enabled. Browse to <http://eddings.justdavis.com:8081/configureSecurity/?>, and configure the options as follows:
 
@@ -84,7 +82,7 @@ References:
 * <http://httpd.apache.org/docs/2.2/mod/mod_proxy.html>
 * [Nexus FAQ: How can I integrate Nexus with Apache Httpd and Mod_Proxy?](https://docs.sonatype.com/display/SPRTNXOSS/Nexus+FAQ#NexusFAQ-Q.HowcanIintegrateNexuswithApacheHttpdandModProxy)
 
-Because Jenkins is running on the non-standard `8081` port and *can't* run on the same port `80` already being used by Apache on this server, we'll configure Apache to forward/proxy requests for certain URLs to Jenkins. For this particular configuration, we'll be modifying the `justdavis.com-ssl` virtual site in Apache, as configured in: <%= topic_link("/it/davis/servers/eddings/") %>.
+Because Jenkins is running on the non-standard `8081` port and *can't* run on the same port `80` already being used by Apache on this server, we'll configure Apache to forward/proxy requests for certain URLs to Jenkins. For this particular configuration, we'll be modifying the `justdavis.com-ssl` virtual site in Apache, as configured in: {% collection_doc_link /it/eddings baseurl:true %}.
 
 Enable Apache's `mod_proxy` and `mod_proxy_http` modules, which will be needed for this:
 
@@ -113,7 +111,7 @@ Add the following configuration to the end of the `VirtualHost` block in `/etc/a
 	</Location>
 ~~~~
 
-Please note that the first part of that configuration may already be there if Nexus has also been installed and configured in <%= topic_link("/it/davis/servers/eddings/nexus/") %>. It does not need to be duplicated; just add the `Location /jenkins/` section.
+Please note that the first part of that configuration may already be there if Nexus has also been installed and configured in {% collection_doc_link /it/eddings/nexus baseurl:true %}. It does not need to be duplicated; just add the `Location /jenkins/` section.
 
 Restart Apache to apply the module and configuration changes:
 
@@ -247,7 +245,7 @@ Note: I'm not sure why, but I also had to separately set each Jenkins job to use
 
 This section assumes the following pre-requisites have been completed:
 
-* <%= topic_summary_link("/it/davis/servers/eddings/nexus/") %>
+* {% collection_doc_link_long /it/eddings/nexus baseurl:true %}
 
 The Jenkins builds should use the Nexus server that's been setup on the server. Aside from the caching/speed benefits, this will also give it access to the artifacts published to that Nexus instance.
 
@@ -270,7 +268,7 @@ The following was added to the Global Maven `settings.xml` for Jenkins, via the 
 
 This section assumes the following pre-requisites have been completed:
 
-* <%= topic_summary_link("/it/davis/servers/eddings/sonarqube/") %>
+* {% collection_doc_link_long /it/eddings/sonarqube baseurl:true %}
 
 Some of the Jenkins builds will need access to a PostgreSQL database server as part of their automated tests. While the installation of PostgreSQL was handled via Puppet as part of the Sonar configuration (as referenced just above), a separate role/user was also created for Jenkins.
 

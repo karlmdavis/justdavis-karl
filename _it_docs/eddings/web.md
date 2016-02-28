@@ -1,7 +1,8 @@
---- 
+---
 title: Eddings Web Server
-kind: topic
-summary: "Describes the steps necessary to make eddings a web server."
+parent: /it/eddings
+layout: it_doc
+description: "Describes the steps necessary to make eddings a web server."
 ---
 
 

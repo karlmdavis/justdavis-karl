@@ -1,18 +1,16 @@
---- 
+---
 title: Eddings Nexus Server
-kind: topic
-summary: "Describes the steps necessary to make eddings a Nexus repository manager server."
+parent: /it/eddings
+layout: it_doc
+description: "Describes the steps necessary to make eddings a Nexus repository manager server."
 ---
 
+This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the steps necessary to make the computer a [Nexus](http://www.sonatype.org/nexus/) [Maven](http://maven.apache.org/) repository manager server. It assumes that the following guides have already been followed:
 
-# <%= @item[:title] %>
-
-This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the steps necessary to make the computer a [Nexus](http://www.sonatype.org/nexus/) [Maven](http://maven.apache.org/) repository manager server. It assumes that the following guides have already been followed:
-
-* <%= topic_summary_link("/it/davis/servers/eddings/kerberos/") %>
-* <%= topic_summary_link("/it/davis/servers/eddings/ldap/") %>
-* <%= topic_summary_link("/it/davis/servers/eddings/web/") %>
-* <%= topic_summary_link("/it/davis/servers/eddings/tomcat/") %>
+* {% collection_doc_link_long /it/eddings/kerberos baseurl:true %}
+* {% collection_doc_link_long /it/eddings/ldap baseurl:true %}
+* {% collection_doc_link_long /it/eddings/web baseurl:true %}
+* {% collection_doc_link_long /it/eddings/tomcat baseurl:true %}
 
 Previously, I'd been using `tolkien` as a Nexus server, which has now been decommissioned. The documentation for the old `tolkien` Nexus server is archived in: <%= wiki_entry_link("TolkienSetupNexus") %>.
 
@@ -65,7 +63,7 @@ References:
 * <http://httpd.apache.org/docs/2.2/mod/mod_proxy.html>
 * [Nexus FAQ: How can I integrate Nexus with Apache Httpd and Mod_Proxy?](https://docs.sonatype.com/display/SPRTNXOSS/Nexus+FAQ#NexusFAQ-Q.HowcanIintegrateNexuswithApacheHttpdandModProxy)
 
-Because Tomcat is running on the non-standard `8080` port and *can't* run on the same port `80` already being used by Apache on this server, we'll configure Apache to forward/proxy requests for certain URLs to Tomcat. For this particular configuration, we'll be modifying the `justdavis.com-ssl` virtual site in Apache, as configured in: <%= topic_link("/it/davis/servers/eddings/") %>.
+Because Tomcat is running on the non-standard `8080` port and *can't* run on the same port `80` already being used by Apache on this server, we'll configure Apache to forward/proxy requests for certain URLs to Tomcat. For this particular configuration, we'll be modifying the `justdavis.com-ssl` virtual site in Apache, as configured in: {% collection_doc_link /it/eddings baseurl:true %}.
 
 Enable Apache's `mod_proxy` and `mod_proxy_http` modules, which will be needed for this:
 
@@ -224,7 +222,7 @@ References:
 
 * [Nexus Book: Chapter 8. Nexus LDAP Integration](http://www.sonatype.com/books/nexus-book/reference/ldap.html)
 
-Nexus can be set to use the LDAP users from the server described in <%= topic_link("/it/davis/servers/eddings/ldap/") %>. It could also be configured to use LDAP groups, though that's not particularly useful for the small `justdavis.com` domain.
+Nexus can be set to use the LDAP users from the server described in {% collection_doc_link /it/eddings/ldap baseurl:true %}. It could also be configured to use LDAP groups, though that's not particularly useful for the small `justdavis.com` domain.
 
 LDAP authentication can be configured through the Nexus GUI, as follows:
 

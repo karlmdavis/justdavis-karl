@@ -1,16 +1,14 @@
---- 
+---
 title: Eddings Puppet Master Server
-kind: topic
-summary: "Describes the steps necessary to make eddings a Puppet master server."
+parent: /it/eddings
+layout: it_doc
+description: "Describes the steps necessary to make eddings a Puppet master server."
 ---
 
+This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the steps necessary to make the computer a [Puppet](http://puppetlabs.com/) master server. It assumes that the following guides have already been followed:
 
-# <%= @item[:title] %>
-
-This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the steps necessary to make the computer a [Puppet](http://puppetlabs.com/) master server. It assumes that the following guides have already been followed:
-
-* <%= topic_summary_link("/it/davis/servers/eddings/kerberos/") %>
-* <%= topic_summary_link("/it/davis/servers/eddings/ldap/") %>
+* {% collection_doc_link_long /it/eddings/kerberos baseurl:true %}
+* {% collection_doc_link_long /it/eddings/ldap baseurl:true %}
 
 Puppet is a configuration management system: it can be used to manage the packages installed on systems, configuration files, services, users, etc. As the `justdavis.com` network is adding Puppet in late, only new services added going forwards will be managed via Puppet; already-installed services will continue to be managed manually.
 

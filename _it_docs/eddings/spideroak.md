@@ -1,13 +1,11 @@
---- 
+---
 title: Eddings SpiderOak Backup
-kind: topic
-summary: "Describes the steps necessary to backup eddings using SpiderOak."
+parent: /it/eddings
+layout: it_doc
+description: "Describes the steps necessary to backup eddings using SpiderOak."
 ---
 
-
-# <%= @item[:title] %>
-
-This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the steps necessary to backup `eddings` using [SpiderOak](https://spideroak.com/), a "zero-knowledge" encrypted backup and synchronization service.
+This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the steps necessary to backup `eddings` using [SpiderOak](https://spideroak.com/), a "zero-knowledge" encrypted backup and synchronization service.
 
 Specifically, the following will be backed up from `eddings`:
 

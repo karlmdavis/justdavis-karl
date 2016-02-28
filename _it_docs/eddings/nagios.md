@@ -1,16 +1,15 @@
---- 
+---
 title: Eddings Nagios Monitoring
-kind: topic
-summary: "Describes the steps necessary to make eddings a Nagios monitoring server."
+parent: /it/eddings
+layout: it_doc
+description: "Describes the steps necessary to make eddings a Nagios monitoring server."
 ---
 
-# <%= @item[:title] %>
+This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the steps necessary to make the computer a [Nagios](http://www.nagios.org/) monitoring server. It assumes that the following guides have already been followed:
 
-This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the steps necessary to make the computer a [Nagios](http://www.nagios.org/) monitoring server. It assumes that the following guides have already been followed:
-
-* <%= topic_summary_link("/it/davis/servers/eddings/kerberos/") %>
-* <%= topic_summary_link("/it/davis/servers/eddings/ldap/") %>
-* <%= topic_summary_link("/it/davis/servers/eddings/web/") %>
+* {% collection_doc_link_long /it/eddings/kerberos baseurl:true %}
+* {% collection_doc_link_long /it/eddings/ldap baseurl:true %}
+* {% collection_doc_link_long /it/eddings/web baseurl:true %}
 
 This monitoring will help ensure that the network and the devices hosted on it are all functioning correctly.
 

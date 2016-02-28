@@ -1,17 +1,15 @@
---- 
+---
 title: Eddings Tomcat Server
-kind: topic
-summary: "Describes the steps necessary to make eddings a Tomcat web application server."
+parent: /it/eddings
+layout: it_doc
+description: "Describes the steps necessary to make eddings a Tomcat web application server."
 ---
 
+This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the steps necessary to make the computer a [Tomcat 7](http://tomcat.apache.org/) web application server. It assumes that the following guides have already been followed:
 
-# <%= @item[:title] %>
-
-This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the steps necessary to make the computer a [Tomcat 7](http://tomcat.apache.org/) web application server. It assumes that the following guides have already been followed:
-
-* <%= topic_summary_link("/it/davis/servers/eddings/kerberos/") %>
-* <%= topic_summary_link("/it/davis/servers/eddings/ldap/") %>
-* <%= topic_summary_link("/it/davis/servers/eddings/web/") %>
+* {% collection_doc_link /it/eddings/kerberos baseurl:true %}
+* {% collection_doc_link /it/eddings/ldap baseurl:true %}
+* {% collection_doc_link /it/eddings/web baseurl:true %}
 
 
 ## Installing Java

@@ -1,17 +1,15 @@
---- 
+---
 title: Eddings SonarQube Server
-kind: topic
-summary: "Describes the steps necessary to make eddings a SonarQube server."
+parent: /it/eddings
+layout: it_doc
+description: "Describes the steps necessary to make eddings a SonarQube server."
 ---
 
+This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the steps necessary to make eddings a [SonarQube](http://www.sonarqube.org/) server. It assumes that the following guides have already been followed:
 
-# <%= @item[:title] %>
-
-This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the steps necessary to make eddings a [SonarQube](http://www.sonarqube.org/) server. It assumes that the following guides have already been followed:
-
-* <%= topic_summary_link("/it/davis/servers/eddings/ldap/") %>
-* <%= topic_summary_link("/it/davis/servers/eddings/puppet/") %>
-* <%= topic_summary_link("/it/davis/servers/eddings/jenkins/") %>
+* {% collection_doc_link_long /it/eddings/ldap baseurl:true %}
+* {% collection_doc_link_long /it/eddings/puppet baseurl:true %}
+* {% collection_doc_link_long /it/eddings/jenkins baseurl:true %}
 
 SonarQube provides a code quality analysis service and web application dashboard. It can be used to run static analysis tools such as [PMD](http://pmd.sourceforge.net/), storing, and tracking the results over time.
 

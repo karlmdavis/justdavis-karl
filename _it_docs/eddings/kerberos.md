@@ -1,13 +1,11 @@
---- 
+---
 title: Eddings Kerberos Server
-kind: topic
-summary: "Describes the steps necessary to make eddings a Kerberos authentication server."
+parent: /it/eddings
+layout: it_doc
+description: "Describes the steps necessary to make eddings a Kerberos authentication server."
 ---
 
-
-# <%= @item[:title] %>
-
-This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the steps necessary to make the computer a Kerberos authentication server, using [MIT Kerberos](http://web.mit.edu/kerberos/).
+This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the steps necessary to make the computer a Kerberos authentication server, using [MIT Kerberos](http://web.mit.edu/kerberos/).
 
 Previously, I'd been using `lewis` as a Kerberos server (see <%= wiki_entry_link("LewisSetupKerberosServer") %>). This functionality has now been moved to `eddings`. The Kerberos realm formerly hosted by `lewis`, `DAVISONLINEHOME.NAME`, was decomissioned and replaced with the new `JUSTDAVIS.COM` realm on `eddings`.
 

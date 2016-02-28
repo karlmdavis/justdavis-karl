@@ -1,13 +1,11 @@
---- 
+---
 title: Eddings DNS Server
-kind: topic
-summary: "Describes the steps necessary to make eddings a DNS server."
+parent: /it/eddings
+layout: it_doc
+description: "Describes the steps necessary to make eddings a DNS server."
 ---
 
-
-# <%= @item[:title] %>
-
-This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the steps necessary to make the computer a DNS server, using [bind](http://www.isc.org/software/bind).
+This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the steps necessary to make the computer a DNS server, using [bind](http://www.isc.org/software/bind).
 
 Previously, I'd been using two other DNS servers, which have now been consolidated onto `eddings`:
 

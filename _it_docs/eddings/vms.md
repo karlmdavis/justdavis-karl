@@ -1,12 +1,11 @@
---- 
+---
 title: Eddings Virtual Machines
-kind: topic
-summary: "Describes the steps necessary to make eddings a VM host."
+parent: /it/eddings
+layout: it_doc
+description: "Describes the steps necessary to make eddings a VM host."
 ---
 
-# <%= @item[:title] %>
-
-This <%= topic_link("/it/davis/servers/eddings/") %> sub-guide describes the steps necessary to make the computer a VM host.
+This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the steps necessary to make the computer a VM host.
 
 This is necessary as the server will be replacing an ESXi server that hosted several old VMs. Until the services on these VMs are migrated onto `eddings`, the VMs will have to be hosted on `eddings` to ensure the services remain available. The VMs being migrated are the following:
 
