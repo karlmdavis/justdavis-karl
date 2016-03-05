@@ -381,3 +381,10 @@ This file should never be committed along with other files; it should always be 
         * Didn't yet link up the `misc` topic links.
         * Didn't yet fix up the old Trac wiki content links.
 
+### 2016-03-05, Saturday
+
+* 1.05h (15:47-16:49): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Migrated the rest of the IT docs.
+    * Having trouble with extra Liquid line breaks in generated lists.
+    * Still haven't updated the old wiki links.
+
