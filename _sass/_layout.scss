@@ -50,17 +50,12 @@
 	@include make-row;
 	margin-bottom: 3em;
 
-	> div {
+	> div.it-docs-group {
 		@include make-xs-column(12);
 
-		> ol {
-			list-style: none;
-			margin-left: 0;
-			padding-left: 0;
-
-			ol {
-				list-style: square;
-			}
+		ul {
+			list-style: square;
+			padding-left: 1.5em;
 		}
 	}
 }

@@ -11,23 +11,35 @@ permalink: /it/
 		</div></div>
 
 		<div class="it-docs">
-			<div><ol>
-				{% assign root_docs = site.it_docs | where:"parent",null | sort:"date" %}
-				{% for root_doc in root_docs %}
-				<li>
-					<h2>{{ root_doc.title }}</h2>
-					<p>{% collection_doc_link_long {{root_doc.id}} baseurl:true %}</p>
-					<ol>
-						{% assign sub_docs = site.it_docs | where:"parent",root_doc.id %}
-						{% for sub_doc in sub_docs | sort:"date" %}
-						<li>
-							<p>{% collection_doc_link_long {{sub_doc.id}} baseurl:true %}</p>
-						</li>
-						{% endfor %}
-					</ol>
-				</li>
-				{% endfor %}
-			</ol></div>
+			<div class="it-docs-group">
+				<h2>Servers</h2>
+				<ul>
+					{% assign server_docs = site.it_docs | where:"parent",null | where:"group","servers" | sort:"date" %}
+					{% for server_doc in server_docs %}
+					<li>{% collection_doc_link_long {{server_doc.id}} baseurl:true %}</li>
+					{% endfor %}
+				</ul>
+			</div>
+			
+			<div class="it-docs-group">
+				<h2>Workstations</h2>
+				<ul>
+					{% assign workstation_docs = site.it_docs | where:"parent",null | where:"group","workstations" | sort:"date" %}
+					{% for workstation_doc in workstation_docs %}
+					<li>{% collection_doc_link_long {{workstation_doc.id}} baseurl:true %}</li>
+					{% endfor %}
+				</ul>
+			</div>
+			
+			<div class="it-docs-group">
+				<h2>Miscellaneous</h2>
+				<ul>
+					{% assign misc_docs = site.it_docs | where:"parent",null | where:"group",null | sort:"date" %}
+					{% for misc_doc in misc_docs %}
+					<li>{% collection_doc_link_long {{misc_doc.id}} baseurl:true %}</li>
+					{% endfor %}
+				</ul>
+			</div>
 		</div>
 
 	</div>

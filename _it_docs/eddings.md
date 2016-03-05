@@ -1,6 +1,7 @@
 ---
-title:  "Eddings"
+title: "Eddings"
 layout: it_doc
+group: servers
 description: Describes the setup and configuration of eddings, my main server.
 ---
 
@@ -269,19 +270,19 @@ When prompted, select the following options:
 You will receive warnings that a number of configuration files have new versions, but been modified since installation. For all of these files, the safest option is to overwrite the changes with the new version, as it's best to just manually re-create those changes after the upgrade has finished. The following is a list of the files such warnings were received for on the 2012-10-13 upgrade of `eddings`:
 
 * `/etc/security/group.conf`
-    * See <%= topic_link("/it/davis/misc/netclients/") %> after the upgrade to re-do the changes.
+    * See {% collection_doc_link /it/netclients baseurl:true %} after the upgrade to re-do the changes.
 * `/etc/ldap/ldap.conf`
-    * See <%= topic_link("/it/davis/misc/netclients/") %> after the upgrade to re-do the changes.
+    * See {% collection_doc_link /it/netclients baseurl:true %} after the upgrade to re-do the changes.
 * `/etc/apparmor.d/usr.sbin.slapd`
     * See {% collection_doc_link /it/eddings/ldap baseurl:true %} after the upgrade to re-do the changes.
 * `/etc/default/slapd`
     * See {% collection_doc_link /it/eddings/ldap baseurl:true %} after the upgrade to re-do the changes.
 * `/etc/pam.d/common-*`
-    * See <%= topic_link("/it/davis/misc/netclients/") %> after the upgrade to re-do the changes: specifically, the section on using `auth-client-config`.
+    * See {% collection_doc_link /it/netclients baseurl:true %} after the upgrade to re-do the changes: specifically, the section on using `auth-client-config`.
 * `/etc/pam.d/login`
-    * See <%= topic_link("/it/davis/misc/netclients/") %> after the upgrade to re-do the changes: specifically, the section on using `auth-client-config`.
+    * See {% collection_doc_link /it/netclients baseurl:true %} after the upgrade to re-do the changes: specifically, the section on using `auth-client-config`.
 * `/etc/sudoers`
-    * See <%= topic_link("/it/davis/misc/netclients/") %> after the upgrade to re-do the changes.
+    * See {% collection_doc_link /it/netclients baseurl:true %} after the upgrade to re-do the changes.
 * `/etc/default/saslauthd`
     * See {% collection_doc_link /it/eddings/ldap baseurl:true %} after the upgrade to re-do the changes.
 * `/etc/msmtprc`?

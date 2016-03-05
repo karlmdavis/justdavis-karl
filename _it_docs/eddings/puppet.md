@@ -93,7 +93,7 @@ The rest of the Puppet configuration from here on out is covered in the actual c
 
 ## Puppet Agent/Client Setup
 
-Installation and initial configuration of Puppet agents/clients is covered in <%= topic_link("/it/davis/misc/puppet-agent/") %>.
+Installation and initial configuration of Puppet agents/clients is covered in {% collection_doc_link /it/puppet-agent baseurl:true %}.
 
 
 ## Puppet References
