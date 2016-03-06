@@ -416,4 +416,8 @@ This file should never be committed along with other files; it should always be 
     * Site is published to <https://justdavis.com/karl>.
     * Even fixed the Apache configs to properly redirect from <https://justdavis.com/>.
     * Just need to merge the Git branch back in, being sure to not lose any changes.
+* 0.65h (13:56-14:35): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Merged the Issue #3 branch back into master and republished.
+    * Cleaned up the branches.
+    * Closed the issue.
 
