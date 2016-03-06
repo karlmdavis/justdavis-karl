@@ -2,9 +2,7 @@
 title: Karl M. Davis
 email: karl@justdavis.com
 description: > # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+  Personal site for Karl M. Davis
 baseurl: "/karl" # the subpath of your site, e.g. /blog/
 url: "https://justdavis.com" # the base hostname & protocol for your site
 twitter_username: karlmdavis
@@ -30,8 +28,13 @@ assets:
   js_compressor:  uglifier
   css_compressor: sass
 
-# Exclude some directories, to prevent builds looping endlessly.
-exclude: [".asset-cache", ".sass-cache"]
+# Exclude some directories and files.
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - dev
+  - .asset-cache   # Prevents endless looping.
+  - .sass-cache    # Prevents endless looping.
 
 gems:
   - jekyll-assets
