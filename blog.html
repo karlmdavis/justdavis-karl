@@ -1,0 +1,23 @@
+---
+layout: default
+permalink: /blog/
+---
+	<div class="container">
+
+		<div class="blog-intro"><div class="blog-intro-inner">
+			<h1>Karl's Blog</h1>
+		</div></div>
+
+		<ol class="blog-posts">
+			{% for post in site.posts %}
+			<li>
+				<h2><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></h2>
+				<p class="blog-post-meta">{{ post.date | date: "%B %-d, %Y" }}</p>
+				<p>{{ post.description }}&hellip; <a class="blog-read-more" href="{{ post.url | prepend: site.baseurl }}">(read more)</a></p>
+			</li>
+			{% endfor %}
+		</ol>
+
+		<p class="blog-rss-subscribe">Subscribe <a href="{{ '/feed.xml' | prepend: site.baseurl }}">via RSS.</a></p>
+
+	</div>

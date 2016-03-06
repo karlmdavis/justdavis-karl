@@ -1,7 +1,0 @@
-<h1><%= "All Articles Tagged '#{tag}'" %></h1>
-<div id="articleExcerpts">
-<% items_with_tag(tag).each do |item| %>
-<%=  render('_excerpt', :item => item) %>
-<% end %>
-</div>
-

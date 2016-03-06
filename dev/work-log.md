@@ -163,6 +163,11 @@ This file should never be committed along with other files; it should always be 
     * Added in the estimation formulas (via MathML), per the TODO. Committed.
     * Published the post. Pushed and deployed.
 
+### 2015-08-17, Monday
+
+* 0.5h (22:34-22:53): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Started installing `rvm`, which will be needed since Jekyll doesn't support Trusty's version of Ruby.
+
 ### 2015-08-18, Tuesday
 
 * 0.6h (10:25-10:50): [Issue #4: Write a blog post about library choice](https://github.com/karlmdavis/justdavis-karl/issues/4)
@@ -172,4 +177,243 @@ This file should never be committed along with other files; it should always be 
 
 * 0.3h (14:37-14:54): [Issue #2: Write a blog post discussing the work log data from RPS Tourney](https://github.com/karlmdavis/justdavis-karl/issues/2)
     * Fixed the missing CSS styling, e.g. for `blockquote` that I happened to notice. Whoops.
+
+### 2015-08-21, Friday
+
+* 0.5h (23:32-23:53): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got RVM installed. Need to figure out gemsets next.
+
+### 2015-08-29, Saturday
+
+* 0.75h (23:30-00:16): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got a gemset created and installed Jekyll into it.
+    * Played around a bit with a new Jekyll site. Need to figure out the simplest way to integrate Bootstrap.
+
+### 2015-08-30, Sunday
+
+* 0.4h (14:53-15:18): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * I might be able to use the [jekyll-assets](http://ixti.net/jekyll-assets/) plugin to integrate in Bootstrap.
+    * If not, I should just give up and use the pre-compiled version.
+
+### 2015-11-08, Sunday
+
+* 1.6h (11:43-13:19): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got things running again.
+    * Got the `jekyll-assets` plugin working, and pulling in Bootstrap 3 via `bootstrap-sass`.
+    * Need to start pulling apart the template and putting it back together how I want it.
+
+### 2015-11-09, Monday
+
+* 0.15h (21:44-21:54): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Looked through personal sites for design inspiration.
+
+### 2015-11-12, Thursday
+
+* 0.5h (08:11-8:41): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got the Bootstrap minimal sample in place.
+    * Got Bootstrap's JS working.
+
+### 2015-11-13, Friday
+
+* 0.1h (23:58-00:03): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Decided to use the Bootstrap blog template as a starting point.
+
+### 2015-11-14, Saturday
+
+* 0.2h (19:41-19:52): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Started pulling the template together. Didn't get too far: got bored.
+
+### 2015-11-15, Sunday
+
+* 0.45h (17:21-17:47): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Working on recreating Bootstrap's example "blog theme".
+
+### 2015-11-16, Monday
+
+* 0.15h (09:59-10:09): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got the nav and footer looking about right.
+* 0.25h (17:14-17:28): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Worked on the home page a bit. Added a jumbotron and 3-column feature.
+* 0.55h (20:35-21:08): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Spent some time trying to decide how hierarchical docs could work. No luck so far.
+
+### 2015-11-17, Tuesday
+
+* 0.25h (10:20-10:35): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Came across Jekyll's "collections" feature, which is *exactly* what I needed. Yay!: <http://jekyllrb.com/docs/collections/>
+
+### 2015-11-19, Thursday
+
+* 0.2h (21:54-22:05): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got my devenv running again.
+    * Got the `it_docs` collection itself working, but can't get the index for it right.
+
+### 2015-11-21, Saturday
+
+* 1.25h (17:02-18:16): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Figured out how to get the IT collection's index working.
+        * Key lesson #1: Don't have a root page with the same name as a collection.
+        * Key lesson #2: Any changes to the config require restarting `jekyll serve`.
+    * Also learned that the site's `baseurl` has to be prepended to every link. Dumb, but okay.
+
+### 2015-11-22, Sunday
+
+* 1.25h (14:44-15:59): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Hacked out a rough understanding of how to link to collection items in Liquid. Very painful learning experience.
+
+### 2015-11-23, Monday
+
+* 1.45h (19:19-20:02,21:35-22:20): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got a first Collections URL plugin written. Doesn't yet handle `baseurl`.
+
+### 2015-11-24, Tuesday
+
+* 0.2h (07:58-08:11): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * If I want to parse tag options, to enable `baseurl` handling, I'm going to have to do it via regex. Yuck.
+
+### 2015-11-25, Wednesday
+
+* 0.15h (19:39-19:49): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * The second parameter in tag constructors seems to be all of the parameters, combined as a single string. Yuck!
+
+### 2015-11-28, Saturday
+
+* 0.1h (16:30-16:36): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got my devenv back up (after a restart). Didn't feel like playing with regexes right now, though.
+
+### 2015-11-30, Monday
+
+* 0.45h (19:56-20:22): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Worked on creating a regex for a while. Still needs to handle item IDs with whitespace.
+
+### 2015-12-01, Tuesday
+
+* 0.7h (21:47-22:30): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Banged on the regex for a while.
+    * Think I have it handling quoted IDs.
+    * Will need a second-stage regex for breaking up the key-value pairs, using `scan` or somesuch. Can't be done with a single regex.
+
+### 2015-12-02, Wednesday
+
+* 0.55h (21:46-22:20): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got the properties parsing working, along with the `baseurl` support that required it.
+
+### 2015-12-03, Thursday
+
+* 0.3h (20:37-20:56): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * This seems like it's about where I need to branch in Git and start actually tracking my changes...
+        * I think I've proven now that all of the tricky stuff is possible.
+        * Just have to slog through all of it, I guess.
+        * Oh, I'm a goof: I already had branched. Silly me.
+    * Got things a bit cleaned up and committed to that branch. Feels good.
+
+### 2015-12-05, Saturday
+
+* 0.6h (23:03-23:39): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Added in the other `collection_doc_*` tag types. Yay!
+
+### 2015-12-06, Sunday
+
+* 0.95h (20:22-21:19): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Banged on the front page a good bit. Starting to look decent.
+
+### 2015-12-07, Monday
+
+* 0.6h (20:41-21:17): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Worked on styling the front page a bit more. Pretty happy with it now, I think.
+    * Started building the `/projects` page.
+
+### 2015-12-09, Wednesday
+
+* 0.65h (22:17-22:21,23:59-00:34): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Finished the `/project` page's layout.
+    * Bootstrap doesn't have good support for equal height columns, so each project needs to fill a whole row.
+
+### 2015-12-11, Friday
+
+* 0.15h (18:05-18:14): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Finished the copy on the `/projects` page.
+
+### 2015-12-12, Saturday
+
+* 0.65h (21:51-22:29): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Committed the work done so far.
+    * Fixed up the nav.
+    * Worked on the `/blog` page.
+    * Something's up with the URLs for `_posts` content. Whyfor?
+
+### 2015-12-13, Sunday
+
+* 0.75h (12:39-12:48,13:34-14:08): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Started trying to fix the nav's `active` setting. Looks like Jekyll doesn't really allow for custom functions, as such.
+    * Need to reimplement it as a custom tag.
+
+### 2016-01-01, Friday
+
+* 0.4h (16:38-17:03): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Fixed the navbar active/inactive badges. Committed.
+
+### 2016-01-03, Sunday
+
+* 0.65h (21:40-22:20): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Created the `/blog` frontpage/list. Reasonably happy with it; pretty much the same as the projects page.
+
+### 2016-02-23, Tuesday
+
+* 0.55h (21:15-21:48): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Got things fired up again.
+    * Documented how to run the site locally, since it'd fallen out of my Bash history.
+    * Fixed a link in the blog frontpage.
+    * Fixed the gutter at the bottom of pages.
+    * Tweaked the blog post layout some. Done? Not sure.
+
+### 2016-02-24, Wednesday
+
+* 0.25h (07:05-07:11,08:00-08:11): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * First pass at formatting the IT Docs frontpage.
+    * Hadn't I added some metadata to those pages that'd allow me to group them by category?
+* 0.8h (21:49-22:37): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Had to leave things broken, due to lack of internet (on a plane):
+        * How to pass IDs using a variable in `collection_doc_link_long`?
+        * How to write an `if` block that verifies a field is missing?
+
+### 2016-02-26, Friday
+
+* 0.7h (07:00-07:41): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Enhanced collection links to support variable item IDs.
+
+### 2016-02-27, Saturday
+
+* 0.5h (12:45-13:15): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Fixed a bug that had completely broken collection doc links. How had I missed that?! Been there forever, I think.
+    * Made the last tweaks (for now) to the layout and all that.
+    * Time for content!
+* 1.15h (15:22-16:31): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Migrated all of my blog posts from nanoc to Jekyll!
+
+### 2016-02-28, Sunday
+
+* 3.25h (12:30-15:46): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Migrated draft blog posts.
+    * Migrated IT topics for `eddings`.
+        * Didn't yet link up the `misc` topic links.
+        * Didn't yet fix up the old Trac wiki content links.
+
+### 2016-03-05, Saturday
+
+* 1.05h (15:47-16:49): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Migrated the rest of the IT docs.
+    * Having trouble with extra Liquid line breaks in generated lists.
+    * Still haven't updated the old wiki links.
+* 0.85h (20:55-21:44): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Fixed up line breaks in the auto-sub-topic lists.
+    * Migrated the legacy Trac wiki content as just unformatted text files, and fixed the links from the regular content into them. Good enough.
+
+### 2016-03-06, Sunday
+
+* 2.55h (10:50-13:22): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Finished all the things!
+    * Site is published to <https://justdavis.com/karl>.
+    * Even fixed the Apache configs to properly redirect from <https://justdavis.com/>.
+    * Just need to merge the Git branch back in, being sure to not lose any changes.
 

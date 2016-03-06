@@ -1,25 +1,18 @@
-source :gemcutter
+source 'https://rubygems.org'
 
+##
 # Install all these gems by running `bundle install`
+##
 
-# Dependencies for local Web server
-gem 'adsf'
-gem 'mime-types'
-gem 'rack'
+# The static site generator used to compile this whole project.
+gem 'jekyll'
 
-# Dependencies for CSS processing
-gem 'less'
-gem 'rainpress'
+# Provides an asset pipeline for Jekyll, which is used to build Bootstrap, etc.
+gem 'jekyll-assets',  '>=2.0.0.pre.beta4'
 
-# Dependencies for syntax colorizing filter
-gem 'coderay'
-gem 'nokogiri'
+# Bring in the SASS fork of Bootstrap, which jekyll-assets has builtin support for.
+gem 'bootstrap-sass'
 
-# Dependency for Textile filter  
-gem 'RedCloth'
+# Used for code highlighting.
+gem 'rouge'
 
-# Dependency for XML Sitemap generation
-gem 'builder'
-
-# nanoc
-gem 'nanoc'

@@ -1,0 +1,46 @@
+---
+layout: default
+permalink: /it/
+---
+	<div class="container">
+
+		<div class="it-intro"><div class="it-intro-inner">
+			<h1>IT Docs</h1>
+			<p>This site contains the IT documentation for various devices and networks I’ve worked on. The site is organized as a series of hierarchical topics, with the top-level topics listed below.</p>
+			<p>Please note that my very earliest IT documentation efforts made use of a Trac site that is no longer available. The (unformatted) content from that site can be found here: <a href="{{ '/legacy_trac_wiki/' | prepend: site.baseurl }}">Legacy Wiki Content</a>.</p>
+		</div></div>
+
+		<div class="it-docs">
+			<div class="it-docs-group">
+				<h2>Servers</h2>
+				<ul>
+					{% assign server_docs = site.it_docs | where:"parent",null | where:"group","servers" | sort:"date" %}
+					{% for server_doc in server_docs %}
+					<li>{% collection_doc_link_long {{server_doc.id}} baseurl:true %}</li>
+					{% endfor %}
+				</ul>
+			</div>
+			
+			<div class="it-docs-group">
+				<h2>Workstations</h2>
+				<ul>
+					{% assign workstation_docs = site.it_docs | where:"parent",null | where:"group","workstations" | sort:"date" %}
+					{% for workstation_doc in workstation_docs %}
+					<li>{% collection_doc_link_long {{workstation_doc.id}} baseurl:true %}</li>
+					{% endfor %}
+				</ul>
+			</div>
+			
+			<div class="it-docs-group">
+				<h2>Miscellaneous</h2>
+				<ul>
+					{% assign misc_docs = site.it_docs | where:"parent",null | where:"group",null | sort:"date" %}
+					{% for misc_doc in misc_docs %}
+					<li>{% collection_doc_link_long {{misc_doc.id}} baseurl:true %}</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+
+	</div>
+

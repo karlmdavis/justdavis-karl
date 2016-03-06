@@ -1,0 +1,44 @@
+---
+layout: default
+---
+
+<h1>Debug Jekyll</h1>
+<p>Used to help debug Jekyll's site generation.</p>
+
+<h2>Collections</h2>
+<ul>
+  {% for collection in site.collections %}
+  <li>
+    <p>Collection: <code>{{ collection.label }}</code></p>
+    <ul>
+      <li>Directory (relative): <code>{{ collection.relative_directory }}</code></li>
+      <li>Directory (absolute): <code>{{ collection.directory }}</code></li>
+      <li>Output?: <code>{{ collection.output }}</code></li>
+      <li>
+        <p>Docs:</p>
+        <ul>
+          {% for doc in collection.docs %}
+          <li>
+            <p>Document:</p>
+            <ul>
+              <li>ID: <code>{{ doc.id }}</code></li>
+              <li>Path (relative): <code>{{ doc.relative_path }}</code></li>
+              <li>Path (absolute): <code>{{ doc.path }}</code></li>
+              <li>URL: <code>{{ doc.url }}</code></li>
+            </ul>
+          </li>
+          {% endfor %}
+        </ul>
+      </li>
+      <li>
+        <p>Files:</p>
+        <ul>
+          {% for file in collection.files %}
+            <li>File: <code>{{ file }}</code></li>
+          {% endfor %}
+        </ul>
+      </li>
+    </ul>
+  </li>
+  {% endfor %}
+</ul>
