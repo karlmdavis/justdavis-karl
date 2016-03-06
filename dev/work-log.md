@@ -387,4 +387,7 @@ This file should never be committed along with other files; it should always be 
     * Migrated the rest of the IT docs.
     * Having trouble with extra Liquid line breaks in generated lists.
     * Still haven't updated the old wiki links.
+* 0.85h (20:55-21:44): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Fixed up line breaks in the auto-sub-topic lists.
+    * Migrated the legacy Trac wiki content as just unformatted text files, and fixed the links from the regular content into them. Good enough.
 
