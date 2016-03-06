@@ -75,3 +75,9 @@ Run this to start a local server at <http://localhost:4000/karl/>:
     $ rvm 2.2.1@jekyll
     $ bundle exec jekyll serve
 
+## Deploy the site to `eddings`
+
+Run the following command to build the site and publish it to <https://justdavis.com/karl/>:
+
+    $ ./dev/build-and-deploy.sh
+
