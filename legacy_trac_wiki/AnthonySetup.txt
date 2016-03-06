@@ -1,0 +1,11 @@
+= AnthonySetup =
+
+`anthony` is the Windows 7 OS on Karl's Acer AS1410 netbook.
+
+Please see the following sub-guides:
+ * AnthonySetupNetworkClient: describes the steps necessary to make the computer a client of the DOH network
+
+
+== Windows 7 64bit Home Premium Clean Install ==
+
+Actually, the laptop didn't come with a Windows 7 OEM disc; a clean install wasn't performed.  Did go through and remove most of the crapware, though.

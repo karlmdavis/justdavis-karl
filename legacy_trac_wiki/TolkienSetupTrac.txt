@@ -1,0 +1,152 @@
+= TolkienSetupTrac =
+
+This TolkienSetup sub-guide describes the steps necessary to make the computer a [http://trac.edgewall.org/ Trac] server.
+
+
+== Installing Apache ==
+
+Apache is required to host Trac.
+
+If you selected the "LAMP server" task during OS install, this should already be installed.  To verify, run the following command:
+{{{
+$ tasksel --list-tasks | grep lamp
+}}}
+
+To see the packages installed for the task, run:
+{{{
+$ tasksel --task-packages lamp-server
+}}}
+
+To specifically check whether or not the `apache2` package is installed, run:
+{{{
+$ apt-cache policy apache2
+}}}
+
+If you need to install this task, run:
+{{{
+# tasksel install lamp-server
+}}}
+
+If the `/etc/apache2/apache-logins.passwd` file does not already exist, create it with a user `apacheadmin` (be sure to make a note of this new username and password):
+{{{
+# htpasswd -cm /etc/apache2/apache-logins.passwd apacheadmin
+}}}
+
+
+=== Apache `mod_wsgi` Module ===
+
+The `mod_wsgi` adapter is an Apache module used to host some Python web applications.
+
+Version 1.3 of this module is distributed with Hardy.  Run the following commands to install and enable it:
+{{{
+# apt-get install libapache2-mod-wsgi
+# a2enmod mod-wsgi
+}}}
+
+
+== Installing Trac ==
+
+Version 0.10.x of Trac is distributed with Hardy.  Unfortunately, this version is rather old and is much less usable than the recent releases.  Accordingly, we'll use Python's `easy_install` tool to install the latest version of Trac rather than `apt`.
+
+To install Trac using Python's `easy_install`:
+ 1. Install `python-setuptools` and other dependencies via `apt`:
+{{{
+# apt-get install python-setuptools python-subversion
+}}}
+ 1. Install Trac:
+{{{
+# easy_install Trac
+}}}
+ 1. Create the folders that will be used to store Trac configuration and data files:
+{{{
+# mkdir /var/lib/trac
+# mkdir /var/lib/trac/apache
+# mkdir /var/lib/trac/eggs
+# mkdir /var/lib/trac/projects
+}}}
+ 1. Create a WSGI application script for Trac in a new `/var/lib/trac/apache/parent-site.wsgi` file and give it the following contents:
+{{{
+import os
+
+os.environ['TRAC_ENV_PARENT_DIR'] = '/var/lib/trac/projects'
+os.environ['PYTHON_EGG_CACHE'] = '/var/lib/trac/eggs'
+
+import trac.web.main
+application = trac.web.main.dispatch_request
+}}}
+ 1. Create an Apache "site" configuration file for Trac in a new `/etc/apache2/sites-available/trac` file and give it the following contents:
+{{{
+WSGIScriptAlias /trac /var/lib/trac/apache/parent-site.wsgi
+
+<Directory /var/lib/trac/apache>
+	WSGIApplicationGroup %{GLOBAL}
+	Order deny,allow
+	Allow from all
+</Directory>
+
+<LocationMatch "/trac/[^/]+/login">
+#<LocationMatch "/trac"> 
+	AuthType Basic
+	AuthName "Trac"
+	AuthUserFile /etc/apache2/apache-logins.passwd
+	Require valid-user
+</LocationMatch>
+}}}
+ 1. Give Apache access to all of the Trac folders:
+{{{
+# chown -R www-data:www-data /var/lib/trac
+}}}
+ 1. Enable the Apache site by running the following command:
+{{{
+# a2ensite trac
+# /etc/init.d/apache2 reload
+}}}
+
+=== Upgrading Trac ===
+
+To upgrade the version of Trac being run on the server, just run `easy_install` again with the `--upgrade` option:
+{{{
+# easy_install --upgrade Trac
+}}}
+
+Then, upgrade each Trac environment.  To do so, run the following command once for each `<projectname>`:
+{{{
+# trac-admin /var/lib/trac/projects/<projectname> upgrade
+}}}
+
+Finally, reload Apache:
+{{{
+# /etc/init.d/apache2 force-reload
+}}}
+
+
+== Creating the "madriver-it" Trac Project ==
+
+Here are the steps to create and configure a "madriver-it" Trac project:
+ 1. Use `trac-admin` to initialize the new project:
+{{{
+# trac-admin /var/lib/trac/projects/madriver-it initenv
+}}}
+    * ''Project Name'': `Mad River IT`
+    * ''Database connection string'': (accept `sqlite:db/trac.db` default by just hitting `ENTER`)
+    * ''Repository type'': (accept `svn` default by just hitting `ENTER`)
+    * ''Path to repository'': (accept default of no repository by just hitting `ENTER`)
+ 1. Give Apache access to all of the project files:
+{{{
+# chown -R www-data:www-data /var/lib/trac/projects/madriver-it
+}}}
+ 1. Give `apacheadmin` admin rights for the project:
+{{{
+# trac-admin /var/lib/trac/projects/madriver-it permission add apacheadmin TRAC_ADMIN
+}}}
+ 1. Edit the following options in the `/var/lib/trac/projects/madriver-it/conf/trac.ini` file:
+    * `[header_logo]`
+       * `alt = Mad River IT`
+       * `link = ./` (will link to the Trac project's front page)
+       * `src = site/header_1_small.jpg` (put this image file in `/var/lib/trac/projects/madriver-it/htdocs`)
+    * `[project]`
+       * `admin = myemail@madrivercode.com`
+       * `descr = Mad River Code's IT documentation`
+       * `footer = Visit the Mad River Code blog at<br /><a href="http://madrivercode.com/blog/">http://madrivercode.com/blog/</a>`
+    * `[mainnav]`
+       * `roadmap = disabled`

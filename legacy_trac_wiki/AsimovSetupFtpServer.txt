@@ -1,0 +1,144 @@
+= AsimovSetupFtpServer =
+
+This AsimovSetup sub-guide documents the steps necessary to make the computer a [http://en.wikipedia.org/wiki/Vsftpd vsftpd] FTP server.
+
+
+== Installation & Configuration ==
+
+First, install the `vsftpd` package:
+{{{
+# apt-get install vsftpd
+}}}
+
+Make the following changes to parameters in the `/etc/vsftpd.conf` file:
+ * Disable anonymous access:
+{{{
+anonymous_enable=NO
+anon_upload_enable=NO
+anon_mkdir_write_enable=NO
+}}}
+ * Enable logins by local UNIX accounts and [http://en.wikipedia.org/wiki/Chroot chroot] their sessions:
+{{{
+local_enable=YES
+chroot_local_user=YES
+}}}
+ * Enable uploads/writes:
+{{{
+write_enable=YES
+}}}
+ * Enable & configure SSL:
+{{{
+ssl_enable=YES
+ssl_tlsv1=YES
+force_local_logins_ssl=YES
+}}}
+ * Restrict logins to whitelisted accounts:
+{{{
+userlist_enable=YES
+userlist_deny=NO
+userlist_file=/etc/vsftpd.user_list
+}}}
+ * Create an artificial login failure delay (to mitigate brute force attacks):
+{{{
+delay_failed_login=10
+}}}
+
+
+== Backup Target: FDC ==
+
+This FTP server is an offsite backup target for Farwest Development & Construction (FDC).
+
+The FDC data is stored on a separate physical drive, which the virtual machine client must be given direct access to.  The following steps will accomplish this:
+ 1. Unmount the drive on the virtual machine's host computer (if it's already mounted).
+ 1. Check the host's `/etc/fstab` file to ensure that the drive will not be mounted automatically at next boot.
+ 1. Open the virtual machine server's console and add physical disk to the virtual machine client, giving it access to the entire drive (as opposed to just a single partition).
+ 1. Run the following command on the virtual machine client to list all of the drives:
+{{{
+# fdisk -l
+}}}
+ 1. Make note of the device node for the FDC drive, e.g. `/dev/sdc`.  In the following steps, replace any occurrences of "`/dev/sdx`" with the correct device node.
+
+If the FDC drive is not already partitioned, create a new `ext3` partition on it as follows:
+    1. Run the following command and make a note of the size of the drive in megabytes:
+{{{
+# fdisk -l /dev/sdx
+}}}
+    1. Run the following commands to create a single primary partition that occupies the entire drive:
+{{{
+# parted /dev/sdx
+(parted) mkpart primary ext3 0.0 <drive-size-in-MB>
+(parted) quit
+}}}
+    1. Reboot the computer:
+{{{
+# reboot
+}}}
+    1. Format the partition:
+{{{
+# mkfs.ext3 /dev/sdx1
+}}}
+
+Mount the drive's partition:
+ 1. Run the following command and make a note of the partition's UUID, e.g. "`fd69931c-c6ba-49bd-bee7-d9470b273ad7`":
+{{{
+# vol_id -u /dev/sdx1
+}}}
+ 1. Add the following lines to the end of the `/etc/fstab` file:
+{{{
+# Entry for /dev/sdx1 <-> /mnt/fdc:
+UUID=<partition's-uuid-from-vol_id-command> /mnt/fdc ext3 defaults 0 2
+}}}
+ 1. Create the mount point for the partition:
+{{{
+# mkdir /mnt/fdc
+}}}
+ 1. Mount everything in `fstab`:
+{{{
+# mount -a
+}}}
+ 1. Verify that the partition was mounted:
+{{{
+# mount -l
+}}}
+
+Create the `fdcbackup` user, making sure to write down the password for it:
+{{{
+# adduser fdcbackup --home /mnt/fdc
+# chown -R fdcbackup:fdcbackup /mnt/fdc
+}}}
+
+Add an entry for the `fdcbackup` user to the `/etc/vsftpd.userlist` file.
+
+
+=== parted Error: "Unable to open /dev/sdx - unrecognised disk label" ===
+
+Apparently, parted has trouble with disks whose sectors aren't 512 bytes.  It seems that `.vmdk` "disks" often have this characteristic.
+
+To get around it, don't use parted: use cfdisk, instead.  For example, to create an ext3 partition on `/dev/sdh/` in cfdisk, do the following:
+ 1. Start cfdisk for the device:
+{{{
+# cfdisk /dev/sdh
+}}}
+ 1. Select '''New'''.
+ 1. Select '''Primary'''.
+ 1. Enter the partition size that is desired and press `ENTER`.
+ 1. Select '''Write''' and enter "`yes`".
+ 1. Select '''Quit'''.
+
+
+== Backup Target: RGI ==
+
+This FTP server is an offsite backup target for Ridgetop Group, Inc. (RGI).
+
+The setup for this FTP backup service is the same as for the FDC backup, with the following details:
+ * Backup User: `rgibackup`
+ * Backup partition mount point: `/mnt/rgi`
+
+
+== Backup Target: IFL ==
+
+This FTP server is an offsite backup target for Integrity First Lending (IFL).
+
+The setup for this FTP backup service is the same as for the FDC backup, with the following details:
+ * Backup User: `iflbackup`
+ * Backup partition mount point: `/mnt/ifl`

@@ -1,0 +1,303 @@
+= SandersonSetupRsync =
+
+The SandersonSetup sub-guide describes the steps necessary to make the computer backup other computer's files via rsync.
+
+
+== Backup Login on `sanderson` ==
+
+References:
+ * http://ubuntuforums.org/showthread.php?t=15082
+
+In order to remotely & automatically back them up, each computer to be backed up will need a backup account with a passphrase-less SSH key pair login.  This is a fairly common setup for exactly this purpose, but it does come with some risks:  SSH key pairs are essentially "passwords in a file", except that usually, they are further protected by a separate passphrase.  When a passphrase is not used, the public portion of the key pair is all that's needed to gain remote access to a system.  Accordingly, this key should never be saved anywhere that others might be able to get a hold of it.  This is best accomplished by only ever using the tools mentioned below to transfer keys; do not transfer keys by hand as it's easy to accidentally leave extra copies laying around in insecure places.
+
+First, create a `sanderson-backup` account on `sanderson`, the backup server:
+ * Run the following command to create an account that can only be logged in with a key pair (or `su`):
+{{{
+# adduser --disabled-password sanderson-backup
+}}}
+ * Create a public/private key pair for the user (just press `ENTER` to accept all defaults, as prompted):
+{{{
+$ ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/sanderson-backup/.ssh/id_rsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/sanderson-backup/.ssh/id_rsa.
+Your public key has been saved in /home/sanderson-backup/.ssh/id_rsa.pub.
+The key fingerprint is:
+b3:...SNIP... sanderson-backup@sanderson
+}}}
+
+
+== Remote Backup Logins ==
+
+Next, create a matching `sanderson-backup` account for each computer to be backed up:
+ * Run the following command to create an account that '''can''' be logged into with a password (be sure to choose a complex password):
+{{{
+# adduser sanderson-backup
+}}}
+ * It's likely that files will be backed up that require root access.  Accordingly, add the following entry to the sudoers file (run `sudo visudo` to edit this file):
+{{{
+# Allow the sanderson-backup account to run rsync with root privileges
+sanderson-backup ALL = NOPASSWD: /usr/bin/rsync
+}}}
+ * SSH into the `sanderson` server and authorize its RSA key to login to the new account just created on the computer to be backed up (replace `eddings` with the name of the computer being backed up):
+{{{
+             karl@eddings:$ ssh karl@sanderson
+           karl@sanderson:$ sudo su sanderson-backup
+sanderson-backup@sanderson$ ssh-copy-id -i ~/.ssh/id_rsa.pub sanderson-backup@eddings
+}}}
+ * Test SSH logins to ensure that logging into `sanderson-backup@eddings` from `sanderson-backup@sanderson` does not require a password:
+{{{
+sanderson-backup@sanderson$ ssh sanderson-backup@eddings
+}}}
+ * Then, exit the SSH session and disable password logins for the `sanderson-backup` account:
+{{{
+sanderson-backup@sanderson$ exit
+           karl@sanderson:$ exit
+             karl@eddings:$ sudo usermod --lock sanderson-backup
+}}}
+ * Restrict the `sanderson-backup@sanderson` login to `sanderson-backup@eddings`.  This will disallow normal SSH logins and other unnecessary security risks.  Prepend the lockdown options to the appropriate line in `/home/sanderson-backup/.ssh/authorized_keys`, as follows:
+{{{
+no-port-forwarding,no-agent-forwarding,no-pty,no-X11-forwarding,from="sanderson,192.168.1.104" ssh-rsa ...SNIP... sanderson-backup@sanderson
+}}}
+
+
+== Backup Script ==
+
+References:
+ * http://ubuntuforums.org/showpost.php?p=943177&postcount=11
+ * http://ubuntuforums.org/showthread.php?t=639979
+
+Backups will be setup to "pull" from each of the remote target computers to `sanderson` via `rsync`.  First, setup the backup storage and scripts:
+ 1. Log in to `sanderson`:
+{{{
+$ ssh sanderson
+}}}
+ 1. Create a folder for storing the backups:
+{{{
+# mkdir /var/rsync-backups
+# chown -R sanderson-backup:sanderson-backup /var/rsync-backups
+# chmod -R u=rwx,g=,o= /var/rsync-backups
+}}}
+ 1. Create the following script as `/var/rsync-backups/rsync-backup.sh`:
+{{{
+#!/bin/sh
+
+# Process the parameters the script was called with
+LOG_FILE=""
+INCLUDES_FILE=""
+EXCLUDES_FILE=""
+while getopts  "l:i:e:" flag
+do
+  #echo "$flag" $OPTIND $OPTARG
+  case "$flag" in
+      l) LOG_FILE="$OPTARG";;
+      i) INCLUDES_FILE="$OPTARG";;
+      e) EXCLUDES_FILE="$OPTARG";;
+    [?]) print >&2 "Usage: $0 [-l logfile] [-i includesfile] [-e excludesfile] source dest"
+         exit 1;;
+  esac
+done
+
+# Shift parameters past all of the options to the positional parameters
+shift $((OPTIND - 1))
+
+# Grab the positional parameters
+BACKUP_SRC=$1
+BACKUP_DEST=$2
+
+# Define the backup user and their private key file
+BACKUP_USER=sanderson-backup
+BACKUP_USER_ID=/home/sanderson-backup/.ssh/id_rsa
+
+# Define the remote shell that rsync should connect over
+REMOTE_SHELL="ssh -l $BACKUP_USER -i $BACKUP_USER_ID"
+
+# Build the options that will be passed to rsync
+OPT_LOG_FILE=""
+if [ -n "$LOG_FILE" ]
+then
+  OPT_LOG_FILE=--log-file="$LOG_FILE"
+fi
+OPT_INCLUDES_FILE=""
+if [ -n "$INCLUDES_FILE" ]
+then
+  OPT_INCLUDES_FILE=--include-from="$INCLUDES_FILE"
+fi
+OPT_EXCLUDES_FILE=""
+if [ -n "$EXCLUDES_FILE" ]
+then
+  OPT_EXCLUDES_FILE=--exclude-from="$EXCLUDES_FILE"
+fi
+
+# Run the rsync command
+rsync --rsh="$REMOTE_SHELL" --rsync-path='sudo rsync' -avz --delete $OPT_LOG_FILE $OPT_INCLUDES_FILE $OPT_EXCLUDES_FILE "$BACKUP_SRC" "$BACKUP_DEST"
+}}}
+ 1. Set the script's permissions:
+{{{
+# chown sanderson-back:sanderson-backup /var/rsync-backups/rsync-backup.sh
+# chmod u=rwx,g=,o= /var/rsync-backups/rsync-backup.sh
+}}}
+ 1. Allow `sanderson-backup` to run the script via `sudo` with no password by adding the following entry to the `sudoers` file on sanderson (edit this file by running `export EDITOR=nano && sudo -E visudo`):
+{{{
+# Allow the sanderson-backup account to run rsync-backup.sh with root privileges
+sanderson-backup ALL = NOPASSWD: /var/rsync-backups/rsync-backup.sh
+}}}
+ 1. Perform a test run of the script to verify that it works as expected (make sure all the expected files were copied and that permissions, owners, etc. were preserved):
+{{{
+sanderson-backup@sanderson:$ mkdir ~/test-dest
+sanderson-backup@sanderson:$ sudo /var/rsync-backups/rsync-backup.sh eddings:/etc/openafs ~/test-dest ~/test-log.txt
+sanderson-backup@sanderson:$ ls -la ~/test-dest
+}}}
+
+
+== Setting Up Each Backup Task ==
+
+References:
+ * https://help.ubuntu.com/community/CronHowto
+
+For each backup computer and task, we will create a separate folder and cron job.  As a for-instance, this section details how to backup the `eddings:/var/lib/trac` directory.
+
+ 1. Login to `sanderson` as `sanderson-backup`:
+{{{
+$ ssh sanderson
+$ sudo su sanderson-backup
+}}}
+ 1. Create a folder for the backup on `sanderson`:
+{{{
+$ mkdir -p /var/rsync-backups/eddings/trac/data
+}}}
+ 1. Save the following script for the backup task as `/var/rsync-backups/eddings/trac/backup.sh` (the trailing slashes are important):
+{{{
+#!/bin/sh
+sudo /var/rsync-backups/rsync-backup.sh -l /var/rsync-backups/eddings/trac/backup.log eddings:/var/lib/trac/ /var/rsync-backups/eddings/trac/data/
+}}}
+ 1. Mark the script as executable:
+{{{
+$ chmod u+x /var/rsync-backups/eddings/trac/backup.sh
+}}}
+ 1. Run the script and verify that everything was backed up correctly:
+{{{
+$ /var/rsync-backups/eddings/trac/backup.sh
+}}}
+ 1. Open `sanderson-backup`'s crontab file:
+{{{
+$ crontab -e
+}}}
+ 1. Add an hourly task to run the earlier backup script:
+{{{
+00 * * * * /var/rsync-backups/eddings/trac/backup.sh
+}}}
+
+
+== Non-Standard Backup Tasks ==
+
+The following backup jobs have special requirements that necessitate some modifications to the above instructions.
+
+
+=== Backing Up Zimbra (Open Source Edition) ===
+
+References:
+ * http://wiki.zimbra.com/index.php?title=Open_Source_Edition_Backup_Procedure#A_Simple_Shell_Script_Method_like_above.2C_but_with_rsync_over_ssh
+
+As Zimbra is running and constantly updating files, its backup has to be performed while it is not running.  To keep the amount of downtime small, the following procedure can be followed:
+ 1. Make a first backup pass while the Zimbra services are running.  This first pass won't be correct but will reduce the length of downtime required.
+ 1. Stop the Zimbra services.
+ 1. Make a second backup pass.
+ 1. Restart the Zimbra services.
+
+To accomplish all this, we'll just modify the standard `backup.sh` script for this backup task some:
+{{{
+#!/bin/sh
+sudo /var/rsync-backups/rsync-backup.sh -l /var/rsync-backups/piers/zimbra/backup.log piers:/opt/zimbra/ /var/rsync-backups/piers/zimbra/data/
+ssh -T piers sudo /etc/init.d/zimbra stop
+sudo /var/rsync-backups/rsync-backup.sh -l /var/rsync-backups/piers/zimbra/backup.log piers:/opt/zimbra/ /var/rsync-backups/piers/zimbra/data/
+ssh -T piers sudo /etc/init.d/zimbra start
+}}}
+
+For this to work, the `sudoers` entry created earlier on the Zimbra server must also be modified slightly, as follows:
+{{{
+# Allow the sanderson-backup account to run rsync with root privileges
+sanderson-backup ALL = NOPASSWD: /usr/bin/rsync, /etc/init.d/zimbra
+}}}
+
+As this backup script requires server downtime, it is recommended it is only scheduled to run once every day, during off-hours.
+
+
+=== Backing Up SVN ===
+
+References:
+ * http://snarfed.org/space/backup%20subversion%20fsfs%20with%20rsync
+ * http://svn.collab.net/repos/svn/trunk/contrib/server-side/svn-fast-backup
+
+Unfortunately, backing up SVN requires a bit more work than just a simple `rsync`.  The naive approach risks backing things up in the middle of a commit, which would lead to a corrupt backup copy.
+
+To fix this, a modified `backup.sh` script can be used for this backup task:
+{{{
+#!/bin/sh
+# Run a two-pass backup:
+# The first time just grab the db/current file
+sudo /var/rsync-backups/rsync-backup.sh -l /var/rsync-backups/eddings/svn/backup.log -e /var/rsync-backups/eddings/svn/pass1.filter eddings:/var/svn/ /var/rsync-backups/eddings/svn/data/
+# Grab everything else (except the db/transactions directory) the second time
+sudo /var/rsync-backups/rsync-backup.sh -l /var/rsync-backups/eddings/svn/backup.log -e /var/rsync-backups/eddings/svn/pass2.filter eddings:/var/svn/ /var/rsync-backups/eddings/svn/data/
+}}}
+
+Create the required `/var/rsync-backups/eddings/svn/pass1.filter` file:
+{{{
+# Include the /var/svn/reponame/db/current file
++ /*/
++ /*/db/
++ /*/db/current
+# Exclude everything else
+- *
+}}}
+
+Create the required `/var/rsync-backups/eddings/svn/pass2.filter` file:
+{{{
+# Exclude the current file
+- /*/db/current
+# Exclude the transactions directory and all its children
+- /*/db/transactions/
+# Include everything else
++ *
+}}}
+
+
+=== Backing Up !WordPress ===
+
+References:
+ * http://codex.wordpress.org/Backing_Up_Your_Database#Using_Straight_MySQL_Commands
+
+!WordPress stores a lot of its data in a MySQL database, which also has to be backed up.  The simplest way to do this is to dump the database to a flat file and backup that flat file.  Please note that as large portions of this file change each dump, `rsync` likely isn't as efficient as it is in other backup scenarios.
+
+A modified `backup.sh` script can be used for this backup task:
+{{{
+#!/bin/sh
+# Back up the WordPress files
+sudo /var/rsync-backups/rsync-backup.sh -l /var/rsync-backups/tolkien/wordpress/backup-files.log tolkien.madrivercode.com:/var/www/blog/ /var/rsync-backups/tolkien/wordpress/files/
+# Dump and backup the WordPress database
+ssh -T tolkien.madrivercode.com sudo /usr/bin/mysqldump -u backup --result-file=/var/backup-staging/wordpress.dump wordpress
+sudo /var/rsync-backups/rsync-backup.sh -l /var/rsync-backups/tolkien/wordpress/backup-db.log tolkien.madrivercode.com:/var/backup-staging/ /var/rsync-backups/tolkien/wordpress/db/
+}}}
+
+Create a backup staging directory on the machine to be backed up:
+{{{
+# mkdir /var/backup-staging
+# chown -R sanderson-backup:sanderson-backup /var/backup-staging
+# chmod -R u+rwx,g=,o= /var/backup-staging
+}}}
+
+Create a "`backup`" MySQL user on the server being backed up.  This account has no password, may only login from the local machine, and only has the privileges required to run `mysqldump`:
+{{{
+$ mysql --user=root -p mysql
+mysql> CREATE USER 'backup'@'localhost';
+mysql> GRANT SELECT,LOCK TABLES,FILE ON *.* TO 'backup'@'localhost';
+mysql> quit;
+}}}
+
+For this to work, the `sudoers` entry created earlier on the server must also be modified slightly, as follows:
+{{{
+# Allow the sanderson-backup account to run rsync and mysqldump with root privileges
+sanderson-backup ALL = NOPASSWD: /usr/bin/rsync, /usr/bin/mysqldump
+}}}

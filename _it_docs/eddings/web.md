@@ -9,10 +9,10 @@ This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the 
 
 Previously, I'd been using `tolkien` as a web server, which has now been decommissioned. The documentation for the old `tolkien` web server is archived in the following pages:
 
-* <%= wiki_entry_link("TolkienSetupSvn") %>
-* <%= wiki_entry_link("TolkienSetupTrac") %>
-* <%= wiki_entry_link("TolkienSetupWebDav") %>
-* <%= wiki_entry_link("TolkienSetupWordpress") %>
+* [TolkienSetupSvn]({{ '/legacy_trac_wiki/TolkienSetupSvn.txt' | prepend: site.baseurl }})
+* [TolkienSetupTrac]({{ '/legacy_trac_wiki/TolkienSetupTrac.txt' | prepend: site.baseurl }})
+* [TolkienSetupWebDav]({{ '/legacy_trac_wiki/TolkienSetupWebDav.txt' | prepend: site.baseurl }})
+* [TolkienSetupWordpress]({{ '/legacy_trac_wiki/TolkienSetupWordpress.txt' | prepend: site.baseurl }})
 
 Please note that all of those services (SVN, Trac, WebDAV, and WordPress) are no longer being used. I was uncomfortable with their security and usabilty and have opted for the following alternatives:
 

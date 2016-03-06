@@ -1,0 +1,118 @@
+= FeistSetupWine =
+
+This FeistSetup sub-guide describes the steps necessary to install `wine` and use it to run Windows applications.
+
+
+== [http://www.winehq.org/ Wine] ==
+
+Install from the Ubuntu repositories:
+{{{
+# apt-get install wine
+}}}
+
+Start winecfg, which will automatically create a fake `C:` drive, etc:
+{{{
+$ winecfg
+}}}
+
+
+== Quicken Home & Business Premier 2006 ==
+
+''Please note that for some reason, Quicken will not run correctly under wine on feist.  It crashes when bringing up the pop-up help.  The attempted install method is archived in this page's comments.''
+
+{{{
+#!comment
+
+Install IEs4Linux:
+ 1. Install cabextract:
+{{{
+# apt-get install cabextract
+}}}
+ 1. Get and install IEs4Linux:
+{{{
+$ wget http://www.tatanka.com.br/ies4linux/downloads/ies4linux-latest.tar.gz
+$ tar zxvf ies4linux-latest.tar.gz
+$ cd ies4linux-*
+$ ./ies4linux
+}}}
+ 1. Make the IEs4Linux install to the default wine container:
+{{{
+$  mv /home/karl/.ies4linux/ /home/karl/.wine
+}}}
+ 1. Download the winetricks script:
+{{{
+$ wget http://www.kegel.com/wine/winetricks
+}}}
+ 1. Use it to download and install gdiplus and gecko:
+{{{
+$ sh winetricks gdiplus gecko
+}}}
+
+ 1. Insert the Quicken CD.
+ 1. Run the Quicken installer:
+{{{
+$ wine /media/cdrom/install.exe
+}}}
+ 1. Create a link to the quicken data files on your C: drive:
+{{{
+$ ln -s /home/karl/server/group/karlanderica/quickenData ~/.wine/drive_c/quicken-data
+}}}
+
+Registration will not work.  To disable registration, go to the ''Online'' menu and click ''One Step Update'' while holding down left-shift and left-ctrl on the keyboard.
+}}}
+
+== Neverwinter Nights 2 ==
+
+''Please note that for some reason, NWN2 will not run correctly under wine on feist.  It can be made to run but character models are invisible.  The attempted install method is archived in this page's comments.''
+
+{{{
+#!comment
+
+References:
+ * http://nwn2forums.bioware.com/forums/viewtopic.html?topic=567671&forum=109&sp=0
+ * http://appdb.winehq.org/objectManager.php?sClass=application&iId=4118
+ * http://nwn2forums.bioware.com/forums/viewtopic.html?topic=518864&forum=116
+ * http://nwvault.ign.com/View.php?view=NWN2Tools.Detail&id=12
+ * http://wiki.winehq.org/winetricks
+
+Install the Microsoft DirextX runtime via winetricks:
+ 1. Download the winetricks script:
+{{{
+$ wget http://www.kegel.com/wine/winetricks
+}}}
+ 1. Use it to download and install DirectX:
+{{{
+$ sh winetricks directx9
+}}}
+
+Install:
+ 1. Insert the NWN2 DVD.
+ 1. Run the installer:
+{{{
+$ wine /media/cdrom/setup.exe
+}}}
+
+Configure things to work under wine:
+ 1. Run `winecfg` and mount `/media/cdrom` as the `D:` drive.
+ 1. Run `regedit` and create the following keys:
+    * `HKEY_CURRENT_USER\Software\Wine\Direct3D\DirectDrawRenderer` = `opengl` (String Value)
+    * `HKEY_CURRENT_USER\Software\Wine\Direct3D\OffscreenRenderingMode` = `fbo` (String Value)
+    * `HKEY_CURRENT_USER\Software\Wine\Direct3D\VideoMemorySize` = `512` (String value, should match GPU memory)
+    * `HKEY_CURRENT_USER\Software\Wine\Direct3D\UseGLSL` = `enabled` (String Value)
+
+The automatic updater will not work under wine (complains about the internet connection).  To manually update:
+ 1. Start up the automatic NWN2 updater and note your current game version.
+ 1. Go [http://nwvault.ign.com/View.php?view=NWN2Articles.Detail&id=230 here] and download the correct manual patch.
+ 1. Download the offline patcher from [http://nwvault.ign.com/View.php?view=NWN2Tools.Detail&id=12 here].
+ 1. Move the patch's `.rtp` file and the extracted offline patcher into "`~/.wine/drive_c/Program Files/Atari/Neverwinter Nights 2`".
+{{{
+$ unzip Desktop/nwn2patcher.zip -d nwn2patcher
+$ cp nwn2patcher/NWN2Patcher.exe /home/karl/.wine/drive_c/Program\ Files/Atari/Neverwinter\ Nights\ 2/
+$ unzip Desktop/nwn2_pc_english_from100788_to105912.zip -d nwn2_pc_english_from100788_to105912
+$ cp nwn2_pc_english_from100788_to105912/nwn2_pc_english_from100788_to105912.rtp /home/karl/.wine/drive_c/Program\ Files/Atari/Neverwinter\ Nights\ 2/
+}}}
+ 1. Run the offline patcher (be sure to select the NWN2 install folder as the temp directory):
+{{{
+$ wine /home/karl/.wine/drive_c/Program\ Files/Atari/Neverwinter\ Nights\ 2/NWN2Patcher.exe
+}}}
+}}}

@@ -9,8 +9,8 @@ This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the 
 
 Previously, I'd been using two other DNS servers, which have now been consolidated onto `eddings`:
 
-* <%= wiki_entry_link("LewisSetupDnsServer") %>
-* <%= wiki_entry_link("TolkienSetupDnsServer") %>
+* [LewisSetupDnsServer]({{ '/legacy_trac_wiki/LewisSetupDnsServer.txt' | prepend: site.baseurl }})
+* [TolkienSetupDnsServer]({{ '/legacy_trac_wiki/TolkienSetupDnsServer.txt' | prepend: site.baseurl }})
 
 The domains now hosted on `eddings` are:
 

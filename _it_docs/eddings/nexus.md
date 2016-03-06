@@ -12,7 +12,7 @@ This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the 
 * {% collection_doc_link_long /it/eddings/web baseurl:true %}
 * {% collection_doc_link_long /it/eddings/tomcat baseurl:true %}
 
-Previously, I'd been using `tolkien` as a Nexus server, which has now been decommissioned. The documentation for the old `tolkien` Nexus server is archived in: <%= wiki_entry_link("TolkienSetupNexus") %>.
+Previously, I'd been using `tolkien` as a Nexus server, which has now been decommissioned. The documentation for the old `tolkien` Nexus server is archived in: [TolkienSetupNexus]({{ '/legacy_trac_wiki/TolkienSetupNexus.txt' | prepend: site.baseurl }}).
 
 
 ## Installing Nexus
@@ -114,7 +114,7 @@ References:
 * <http://www.sonatype.com/people/2010/01/how-to-backup-nexus-configuration-and-repository-artifacts/>
 * <http://superuser.com/questions/117870/ssh-execute-sudo-command>
 
-As the instance previously hosted by `tolkien` (<%= wiki_entry_link("TolkienSetupNexus") %>) is being moved to this server, the data from the old server needs to be moved over to this one. This is actually pretty simple, we'll just `rsync` Nexus' "work" directory from the old server to the new.
+As the instance previously hosted by `tolkien` ([TolkienSetupNexus]({{ '/legacy_trac_wiki/TolkienSetupNexus.txt' | prepend: site.baseurl }})) is being moved to this server, the data from the old server needs to be moved over to this one. This is actually pretty simple, we'll just `rsync` Nexus' "work" directory from the old server to the new.
 
 First, stop Nexus/Tomcat on both servers so that nothing is modified during this operation:
 

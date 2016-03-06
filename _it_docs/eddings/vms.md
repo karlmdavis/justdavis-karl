@@ -9,10 +9,10 @@ This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the 
 
 This is necessary as the server will be replacing an ESXi server that hosted several old VMs. Until the services on these VMs are migrated onto `eddings`, the VMs will have to be hosted on `eddings` to ensure the services remain available. The VMs being migrated are the following:
 
-* <%= wiki_entry_link("LewisSetup") %>
-* <%= wiki_entry_link("AsimovSetup") %>
+* [LewisSetup]({{ '/legacy_trac_wiki/LewisSetup.txt' | prepend: site.baseurl }})
+* [AsimovSetup]({{ '/legacy_trac_wiki/AsimovSetup.txt' | prepend: site.baseurl }})
 * `piers` (no documentation available)
-* <%= wiki_entry_link("TolkienSetup") %>
+* [TolkienSetup]({{ '/legacy_trac_wiki/TolkienSetup.txt' | prepend: site.baseurl }})
 
 
 ## Selecting a VM Technology

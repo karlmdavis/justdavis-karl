@@ -7,7 +7,7 @@ description: "Describes the steps necessary to make eddings an OpenAFS file serv
 
 This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the steps necessary to make the computer an [http://www.openafs.org/](OpenAFS) file server.
 
-Previously, I'd been using `asimov` as an OpenAFS server hosting the `davisonlinehome.name` cell (see <%= wiki_entry_link("AsimovSetupAfsServer") %>). This functionality has now been moved to `eddings`. The cell formerly hosted by `asimov`, `davisonlinehome.name`, was decomissioned and replaced with the new `justdavis.com` cell on `eddings`.
+Previously, I'd been using `asimov` as an OpenAFS server hosting the `davisonlinehome.name` cell (see [AsimovSetupAfsServer]({{ '/legacy_trac_wiki/AsimovSetupAfsServer.txt' | prepend: site.baseurl }})). This functionality has now been moved to `eddings`. The cell formerly hosted by `asimov`, `davisonlinehome.name`, was decomissioned and replaced with the new `justdavis.com` cell on `eddings`.
 
 This OpenAFS installation will depend on Kerberos. Please ensure that the `JUSTDAVIS.COM` Kerberos realm has been setup as described in {% collection_doc_link /it/eddings/kerberos baseurl:true %}.
 

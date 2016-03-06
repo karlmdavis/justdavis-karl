@@ -1,0 +1,104 @@
+= EddingsSetup =
+
+This document describes the steps necessary to setup and configure `eddings`, the main server for the DOH network.  `eddings` runs VMWare ESXi and is responsible for hosting `lewis`, `asimov`, and the other virtual machine servers.
+
+Hardware Specs:
+ * TODO
+ * Hard disk drives:
+   * 1TB Seagate drive
+     * Primary storage for `eddings`.
+     * Mounted in topmost drive cage slot.
+
+
+== Installing ESXi ==
+
+VMWare ESXi is a hypervisor virtual machine server: it takes the place of a primary operating system such as Windows or Linux and provides a minimal environment for hosting virtual machine clients.  This leaves more resources available for those virtual machine clients.  It's also free.
+
+To install ESXi, the `.iso` installer image must be downloaded from [http://www.vmware.com] and burned to a CD.  Registration is required.
+
+Once the installer CD has been burned, proceed through the following steps to install ESXi:
+ 1. Insert the ESXi installation CD into the server's CD drive.
+ 1. Power off the server.
+ 1. Connect a monitor and keyboard (must be a USB keyboard) to the server.
+ 1. Power on the server and tap `F8` to enter the boot menu.
+ 1. Select the CD drive from the boot menu and press `ENTER`.
+ 1. On the ''VMWare VMVisor Boot Menu'', select '''ESXi Installer''' using the keyboard and press `ENTER`.
+ 1. After loading, the installer will boot the ''VMWare ESXi 4.0.0 Installer''.
+ 1. Press `ENTER` to start the ''Install'' operation, when prompted.
+ 1. Press `F11` to accept the license agreement, when prompted.
+ 1. On the ''Select a  Disk'' screen, select the 1TB drive and press `ENTER` to continue.
+ 1. Press `F11` on the ''Confirm Install'' screen, after reviewing the message to ensure the correct disk was selected.
+ 1. After the installation has completed, remove the installation CD from the drive and press `ENTER` to reboot.
+
+
+== ESXi Console Configuration ==
+
+After ESXi has booted for the first time, it will begin looking for a DHCP server to offer it an IP.  Due to the setup of the DOH network, it will not find one.
+
+Go through the following steps to assign an IP manually:
+ 1. Press `F2` to enter the ''Customize System'' screen.
+ 1. Select '''Configure Management Network''' and press `ENTER`.
+ 1. Select '''IP Configuration''' and press `ENTER`.
+ 1. Select '''Set static IP address and network configuration''' and press `SPACE`.
+ 1. Configure the network as follows (press `ENTER` when done):
+    * ''IP Address'': `10.1.10.3`
+    * ''Subnet Mask'': `255.255.255.0`
+    * ''Default Gateway'': `10.1.10.1`
+ 1. Select '''DNS Configuration''' and press `ENTER`.
+ 1. Configure DNS as follows (press `ENTER` when done):
+    * ''Primary DNS Server'': `68.87.85.98`
+    * ''Alternate DNS Server'': `68.87.69.146`
+    * ''Hostname'': `eddings.davisonlinehome.name`
+ 1. Press `ESC` to exit the '''Configure Management Network''' screen.
+ 1. Press `Y` to apply the changes and restart the management network, when prompted.
+ 1. Press `ESC` to exit the '''System Customization''' screen.
+
+To test the network configuration, run the following command from a computer on the DOH network:
+{{{
+$ ping 10.1.10.3
+}}}
+
+If the pings fail, try switching the Ethernet port that is connected on the server.
+
+Go through the following steps to assign a password to the ESXi `root` login:
+ 1. Press `F2` to enter the ''Customize System'' screen.
+ 1. Select '''Configure Password''' and press `ENTER`.
+ 1. Enter a new password and press `ENTER` to save it.  By default, the ''Old Password'' will be blank.  Be sure to make a note of the password in a safe location.
+ 1. Press `ESC` to exit the '''System Customization''' screen.
+
+== ESXi Management ==
+
+Unfortunately, ESXi does not have a web management interface such as that provided with VMWare Server.  Instead, the "vSphere Client" application must be used to manage the ESXi server.  Even more unfortunately, there does not appear to be a Linux version of this client application available-- only Windows.
+
+To install the vSpehere Client, go through the following steps:
+ 1. Log into a Windows computer on the DOH network.
+ 1. Open a browser and go to [http://10.1.10.3/].
+ 1. Click the [https://10.1.10.3/client/VMware-viclient.exe Download vSphere Client] link to download the vSphere Client installer.
+ 1. After the download has completed, start the downloaded setup application:
+    * ''Install vSphere Host Update Utility 4.0'': yes
+
+After installation, the '''VMWare vSphere Client''' can be started from Windows '''Start''' menu.
+
+
+== ESXi License ==
+
+ESXi needs to be assigned a license key within 60 days of being installed.  This license key can be obtained for free from [http://vmware.com].
+
+To install the license key:
+ 1. Log in to the ESXi server using the vSphere Client.
+ 1. Select the ''Configuration'' tab.
+ 1. Open the '''Software > Licensed Features''' panel.
+ 1. Click the '''Edit...''' button in the top right.
+ 1. Select the '''Assign a new license key to this host''' option and click the '''Enter Key...''' button.
+ 1. Enter the license key and press '''OK'''.
+ 1. Click '''OK''' again.
+
+
+== Converting VMs From VMWare Server ==
+
+ESXi does not itself support running VMs created by/for VMWare Server.  In order to run VMs from VMWare Server, the VMs will have to be converted using the free [http://www.vmware.com/products/converter/ VMWare vCenter Converter].
+
+Please note that ESXi does not support locally-attached raw disk access.  Before conversion, remove any such disks by editing the `.vmx` file in a text editor.
+
+Download and install the Converter on the same Windows computer running the vSphere Client:
+ * ''Setup Type'': '''Client-Server installation (advanced)'''

@@ -1,0 +1,27 @@
+= AndroidBackup =
+
+This page describes the steps to back up the phone.
+
+
+== Prerequisites ==
+
+''See the README file in the Nandroid `.zip` file.''
+
+
+== Backup ==
+
+References:
+ * http://www.gotontheinter.net/content/nandroid-v20-full-nand-backup-and-restore-tool
+
+It's a pretty simple set of steps:
+ 1. Download the Nandroid `.zip` from the referenced link above.
+ 1. Extract the `.zip` on a Linux computer.
+ 1. Boot the phone into recovery mode (Home + Power).
+ 1. Connect the phone to the Linux computer via USB.
+ 1. Run the following commands from the extracted Nandroid folder (update the timestamps and paths to match):
+{{{
+$ sudo su
+# PATH=/usr/local/bin/android-sdk-linux_x86-1.0_r2/tools:$PATH
+# ./nandroid.sh /home/karl/Desktop/android-backup-2009-05-24-2100
+}}}
+ 1. Copy the backup somewhere for safe-keeping.

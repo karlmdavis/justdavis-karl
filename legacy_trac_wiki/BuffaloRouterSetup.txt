@@ -1,0 +1,85 @@
+= BuffaloRouterSetup =
+
+This page describes the setup of the Buffalo !AirStation router, running the DD-WRT firmware.  The router's administration interface can be accessed via [http://192.168.1.2/index.asp].
+
+A backup of the router configuration with the settings described on this page is attached as [attachment:wiki:BuffaloRouterSetup:nvrambak-20090425.bin].  This backup file is for firmware version "DD-WRT v23 SP2 (09/15/06) std" only.
+
+
+== Network Topology ==
+
+The following is the desired network topology:
+{{{
+desktop------+     cable modem-------Internet
+             |     |
+server-------buffalo
+}}}
+
+Some details on this topology:
+ * The cable modem's LAN IP is `192.168.1.1`.
+ * The Buffalo router's LAN IP is `192.168.1.2`.
+ * All desktops have private IPs in the `192.168.1.0/255.255.255.0` range.
+ * Most servers have a public IP in the `75.146.134.38/255.255.255.248` range (though some are in the private IP range).
+ * The desktops must be able to communicate with the servers, and vice-versa.
+ * To enable the server-to-desktop communication, the cable modem is connected to the LAN side of the Buffalo router.  Additionally, the Buffalo router isn't acting as a router at all, just as a wireless access point and DHCP server.
+
+
+== Setup, Basic Setup ==
+
+ * Internet Setup
+   * Internet Connection Type
+     * Connection Type: ''Disabled''
+     * STP: ''Disable''
+ * Network Setup
+   * Router IP
+     * Local IP Address: `192.168.1.2`
+     * Subnet Mask: `255.255.255.0`
+     * Gateway: `192.168.1.1`
+     * Local DNS: `0.0.0.0`
+   * Network Address Server Settings (DHCP)
+     * DHCP Type: ''DHCP Server''
+     * DHCP Server: ''Enable''
+     * Start IP Address: `192.168.1.100`
+     * Static DNS 1: `75.146.134.33`
+     * Static DNS 2: `68.87.85.98`
+     * Static DNS 3: `68.87.69.146`
+     * WINS: `0.0.0.0`
+     * Use DNSMasq for DHCP: false
+     * Use DNSMasq for DNS: true
+
+
+== Wireless ==
+
+ * Basic Settings
+   * Wireless Mode: ''AP''
+   * Wireless Network Mode: ''Mixed''
+   * Wireless Network Name (SSID): `Davis`
+   * Wireless Channel: ''Auto''
+   * Wireless SSID Broadcast: ''Enable''
+ * Wireless Security
+   * Security Mode: ''WPA Pre-Shared Key''
+   * WPA Algorithms: ''TKIP''
+   * WPA Shared Key: `k&e4wirelessAP`
+
+
+== Administration, Management ==
+
+ * Router Password
+   * Router Username: `root` (default)
+   * Router Password: `k&e4routerAdmin`
+ * Remote Access (there's nothing on the WAN side, so these options are pointless)
+   * Web GUI Management: ''Disable''
+   * SSH Management: ''Disable''
+
+
+== Administration, Services ==
+
+ * DHCP Server
+   * Static Leases:
+     * `00:1F:D0:81:14:3C`, `feist`, `192.168.1.101`
+     * `00:1C:BF:61:AC:9E`, `kerr`, `192.168.1.102`
+     * `00:1F:29:F7:49:7D`, `HPF7497D`, `192.168.1.103`
+     * `00:21:85:C2:97:30`, `sanderson`, `192.168.1.104`
+ * Secure Shell
+   * SSHd: ''Disable''
+ * Telnet
+   * Telnet: ''Enable''

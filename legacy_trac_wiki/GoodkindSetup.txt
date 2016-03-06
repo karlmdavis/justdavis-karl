@@ -1,0 +1,167 @@
+= GoodkindSetup =
+
+`goodkind` is the name of my old, dependable desktop (when it's running Linux).
+
+Please see the following sub-guides:
+ * GoodkindSetupNetworkClient: describes the steps necessary to make `goodkind` a part of the DOH network
+ * GoodkindSetupUserSettings: describes the steps necessary to setup a new user account on `goodkind`
+ * GoodkindSetupWine: describes the steps necessary to install `wine` and Windows applications
+ * GoodkindSetupDevelopment: describes the steps necessary to install development tools, etc.
+
+
+== Full Backup (tar) ==
+
+ * References:
+   * https://help.ubuntu.com/community/BackupYourSystem
+   * https://help.ubuntu.com/community/BackupYourSystem/TAR
+
+I used the following commands to backup the system drive and the `/home` drive, respectively:
+{{{
+tar -cvpzf /media/FreeAgent\ Drive/goodkindFullBackup-2008-11-02.tgz --one-file-system --exclude=/lost+found --exclude=/proc --exclude=/mnt --exclude=/sys /
+tar -cvpzf /media/FreeAgent\ Drive/homeBackup-2008-11-02.tgz --one-file-system --exclude=/lost+found /home/
+}}}
+
+
+== Ubuntu 8.10 i386 Desktop, Clean Install ==
+
+Here's what I did:
+ 1. Booted from install CD and tried to install everything on 160GB drive.  It kept crashing.
+ 1. Booted from install CD again into Live CD Desktop.
+ 1. Ran install.  It failed again.
+ 1. Modified "Install" shortcut on desktop to disable the Migration Assistant by appending `--no-migration-assistant` to the `ubiquity` command.
+ 1. Ran install again.  For some reason, this time it ''only'' saw the 160 GB disk (the 80GB drive was not listed in the formatter).  This time, though, the installation completed successfully and I was able to restart into the new system.
+
+During the install, I opted to create a `localuser` account (as opposed to a `karl` account).  After rebooting into the new system, I installed the available updates before doing anything else.
+
+
+== OpenSSH Server ==
+
+Install it:
+{{{
+# apt-get install openssh-server
+}}}
+
+
+== X Setup ==
+
+Turn on the NVIDIA drivers:
+ 1. ''System --> Administration --> Hardware Drivers''
+ 1. Select the "Recommended" NVIDIA driver and click the ''Activate'' button.
+ 1. Restart.
+
+Setup the dual monitors:
+ 1. ''System --> Administration --> NVIDIA X Server Settings''
+ 1. Select the ''X Server Display Configuration'' node.
+ 1. Select the Disabled monitor.
+ 1. Click ''Configure'' and select ''!TwinView''.
+ 1. Switch to the ''X Screen'' tab and change ''Position'' to ''Left of''.
+ 1. Check the ''Make this the primary display for the X screen'' box.
+ 1. Click the ''Save to X Configuration File'' button.
+
+Problems with the ''NVIDIA X Server Settings'' tool:
+ * It crashes when you click the ''Save to X Configuration File'' button.
+   * I installed an update from `-proposed` per https://bugs.launchpad.net/ubuntu/+source/nvidia-settings/+bug/286424/
+ * I get an error about "Unable to create new X config backup file '/etc/X11/xorg.conf.backup'."
+   1. Run the applet via `gksudo`.
+
+Problems with window titlebars looking goofy?  Run this command:
+{{{
+# nvidia-xconfig --add-argb-glx-visuals -d 24
+}}}
+
+
+== Compiz ==
+
+Install the advanced settings manager:
+{{{
+# apt-get install compizconfig-settings-manager emerald
+}}}
+
+
+== Disabling avahi ==
+
+avahi causes problems with .local domains.  It appears the new version checks for the presence of these domains at startup, but this can still be an issue when using VPN.
+
+To disable avahi discovery, edit the "hosts" line in /etc/nsswitch.conf as follows:
+{{{
+#hosts:          files mdns4_minimal [NOTFOUND=return] dns mdns4 <-- This line edited to resolve avahi and *.local DNS issues
+hosts:          files mdns4_minimal dns mdns4
+}}}
+
+Restart.
+
+
+== Epson Printer ==
+
+Install the escputil package:
+{{{
+# apt-get install escputil
+}}}
+
+Run the escputil command to check ink levels:
+{{{
+# escputil -i -r /dev/usblp0
+}}}
+
+
+== VPN Client ==
+
+Install the PPTP plugin for network-manager:
+{{{
+# apt-get install network-manager-pptp
+# NetworkManager restart
+}}}
+
+Thanks to [https://bugs.launchpad.net/ubuntu/+source/network-manager-pptp/+bug/259168 Bug 259168], the following workarounds are needed:
+ 1. Do not save the connection password; it will be unable to connect.
+ 1. Enable the ''Use Point-to-Point encryption (MPPE)'' option in ''VPN Connections --> Configure VPN --> Edit --> Advanced''.
+ 1. Run `gconf-editor` and in the `/system/networking/connections/x/vpn` node, create a '''refuse-eap''' ''String'' key with a value of '''yes'''.
+
+
+== Adobe Flash ==
+
+Install the Adobe plugin from the `multiverse` repository:
+{{{
+# apt-get install flashplugin-nonfree
+}}}
+
+
+== Gnome Do ==
+
+Install gnome-do:
+{{{
+# apt-get install gnome-do
+}}}
+
+
+== `tracert` ==
+
+Install the `traceroute` package:
+{{{
+# apt-get install traceroute
+}}}
+
+
+== Audio Fixes ==
+
+References:
+ * http://ubuntuforums.org/showthread.php?t=789578
+
+If audio randomly stops working after a while, follow these steps:
+
+ 1. Backup (and then delete) the previous configuration files for !PulseAudio:
+{{{
+$ mkdir ~/pulse-backup && cp -r ~/.pulse ~/.asound* /etc/asound.conf /etc/pulse -t ~/pulse-backup/
+# rm -r ~/.pulse ~/.asound* /etc/asound.conf
+}}}
+ 1. Ensure Adobe Flash & the necessary !PulseAudio libraries and configuration utilities are installed:
+{{{
+# apt-get install libasound2-plugins padevchooser libao-pulse libsdl1.2debian-pulseaudio flashplugin-nonfree
+}}}
+ 1. Ensure the evil "libflashsupport" library is not installed:
+{{{
+# apt-get remove --purge libflashsupport flashplugin-nonfree-extrasound
+}}}
+ 1. Open ''System --> Preferences --> Sound''. In the Devices section, ensure that all "Sound playback" options are set to Autodetect. Set the "Sound capture" item to "!PulseAudio".
+ 1. Open the !PulseAudio Volume Control application ("pavucontrol", or you can launch ''Applications --> Sound & Video --> !PulseAudio Device Chooser'' and select Volume Control from this applet's menu). In the Output Devices section you will see a listing of the playback devices available on your system. Right-click on the entry that you desire to be made the default playback device on your system and enable the "Default" checkmark. Similarly, navigate to Input Devices, then right-click on the device you wish to set as your default input device (microphone), and ensure the "Default" setting is checked. Close the application when you're finished.
+ 1. Restart.

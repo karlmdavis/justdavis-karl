@@ -5,7 +5,7 @@ group: workstations
 description: Describes the setup of fforde, which is Erica's EeePC 900A Linux laptop.
 ---
 
-`fforde` is Erica's EeePC 900A Linux laptop. The original setup documentation for `fforde` is archived at <%= wiki_entry_link("FfordeSetup") %>. This page documents everything done since then to configure `fforde`.
+`fforde` is Erica's EeePC 900A Linux laptop. The original setup documentation for `fforde` is archived at [FfordeSetup]({{ '/legacy_trac_wiki/FfordeSetup.txt' | prepend: site.baseurl }}). This page documents everything done since then to configure `fforde`.
 
 
 ## Specs

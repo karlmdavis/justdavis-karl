@@ -5,7 +5,7 @@ group: workstations
 description: Describes the setup of feist, which is Karl's primary Linux desktop.
 ---
 
-`feist` is Karl's primary Linux desktop. The original setup documentation for `feist` is archived at <%= wiki_entry_link("FeistSetup") %>. This page documents everything done since then to configure `feist`.
+`feist` is Karl's primary Linux desktop. The original setup documentation for `feist` is archived at [FeistSetup]({{ '/legacy_trac_wiki/FeistSetup.txt' | prepend: site.baseurl }}). This page documents everything done since then to configure `feist`.
 
 
 ## Specs

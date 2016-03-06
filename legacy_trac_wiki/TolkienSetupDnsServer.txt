@@ -1,0 +1,108 @@
+= TolkienSetupDnsServer =
+
+This TolkienSetup sub-guide describes the steps necessary to make the computer a DNS server.
+
+The DNS Server will be used to host the `madrivercode.com` domain, which was registered with [http://1and1.com/ 1&1 Internet].
+
+
+== Installing BIND ==
+
+If you selected the "DNS server" task during OS install, this should already be installed.  To verify, run the following command:
+{{{
+$ tasksel --list-tasks | grep dns
+}}}
+
+To see the packages installed for the task, run:
+{{{
+$ tasksel --task-packages dns-server
+}}}
+
+If you need to install this task, run:
+{{{
+# tasksel install dns-server
+}}}
+
+
+== DNS Zone: `madrivercode.com` ==
+
+If it doesn't already exist, create a `zones` folder:
+{{{
+# mkdir /etc/bind/zones
+}}}
+
+Create a `/etc/bind/zones/madrivercode.com.db` file with the following contents:
+{{{
+$ORIGIN madrivercode.com.
+$TTL 1h ; sets the default time-to-live for this zone
+
+; name ttl class rr    name-server                 email-addr  (sn ref ret ex min)
+@          IN    SOA   ns1.madrivercode.com.   hostmaster.madrivercode.com. (
+                              2009031400 ; sn = serial number (yyyymmdd##)
+                              2d         ; ref = refresh
+                              15M        ; ret = update retry
+                              4W         ; ex = expiry
+                              1h         ; min = minimum
+                              )
+
+; Nameserver Records
+; name             ttl    class   rr                name
+@                         IN      NS                ns1
+
+; IPv4 Address Records
+; name             ttl    class   rr                name
+@                         IN      A                 75.146.134.35
+ns1                       IN      A                 75.146.134.35
+tolkien                   IN      A                 75.146.134.35
+
+; CNAME Records
+; name             ttl    class   rr                name
+www                       IN      CNAME             tolkien
+}}}
+
+Edit the `/etc/bind/named.conf.local` file and and the following lines to the end:
+{{{
+# List other trusted name servers that are allowed to request zone transfers:
+acl trusted-servers  {
+        74.208.2.6;  // 1and1 secondary name server (domain: slv1.1and1.com)
+        217.160.224.4;  // 1and1 secondary name server (domain: slv1.1and1.com)
+};
+
+# Forward definition for madrivercode.com:
+zone "madrivercode.com" {
+	type master;
+	file "/etc/bind/zones/madrivercode.com.db";
+	allow-transfer { trusted-servers; };
+};
+}}}
+
+Edit the `/etc/bind/named.conf.options` file and set the `forwarders` block up as follows:
+{{{
+	forwarders {
+		68.87.85.98;
+		68.87.69.146;
+	};
+}}}
+
+Restart the `bind` service:
+{{{
+# /etc/init.d/bind9 restart
+}}}
+
+Use the domain registrar's tools to register this computer as the domain's primary DNS server:
+ 1. Log in to [http://admin.1and1.com] control panel.
+ 1. Go to the "Manage Domains" area.
+ 1. Create a subdomain that points to this computer's IP:
+    1. Go to ''New'', ''Create Subdomain''.
+    1. Create a new `dns` subdomain.
+    1. Edit that subdomain's DNS settings to point to `75.146.134.35` as it's primary A record.
+ 1. Edit the `madrivercode.com`'s DNS settings as follows:
+    * ''Name server'': My name server
+    * ''Primary name server'': `dns.madrivercode.com`
+    * ''Secondary name server'': 1and1 name server
+
+
+== Reverse DNS ==
+
+You will need to contact Comcast business support at 1-800-316-1619 and request that they create a reverse DNS entry for `75.146.134.35` that points to:
+ * `tolkien.madrivercode.com`
+ * `ns1.madrivercode.com`

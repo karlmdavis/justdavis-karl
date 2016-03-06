@@ -7,7 +7,7 @@ description: "Describes the steps necessary to make eddings an LDAP directory se
 
 This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the steps necessary to make the computer an LDAP directory server, using [Open LDAP](http://www.openldap.org/).
 
-Previously, I'd been using `lewis` as an LDAP server (see <%= wiki_entry_link("LewisSetupLdapServer") %>). This functionality has now been moved to `eddings`. The LDAP domain formerly hosted by `lewis`, `dc=davisonlinehome,dc=name`, was decomissioned and replaced with the new `dc=justdavis,dc=com` domain on `eddings`.
+Previously, I'd been using `lewis` as an LDAP server (see [LewisSetupLdapServer]({{ '/legacy_trac_wiki/LewisSetupLdapServer.txt' | prepend: site.baseurl }})). This functionality has now been moved to `eddings`. The LDAP domain formerly hosted by `lewis`, `dc=davisonlinehome,dc=name`, was decomissioned and replaced with the new `dc=justdavis,dc=com` domain on `eddings`.
 
 
 ## Installing LDAP
