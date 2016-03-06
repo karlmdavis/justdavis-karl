@@ -1,9 +1,0 @@
-= AndroidSetup =
-
-This document describes the setup for an Android G1 phone.
-
-Please see the following sub-guides:
- * AndroidBackup: describes the steps to backup the phone
- * AndroidSetupRooting: describes the steps necessary to gain root access to the phone
- * AndroidSetupWifiTethering: describes the steps necessary to use the phone as a wifi tether
-
