@@ -23,8 +23,6 @@ description: Describes the setup of fforde, which is Erica's EeePC 900A Linux la
 
 Please see the following sub-guides:
 
-{% assign sub_docs = site.it_docs | where:"parent","/it/fforde" %}
-{% for sub_doc in sub_docs | sort:"date" %}
-* {% collection_doc_link_long {{sub_doc.id}} baseurl:true %}</p>
+{% assign sub_docs = site.it_docs | where:"parent","/it/fforde" %}{% for sub_doc in sub_docs | sort:"date" %}* {% collection_doc_link_long {{sub_doc.id}} baseurl:true %}
 {% endfor %}
 

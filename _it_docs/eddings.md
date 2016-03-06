@@ -30,9 +30,7 @@ description: Describes the setup and configuration of eddings, my main server.
 
 The content on this page covers the base OS install and configuration; it doesn't cover configuration of any of the main services hosted by the machine. Please see the following sub-guides for details on those:
 
-{% assign sub_docs = site.it_docs | where:"parent","/it/eddings" %}
-{% for sub_doc in sub_docs | sort:"date" %}
-* {% collection_doc_link_long {{sub_doc.id}} baseurl:true %}</p>
+{% assign sub_docs = site.it_docs | where:"parent","/it/eddings" %}{% for sub_doc in sub_docs | sort:"date" %}* {% collection_doc_link_long {{sub_doc.id}} baseurl:true %}
 {% endfor %}
 
 

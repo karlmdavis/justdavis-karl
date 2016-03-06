@@ -28,10 +28,8 @@ The content on this page covers the base OS install and configuration; it doesn'
 
 * {% collection_doc_link_long /it/netclients baseurl:true %}
 * {% collection_doc_link_long /it/tmux baseurl:true %}
-{%- assign sub_docs = site.it_docs | where:"parent","/it/piers" %}
-{%- for sub_doc in sub_docs | sort:"date" %}
-* {% collection_doc_link_long {{sub_doc.id}} baseurl:true %}</p>
-{%- endfor %}
+{% assign sub_docs = site.it_docs | where:"parent","/it/piers" %}{% for sub_doc in sub_docs | sort:"date" %}* {% collection_doc_link_long {{sub_doc.id}} baseurl:true %}
+{% endfor %}
 
 
 ### Rename Old piers VM
