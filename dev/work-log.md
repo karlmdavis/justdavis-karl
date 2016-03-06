@@ -391,3 +391,11 @@ This file should never be committed along with other files; it should always be 
     * Fixed up line breaks in the auto-sub-topic lists.
     * Migrated the legacy Trac wiki content as just unformatted text files, and fixed the links from the regular content into them. Good enough.
 
+### 2016-03-06, Sunday
+
+* 2.55h (10:50-13:22): [Issue #3: Update my website template to look better (and be mobile-friendly)](https://github.com/karlmdavis/justdavis-karl/issues/3)
+    * Finished all the things!
+    * Site is published to <https://justdavis.com/karl>.
+    * Even fixed the Apache configs to properly redirect from <https://justdavis.com/>.
+    * Just need to merge the Git branch back in, being sure to not lose any changes.
+
