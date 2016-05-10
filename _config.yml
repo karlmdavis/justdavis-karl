@@ -27,6 +27,9 @@ assets:
   debug: false
   js_compressor:  uglifier
   css_compressor: sass
+  assets:
+    - "*.png"
+    - "*.jpg"
 
 # Exclude some directories and files.
 exclude:
