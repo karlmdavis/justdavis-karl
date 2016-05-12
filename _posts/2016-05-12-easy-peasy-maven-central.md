@@ -8,7 +8,7 @@ description: "I needed to push some tiny little open source projects of mine to 
 
 Last week, I needed to push some tiny little open source projects of mine to Maven Central. I'd been avoiding this because I figured it'd be a huge hassle. Turns out, no: it's easy!
 
-Pretty much everything you need to know is documented in detail here: [The Central Repository: Apache Maven](http://central.sonatype.org/pages/apache-maven.html). In short, though, the process goes like this:
+Pretty much everything you need to know is documented in detail here: [The Central Repository: OSSRH Guide](http://central.sonatype.org/pages/ossrh-guide.html). In short, though, the process goes like this:
 
 1. File a ticket with the OSSRH project requesting a new repo.
     * The ticket I filed for this is [OSSRH-22242](https://issues.sonatype.org/browse/OSSRH-22242), which they resolved in **less than an hour**! Wow.
