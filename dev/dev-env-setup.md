@@ -71,9 +71,9 @@ Parts of Jekyll also require Node.js to be available on the path. Install it fro
 ## Serve the Site Locally
 
 Run this to start a local server at <http://localhost:4000/karl/>:
-
+s
     $ rvm 2.2.1@jekyll
-    $ bundle exec jekyll serve
+    $ bundle exec jekyll serve --drafts
 
 ## Deploy the site to `eddings`
 
