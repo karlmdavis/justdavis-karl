@@ -12,3 +12,9 @@ math[display=inline] {
 	display: inline;
 }
 
+/* List subscription form controls should be a bit larger. */
+form.list-subscribe .controls {
+	padding-top: 0.5em;
+	font-size: 1.25em;
+}
+

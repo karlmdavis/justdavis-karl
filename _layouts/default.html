@@ -60,5 +60,20 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	{% javascript app %}
+
+	<!-- Drip. This code allows Drip to track subscriber activity and display opt-in forms on your website. It should be included even on pages with no Drip forms, so that Drip can accurately track visitor stats. -->
+	<script type="text/javascript">
+		var _dcq = _dcq || [];
+		var _dcs = _dcs || {};
+		_dcs.account = '8332376';
+
+		(function() {
+			var dc = document.createElement('script');
+			dc.type = 'text/javascript'; dc.async = true;
+			dc.src = '//tag.getdrip.com/8332376.js';
+			var s = document.getElementsByTagName('script')[0];
+			s.parentNode.insertBefore(dc, s);
+		})();
+	</script>
 </body>
 </html>
