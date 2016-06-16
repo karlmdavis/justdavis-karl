@@ -1,7 +1,7 @@
 ---
 title: "Rule #1: Always Be Learning"
 layout: post
-date: 2016/06/08
+date: 2016/06/14
 categories: career
 description: "What do I want to convey to you more than anything else? There's really only one guideline for your career that I'm convinced is 100% completely absolute, and it's this"
 ---
