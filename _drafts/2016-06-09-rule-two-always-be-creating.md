@@ -22,7 +22,7 @@ Later on in my career — just a couple of years ago, actually — I found mysel
 
 Again: I needed to be creating, so I invented a silly side project for myself. I wrote about this a bit in [What On Earth Was I Thinking?!]({% post_url 2015-07-27-what-on-earth-was-i-thinking %}), but the short of it is this: I decided to create a silly game. That got me through a rough year or so at IBM, where the only coding I had time to do was at night, working on it. And it was silly. And mostly pointless. But it made me happy. I had an excuse to try out new libraries and tools again. I had an excuse to try out different coding styles and best practices and such again. I was learning, and I was creating something! For the second time, a silly side project kept my career from going in a very different — and less fun — direction.
 
-So. If [Rule #1 is "Always Be Learning"]({% post_url 2016-06-08-rule-one-always-be-learning %}), then Rule #2 is this:
+So. If [Rule #1 is "Always Be Learning"]({% post_url 2016-06-14-rule-one-always-be-learning %}), then Rule #2 is this:
 
 <span style="font-weight:bold;font-size:1.5em;">Always Be Creating</span>
 
