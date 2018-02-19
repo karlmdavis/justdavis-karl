@@ -6,6 +6,22 @@ description: "Details various important information about my ISP."
 
 This page provides details on important information relating to the ISP I use. To benefit others, it also contains any information from past ISPs that might still be useful.
 
+## Comcast Business
+
+While living in Westminster, my ISP was Comcast Business. This was activated on 2016-10-11.
+
+Here are the connection details:
+
+* Gateway IP Address: `96.86.32.142`
+* Subnet Mask: `255.255.255.248`
+* Static IPv4 Block CIDR: `96.86.32.136/29`
+* Static IPv4 Addresses:
+    * `96.86.32.137`: `eddings.justdavis.com` (main IP)
+    * `96.86.32.138`: `piers.justdavis.com`
+    * `96.86.32.139`: `eddings.justdavis.com` (VPN gateway)
+    * `96.86.32.140`
+    * `96.86.32.141`
+* Static IPv6 Block CIDR: `2603:3003:5207:ad00::/56`
 
 ## Optimum/CableVision
 
@@ -27,7 +43,6 @@ Here are the details of connection:
 ### Reverse DNS
 
 Reverse DNS for Optimum static IPs can be managed at the following page: <https://business.optimum.net/internet/networkconfig>.
-
 
 ## Verizon FiOS
 
