@@ -21,7 +21,6 @@ description: Describes the setup of brooks, which is Karl's secondary Windows wo
             * Max Resolution: 4096x2160 @60 Hz
         * HDMI Output:
             * 1x HDMI (version 1.4a/2.0)
-        * Max Resolution: 4096x2160 @24 Hz (1.4a), 3840x2160 @60 Hz (2.0)
         * DVI Outputs:
             * 1x Dual-Link DVI-I
             * 1x Dual-Link DVI-D
