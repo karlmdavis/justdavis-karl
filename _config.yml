@@ -8,7 +8,14 @@ url: "https://justdavis.com" # the base hostname & protocol for your site
 twitter_username: karlmdavis
 github_username:  karlmdavis
 
-# Default URLs for posts:
+# Default URLs for posts.
+# Options:
+# 1. No trailing slash or extension: The Apache `Multiviews` option must be
+#    enabled.
+# 2. No trailing extension, but ends in a slash: Jekyll will render all posts
+#    into subdirectories with `index.html` files.
+# 3. Trailing extension (`:output_ext`): URLs will end in, for example,
+#    `.html`.
 permalink: /blog/:year/:title
 
 # Build settings
