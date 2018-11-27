@@ -8,7 +8,9 @@ description: "I have a love-hate relationship with time tracking. I wish there w
 
 I have a love-hate relationship with time tracking.
 
-I hate employer-mandated time tracking: I'm really, really bad at it. Awful, really. It's kind of embarassing.
+I love having the data it provides: I can easily see and run reports on where my time has been spent. I can compare my initial rosy-eyed estimates to harsh reality <a id="ref-1-source"><sup>[[1]](#ref-1-target)</sup></a>. I can keep track of how many hours per week I'm putting in, to keep myself honest on work-life balance. It's great!
+
+I hate keeping up with all the data entry. I particularly hate it when it's employer-mandated, as that inevitably comes with inconvenient submission deadlines: usually Friday end of day, when I'm just trying to wrap things up and get out the door. Honestly, it's embarassing how bad at this I end up being: folks are always yelling at me for submitting timehseets late.
 
 It's not so bad when things are going well and aren't super busy: I just make notes as I go through the day on what I worked on. If I'm really organized, I'll put together a whole list of priorities and tasks that I hope to tackle, then track my time against those items as I go through the day. Usually, I take the extra step of posting all this publicly on the company's internal wiki, so that it's easy for my managers and coworkers to see what I'm up to each day. Something like this:
 
@@ -54,8 +56,11 @@ Except:
 
 Unfortunately, it just doesn't support my multi-device, not-often-in-Windows, work lifestyle. I wish it did: it was some of the best money I'd ever spent.
 
-I've looked around at some of their competitors, and it doesn't seem like most of them are a good choice, either. A few of them are multi-device, but those all seem to want me to send them a stream of every window/application I use, on every one of those devices. Unencrypted. That's a **terrible** idea, from a security perspective. And creepy.
+I've looked around at some of their competitors, and it doesn't seem like they provide an acceptable solution, either. A few of them are multi-device, but those all seem to want me to send them a stream of every window/application I use, on every one of those devices. Unencrypted. That's a **terrible** idea, from a security perspective. And creepy.
 
 Anyone know of a privacy-conscious, multi-device offering in this space?
 
 Until then, I'm still updating the company wiki by hand, every day, all day (except when I get busy and it matters most).
+
+
+<a id="ref-1-target">[[1]](#ref-1-source)</a> Related: [Software Project Estimation: Rebuilding Trust]({{ site.baseurl }}{% post_url 2015-08-16-software-project-estimation-rebuilding-trust %})
