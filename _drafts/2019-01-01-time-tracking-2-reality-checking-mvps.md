@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Way Longer Than Expected"
-date: 2015/06/14
+date: 2019/01/01
 categories: coding
 description: "How long would you expect you'd need to build a simple web game? My first attempt left me very surprised..."
 ---

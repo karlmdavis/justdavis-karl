@@ -1,7 +1,7 @@
 ---
 title: "Work Journals and Time Tracking"
 layout: post
-date: 2018/11/26
+date: 2019/01/01
 categories: Time Tracking
 description: "Tracking the tick-tock of my work days and projects."
 ---
