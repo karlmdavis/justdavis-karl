@@ -23,7 +23,7 @@ But. There are some useful ideas and practices here that can be a part of a heal
 
 ## DevOps Principle: Transparency
 
-<img alt="Photo of person carrying large stack of boxes." src="/karl/assets/2019-04-25-personal-devops-carrying-boxes.jpg" style="border: 1px solid black" width="300px" />
+<img alt="Photo of person carrying large stack of boxes." src="{{ '/assets/2019-04-25-personal-devops-carrying-boxes.jpg' | prepend: site.baseurl }}" style="border: 1px solid black" width="300px" />
 
 > People keep asking me to do more but they don’t know how busy I already am!
 
@@ -39,7 +39,7 @@ What if, instead of worrying about how angry folks are getting, you could instea
 
 Simple solution: apply the DevOps principle of Transparency by working openly. Create a page in your team's wiki, title it "Karl's Daily Work Log" or something like that. At the top of the page, add a "Backlog" section and start moving that list of dozens of items out of your brain and into the wiki. Right below that, add a section every day with the date and list the items you're planning to get to, your meetings, etc. — in the order that you plan to get to them.
 
-![Screenshot of wiki page with backlog and current day's tasks.]({{ "/karl/assets/2019-04-25-personal-devops-daily-log.png" }})
+![Screenshot of wiki page with backlog and current day's tasks.]({{ '/assets/2019-04-25-personal-devops-daily-log.png' | prepend: site.baseurl }})
 
 As new action items land in your lap, or as folks ask you for the status of those items, point them at your wiki page. If your wiki supports it, liberally @-mention folks, so that they're automatically notified about updates.
 
@@ -47,7 +47,7 @@ Congratulations! You've now solved your problem in just about the simplest way p
 
 ## DevOps Principle: Long-Term Focus
 
-<img alt="Application icons for Mail, Google Calendar, and Slack, with badges indicating lots of unreads." src="/karl/assets/2019-04-25-personal-devops-notifications.svg" style="padding: 5px; border: 1px solid black" width="250px" />
+<img alt="Application icons for Mail, Google Calendar, and Slack, with badges indicating lots of unreads." src="{{ '/assets/2019-04-25-personal-devops-notifications.svg' | prepend: site.baseurl }}" style="padding: 5px; border: 1px solid black" width="250px" />
 
 > Ugh, it feels like I spent all my time today on email and meetings.
 
@@ -61,19 +61,19 @@ Here's how you get there: apply the DevOps principle of having a Long-Term Focus
 
 First, as a team, set aside a two hour or so block in the afternoons for any/all meetings. That's when you schedule your meetings. That's when you open up your email clients and work through your inbox. That's the time your team dedicates to the collaboration that's critical for success.
 
-<img alt="Screenshot of calendar day with most time reserved for heads-down work." src="/karl/assets/2019-04-25-personal-devops-calendar.png" style="padding: 5px; border: 1px solid black" width="400px" />
+<img alt="Screenshot of calendar day with most time reserved for heads-down work." src="{{ '/assets/2019-04-25-personal-devops-calendar.png' | prepend: site.baseurl }}" style="padding: 5px; border: 1px solid black" width="400px" />
 
 Second, at the start of every day, go to your "Daily Work Log" wiki page. Write down, and then answer this question at the top of the section for your day, first thing:
 
 > What can I do today that will still matter a year from now?
 
-<img alt="Screenshot of daily log page in wiki. Question: calendar t can I do today that will still matter a year from? Answer: Move TICKET-12345 along: that will really help our customers!" src="/karl/assets/2019-04-25-personal-devops-daily-log-with-goal.png" />
+<img alt="Screenshot of daily log page in wiki. Question: calendar t can I do today that will still matter a year from? Answer: Move TICKET-12345 along: that will really help our customers!" src="{{ '/assets/2019-04-25-personal-devops-daily-log-with-goal.png' | prepend: site.baseurl }}" />
 
 What you're trying to do here is start every day with a Long-Term Focus. Get out of that firefighting mode; stop worrying so much about all of the minor things on your backlog and instead keep an eye towards the work that will ultimately matter the most for your customers.
 
 ## DevOps Principle: Monitoring & Analytics
 
-<img alt="Photo of hamster running in exercise wheel. Very cute!" src="/karl/assets/2019-04-25-personal-devops-hamster.png" style="border: 1px solid black" />
+<img alt="Photo of hamster running in exercise wheel. Very cute!" src="{{ '/assets/2019-04-25-personal-devops-hamster.png' | prepend: site.baseurl }}" style="border: 1px solid black" />
 
 > I'm working like a _hundred_ hours a week lately. It's killing me.
 
@@ -91,17 +91,17 @@ I'm a bit weird, but maybe you are too: I _hate_ being forced to track and submi
 
 Step one: start recording all your work hours, in five minute blocks or something like that. When you got in for the day. Your lunch break. When you left for the day. The twenty minutes you spent at night checking your email. Record all of it somewhere.
 
-<img alt="Screenshot of daily log page in wiki, with work hours logged." src="/karl/assets/2019-04-25-personal-devops-daily-log-with-hours.png" />
+<img alt="Screenshot of daily log page in wiki, with work hours logged." src="{{ '/assets/2019-04-25-personal-devops-daily-log-with-hours.png' | prepend: site.baseurl }}" />
 
 Step two: use [RescueTime](https://www.rescuetime.com/) or something like it to track _how_ you're spending all of that work time. How much time are you spending blocked? How much of your time is being spent well vs. how much of it was probably wasted time?
 
-<img alt="RescueTime logo." src="/karl/assets/2019-04-25-personal-devops-rescuetime-logo.svg" style="padding: 5px; border: 1px solid black" width="300px" />
+<img alt="RescueTime logo." src="{{ '/assets/2019-04-25-personal-devops-rescuetime-logo.svg' | prepend: site.baseurl }}" style="padding: 5px; border: 1px solid black" width="300px" />
 
 This is an experiment. Collect the data for a few weeks, then put it all together at the end and analyze it. I guarantee that the results will shock you. And you'll find some obvious productivity improvements you can make that will reduce the pressure you're under to sacrifice your work-life balance. Also, intriguingly, if you're tracking the hours you worked, you'll find that you were actually exaggerating how bad your work-life balance really is. <a id="ref-1-source"><sup>[[1]](#ref-1-target)</sup></a> Bringing some reality to that feeling can only be healthy.
 
 ## DevOps Principle: Empathy
 
-<img alt="Woman wearing boxing gloves punching man in face." src="/karl/assets/2019-04-25-personal-devops-punch.jpg" style="border: 1px solid black" width="400px" />
+<img alt="Woman wearing boxing gloves punching man in face." src="{{ '/assets/2019-04-25-personal-devops-punch.jpg' | prepend: site.baseurl }}" style="border: 1px solid black" width="400px" />
 
 > It feels like everyone’s attacking each other — playing CYA and the blame game — when things get tough, rather than attacking the problem.
 
@@ -120,13 +120,13 @@ No quick fixes here: if your workplace culture has started going in the wrong di
 * Along with your Incident Response processes, SLAs, and all that, ensure that your teams have regular "water cooler meetings" for folks to get to know the other teams and people that they rely on.
 * When folks are struggling with something, be sure to always respectfully offer help.
 
-<img alt="Cheesy photo of four people around a table doing a group high five." src="/karl/assets/2019-04-25-personal-devops-team-high-five.jpg" style="border: 1px solid black" width="400px" />
+<img alt="Cheesy photo of four people around a table doing a group high five." src="{{ '/assets/2019-04-25-personal-devops-team-high-five.jpg' | prepend: site.baseurl }}" style="border: 1px solid black" width="400px" />
 
 Over time, these little acts of empathy will build the trust and connections your team needs to succeed.
 
 ## DevOps Principle: Heroes Not Needed
 
-<img alt="Photo of seaside cliff with sign: Unstable cliffs. Danger. Stay back. No public access." src="/karl/assets/2019-04-25-personal-devops-cliff.jpg" style="border: 1px solid black" width="400px" />
+<img alt="Photo of seaside cliff with sign: Unstable cliffs. Danger. Stay back. No public access." src="{{ '/assets/2019-04-25-personal-devops-cliff.jpg' | prepend: site.baseurl }}" style="border: 1px solid black" width="400px" />
 
 > It feels like everything's _this_ close to falling apart.
 >
@@ -144,7 +144,7 @@ Here's the super duper secret solution: **Get. Some Fucking. Sleep.** The end. T
 
 ... but seriously: go get some sleep. Everytime I get all stressed like this, it turns out it's mostly because I'm super tired. And I'm super tired because I'm staying up way too late working (but mostly worrying). Stop that. Go to bed on time. Maybe even take a couple long weekends and relax some. <a id="ref-2-source"><sup>[[2]](#ref-2-target)</sup></a>
 
-<img alt="Photo of person faced-down in bed with just their feet showing from under the covers." src="/karl/assets/2019-04-25-personal-devops-sleep.jpg" style="border: 1px solid black" width="400px" />
+<img alt="Photo of person faced-down in bed with just their feet showing from under the covers." src="{{ '/assets/2019-04-25-personal-devops-sleep.jpg' | prepend: site.baseurl }}" style="border: 1px solid black" width="400px" />
 
 Sleep and relaxation will radically change your perspective. Few weeks back, I was feeling pretty stressed out and sorry for myself about things at work. Then I got sick. Spent the better part of three days sleeping, pretty much nonstop. After recovering and heading back in to work?
 
