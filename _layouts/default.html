@@ -14,7 +14,7 @@
 	<meta name="twitter:creator" content="@karlmdavis">
 	<meta name="twitter:title" content="{{ page.title }}">
 	<meta name="twitter:description" content="{{ page.description }}">
-	<meta name="twitter:image" content="{{ page.image | prepend: site.baseurl }}">
+	<meta name="twitter:image" content="{{ page.image | prepend: site.baseurl | prepend: site.url }}">
 	{% endif %}
 
 	<link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}">
