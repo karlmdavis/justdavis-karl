@@ -4,7 +4,7 @@ title: "Personal DevOps"
 date: 2019/04/25
 categories: DevOps
 description: "DevOps is all about trying to improve a team's productivity, but sometimes, the best place to start is with ourselves."
-image: "/assets/2019-04-25-personal-devops-hamster.jpg"
+image: "/assets/2019-04-25-personal-devops-hamster.png"
 ---
 
 ## DevOps-ify Your Own Damn Self
