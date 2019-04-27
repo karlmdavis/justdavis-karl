@@ -5,6 +5,7 @@ date: 2019/04/25
 categories: DevOps
 description: "DevOps is all about trying to improve a team's productivity, but sometimes, the best place to start is with ourselves."
 image: "/assets/2019-04-25-personal-devops-hamster.png"
+image_alt: "Photo of hamster running in exercise wheel. Very cute!"
 ---
 
 ## DevOps-ify Your Own Damn Self

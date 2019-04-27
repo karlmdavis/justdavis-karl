@@ -1,20 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" prefix="og: http://ogp.me/ns#">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-	<title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+	<title>{{ site.title }}{% if page.title %}: {{ page.title }}{% endif %}</title>
 	<meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
 
-	{% if page.title and page.description and page.image %}
-	<meta name="twitter:card" content="summary_large_image">
+	<meta property="og:site_name" content="{{ site.title }}">
+	<meta property="og:url" content="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
 	<meta name="twitter:site" content="@karlmdavis">
 	<meta name="twitter:creator" content="@karlmdavis">
-	<meta name="twitter:title" content="{{ page.title }}">
+	{% if page.title %}
+	<meta property="og:title" content="{{ site.title }}: {{ page.title }}">
+	<meta name="twitter:title" content="{{ site.title }}: {{ page.title }}">
+	<meta name="twitter:card" content="summary">
+	{% endif %}
+	{% if page.description %}
+	<meta property="og:description" content="{{ page.description }}">
 	<meta name="twitter:description" content="{{ page.description }}">
+	{% endif %}
+	{% if page.image %}
+	<meta property="og:image" content="{{ page.image | prepend: site.baseurl | prepend: site.url }}">
 	<meta name="twitter:image" content="{{ page.image | prepend: site.baseurl | prepend: site.url }}">
+	{% if page.image_alt %}
+	<meta name="twitter:image:alt" content="{{ page.image_alt }}">
+	<meta property="og:image:alt" content="{{ page.image_alt }}">
+	{% endif %}
 	{% endif %}
 
 	<link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}">
