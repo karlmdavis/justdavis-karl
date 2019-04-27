@@ -37,6 +37,7 @@ assets:
   assets:
     - "*.png"
     - "*.jpg"
+    - "*.svg"
 
 # Exclude some directories and files.
 exclude:
