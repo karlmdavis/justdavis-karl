@@ -141,7 +141,7 @@ What if you _weren't_ a gross Stress Lord like this? Instead, when folks ask you
 
 Here's the super duper secret solution: **Get. Some Fucking. Sleep.** The end. Thanks for coming to my Ted Talk.
 
-... but seriously: go get some sleep. Everytime I get all stressed like this, it turns out it's mostly because I'm super tired. And I'm super tired because I'm staying up way too late working (but mostly worrying). Stop that. Go to bed on time. Maybe even take a couple long weekends and relax some.
+... but seriously: go get some sleep. Everytime I get all stressed like this, it turns out it's mostly because I'm super tired. And I'm super tired because I'm staying up way too late working (but mostly worrying). Stop that. Go to bed on time. Maybe even take a couple long weekends and relax some. <a id="ref-2-source"><sup>[[2]](#ref-2-target)</sup></a>
 
 <img alt="Photo of person faced-down in bed with just their feet showing from under the covers." src="/karl/assets/2019-04-25-personal-devops-sleep.jpg" style="border: 1px solid black" width="400px" />
 
@@ -157,3 +157,5 @@ Remember: products are built by people. The most important thing is to empower a
 
 
 <a id="ref-1-target">[[1]](#ref-1-source)</a> Related: [People Who Claim to Work 75-Hour Weeks Usually Only Work About 50 Hours](http://nymag.com/intelligencer/2019/04/people-who-claim-to-work-75-hour-weeks-are-lying.html)
+
+<a id="ref-2-target">[[2]](#ref-2-source)</a> Related: [Tweet from @hillelogram detailing impacts of stress and sleep on productivity](https://twitter.com/hillelogram/status/1119709859979714560)
