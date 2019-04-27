@@ -56,7 +56,7 @@ What if, instead, you and your team could get to the end of the week feeling lik
 
 > Wow, look at how productive we all were this week! We moved the product — and our customers — so much forward!
 
-Here's how you get there: apply the DevOps principle of having a Long-Term Focus to transform how you & your team work. Two things to do.
+Here's how you get there: apply the DevOps principle of having a Long-Term Focus to transform how you & your team work. Two things to do...
 
 First, as a team, set aside a two hour or so block in the afternoons for any/all meetings. That's when you schedule your meetings. That's when you open up your email clients and work through your inbox. That's the time your team dedicates to the collaboration that's critical for success.
 
@@ -151,7 +151,7 @@ Turns out, everything was fine all along. The team's got this. My Hero Complex w
 
 ## Conclusion
 
-At the end of the day, the DevOps philosophy is about looking at your product delivery systems in a wholistic manner, and making improvements to deliver more value, faster. You can — and should — apply those same analyses and techniques to your personal daily work.
+At the end of the day, the DevOps philosophy is about looking at your product delivery systems in a holistic manner, and making improvements to deliver more value, faster. You can — and should — apply those same analyses and techniques to your personal daily work.
 
 Remember: products are built by people. The most important thing is to empower and trust your team.
 
