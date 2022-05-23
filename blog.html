@@ -9,11 +9,22 @@ permalink: /blog/
 		</div>
 
 		<ol class="blog-posts-row">
-			{% for post in site.posts %}
-			<li class="blog-post-summary">
-				<h2><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></h2>
-				<p class="blog-post-meta">{{ post.date | date: "%B %-d, %Y" }}</p>
-				<p>{{ post.description }}&hellip; <a class="blog-read-more" href="{{ post.url | prepend: site.baseurl }}">(read more)</a></p>
+			{% assign posts_by_year = site.posts | group_by_exp:"post", "post.date | date: '%Y'"%}
+			{% for year in posts_by_year %}
+			<li>
+				<h2>{{ year.name }}</h2>
+				<ol class="blog-posts-for-year">
+					{% for post in year.items %}
+					<li>
+						<div class="summary">
+							<h3><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></h3>
+							<p class="meta">{{ post.date | date: "%B %-d, %Y" }}</p>
+							<p class="description">{{ post.description }}&hellip;</p>
+							<a class="read-more" href="{{ post.url | prepend: site.baseurl }}">Read More</a>
+						</div>
+					</li>
+					{% endfor %}
+				</ol>
 			</li>
 			{% endfor %}
 		</ol>
