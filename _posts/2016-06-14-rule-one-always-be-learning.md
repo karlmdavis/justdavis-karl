@@ -3,7 +3,7 @@ title: "Rule #1: Always Be Learning"
 layout: post
 date: 2016/06/14
 categories: career
-description: "What do I want to convey to you more than anything else? There's really only one guideline for your career that I'm convinced is 100% completely absolute, and it's this"
+description: "What do I want to convey to you more than anything else? There's really only one guideline for your career that I'm convinced is 100% completely absolute, and it's this…"
 ---
 
 One of the cardinal sins in engineering is "Not Invented Here" Syndrome, or NIH. Folks afflicted with NIH insist on re-creating everything, all the time. Need a logging framework? Going to have to create one from scratch. Need to do database connection pooling? That's tricky, but yeah, they will whip that up for you (it'll even work... at least some of the time). The classic example of this is a Content Management System (CMS). It's almost a rite of passage for engineers to create their own from scratch, rather than using one of the bazillion that are already out there. I was guilty of this myself, early in my career!
