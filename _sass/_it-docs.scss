@@ -1,0 +1,35 @@
+/*
+ * This file contains styling for the site's `/it` pages.
+ */
+
+
+/*
+ * Import Bootstrap's functions, variables, and mixins so that we can use them
+ * below.
+ */
+@import "bootstrap/functions";
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+
+.it-intro-row {
+  @include make-row;
+
+  .it-intro {
+    @include make-col-ready();
+    @include make-col(12);
+  }
+}
+
+.it-docs-groups-row {
+  @include make-row;
+
+  > div.it-docs-group {
+    @include make-col-ready();
+    @include make-col(12);
+
+    ul {
+      list-style: square;
+      padding-left: 1.5rem;
+    }
+  }
+}

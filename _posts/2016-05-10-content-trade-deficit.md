@@ -25,5 +25,5 @@ Whoops.
 
 I should have been documenting/blogging the whole way through. But there's no time like the present to start. From now on, I want to be more like [b0rk](https://twitter.com/b0rk).
 
-<br /><br />{% img bork-bork-bork.jpg magick:resize:75% alt:'This is my alt' %}
+<br /><br />![Swedish Chef: bork bork bork]({{ '/assets/images/2016-05-10-content-trade-deficit-bork-resized.jpg' | prepend: site.baseurl }})
 

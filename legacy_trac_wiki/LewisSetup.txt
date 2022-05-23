@@ -68,28 +68,28 @@ Assign the server a static public IP:
 
  1. Edit the `/etc/network/interfaces` file and set the `eth0` section as follows:
 
-{{{
+```
 auto eth0
 iface eth0 inet static
         address 75.146.134.36
         netmask 255.255.255.248
         gateway 75.146.134.38
-}}}
+```
 
  1. Restart networking:
 
-{{{
+```
 # /etc/init.d/networking restart
-}}}
+```
 
 
 == Connecting via SSH ==
 
 After the network connection has been setup, you should be able to connect to the computer from other hosts via the following SSH command:
 
-{{{
+```
 $ ssh karl@75.146.134.36
-}}}
+```
 
 
 == Keeping the Clock Synchronized ==
@@ -99,6 +99,7 @@ References:
  * https://help.ubuntu.com/8.04/serverguide/C/NTP.html
 
 As a virtual machine guest, the computer's clock will tend to "drift" faster than normal.  To correct this, simply install `ntpd` via the following command:
-{{{
+
+```
 # apt-get install ntp
-}}}
+```

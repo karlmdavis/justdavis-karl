@@ -1,17 +1,25 @@
 ---
-# Only the main Sass file needs front matter (the dashes are enough)
+# SASS files in Jekyll need front matter (the dashes are enough).
 ---
 @charset "utf-8";
 
 // Import partials from `sass_dir` (defaults to `_sass`)
-@import
-        "base",
-        "blog-theme",
-        "layout"
-;
+@import "bootstrap-variables-customize";
+@import "shared";
+@import "home";
+@import "projects";
+@import "blog";
+@import "it-docs";
 
-// Import the Rouge syntax highlighting styles.
-// (This was copied from here: <https://github.com/richleland/pygments-css/blob/master/github.css>.)
-// (Rouge also has builtin themes that can be xported by running something like: `rougify style monokai.sublime > rouge.monokai.sublime.css`.)
+// Some of this will have been imported by the earlier partials, but make sure
+// we get all of it.
+@import "bootstrap";
+
+/**
+ * Import the Rouge syntax highlighting styles.
+ * (This was copied from here:
+ * <https://github.com/richleland/pygments-css/blob/master/github.css>.)
+ * (Rouge also has builtin themes that can be xported by running something like:
+ * `rougify style monokai.sublime > rouge.monokai.sublime.css`.)
+ */
 @import "rouge.github.css";
-

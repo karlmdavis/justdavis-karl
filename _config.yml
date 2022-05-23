@@ -21,6 +21,10 @@ permalink: /blog/:year/:title
 # Build settings
 markdown: kramdown
 highlighter: rouge
+sass:
+  # This seems to be required for Bootstrap's SASS; the default SASS plugin
+  # fails to load it.
+  implementation: sass-embedded
 
 # Specify the not-a-blog collections that are also present in this site.
 # See docs: http://jekyllrb.com/docs/collections/
@@ -29,17 +33,6 @@ collections:
     output: true
     permalink: /it/:path/
 
-# Configuration for jekyll-assets.
-assets:
-  debug: false
-  js_compressor:  uglifier
-  css_compressor: sass
-  assets:
-    - "*.png"
-    - "*.jpg"
-    - "*.svg"
-    - "*.ico"
-
 # Exclude some directories and files.
 exclude:
   - Gemfile
@@ -47,6 +40,3 @@ exclude:
   - dev
   - .asset-cache   # Prevents endless looping.
   - .sass-cache    # Prevents endless looping.
-
-gems:
-  - jekyll-assets

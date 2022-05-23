@@ -29,7 +29,7 @@
 	<link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}">
 	<link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
 	<link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}" />
-	<link rel="shortcut icon" type="image/x-icon" href="{{ '/assets/favicon.ico' | prepend: site.baseurl | prepend: site.url }}">
+	<link rel="shortcut icon" type="image/x-icon" href="{{ '/assets/images/favicon.ico' | prepend: site.baseurl | prepend: site.url }}">
 	
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=MML_HTMLorMML"></script>
 	
@@ -52,18 +52,30 @@
 </head>
 <body>
 
-	<div class="masthead">
+	<nav class="navbar navbar-masthead navbar-expand navbar-dark mb-3">
 		<div class="container">
-			<nav class="nav">
-				<a class="nav-item {% nav_active '/' %}" href="{{ '/' | prepend: site.baseurl }}">Home</a>
-				<a class="nav-item {% nav_active '/projects' %}" href="{{ '/projects' | prepend: site.baseurl }}">Projects</a>
-				<a class="nav-item {% nav_active '/blog' %}" href="{{ '/blog' | prepend: site.baseurl }}">Blog</a>
-				<a class="nav-item {% nav_active '/it' %}" href="{{ '/it' | prepend: site.baseurl }}">IT Docs</a>
-			</nav>
+			<div class="container-fluid px-0">
+				<ul class="navbar-nav me-auto">
+					<li class="nav-item">
+						<a class="nav-link ps-0 {% nav_active '/' %}" href="{{ '/' | prepend: site.baseurl }}">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link {% nav_active '/projects' %}" href="{{ '/projects' | prepend: site.baseurl }}">Projects</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link {% nav_active '/blog' %}" href="{{ '/blog' | prepend: site.baseurl }}">Blog</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link {% nav_active '/it' %}" href="{{ '/it' | prepend: site.baseurl }}">IT Docs</a>
+					</li>
+				</ul>
+			</div>
 		</div>
-	</div>
+	</nav>
 
-	{{ content }}
+	<div class="container">
+		{{ content }}
+	</div>
 
 	<footer>
 		<p>Copyright {{ site.time | date: '%Y' }}, Karl M. Davis. Check out the site on GitHub: <a href="https://github.com/karlmdavis/justdavis-karl">justdavis-karl</a>.</p>
@@ -77,8 +89,6 @@
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	{% javascript app %}
 
 	<!-- Drip. This code allows Drip to track subscriber activity and display opt-in forms on your website. It should be included even on pages with no Drip forms, so that Drip can accurately track visitor stats. -->
 	<script type="text/javascript">

@@ -1,0 +1,14 @@
+/* 
+ * Override any Bootstrap variables we want to alter, and then import the
+ * defaults.
+ */
+
+// Go with a more muted primary blue.
+$primary: #337ab7;
+
+// Customize the headings some.
+$headings-font-weight: normal;
+$headings-color:       #333;
+
+@import "bootstrap/functions"; // This is a pre-req for the variables.
+@import "bootstrap/variables";

@@ -1,0 +1,134 @@
+/*
+ * This file contains styling that is shared across the site.
+ */
+
+
+/*
+ * Import Bootstrap's functions, variables, and mixins so that we can use them
+ * below.
+ */
+@import "bootstrap/functions";
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+
+
+/*
+ * Customize the primary "masthead" navbar.
+ */
+.navbar-masthead {
+  background-color: #428bca;
+}
+
+
+/*
+ * Nav links.
+ */
+/*
+.nav-item {
+  position: relative;
+  display: inline-block;
+  padding: 10px;
+  font-weight: 500;
+  color: #cdddeb;
+}
+.nav-item:hover,
+.nav-item:focus {
+  color: #fff;
+  text-decoration: none;
+}
+*/
+
+
+/*
+ * Active state gets a caret at the bottom.
+ */
+/*
+.nav .active {
+  color: #fff;
+}
+.nav .active:after {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 0;
+  margin-left: -5px;
+  vertical-align: middle;
+  content: " ";
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid;
+  border-left: 5px solid transparent;
+}
+*/
+
+
+/*
+ * Footer.
+ */
+footer {
+  padding: 40px 0;
+  color: #999;
+  text-align: center;
+  background-color: #f9f9f9;
+  margin-top: 4rem;
+  border-top: 1px solid #e5e5e5;
+}
+footer p:last-child {
+  margin-bottom: 0;
+}
+
+
+/*
+ * Remove link decorations/underlines, for a cleaner aesthetic.
+ */
+a:link,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
+}
+
+
+/*
+ * Style blockquotes more better.
+ */
+blockquote {
+  border-left: 3px solid $gray-400;
+  padding-left: 1rem;
+}
+
+
+/*
+ * Style code to "pop" more.
+ */
+pre {
+  padding-top: 0.25rem;
+  padding-right: 0.4rem;
+  padding-bottom: 0.2rem;
+  padding-left: 0.4rem;
+
+  // Collapse whitespace, but honor line breaks.
+  white-space: pre-line;
+}
+pre,
+code {
+  @extend .rounded;
+  background-color: $gray-200;
+}
+
+
+/*
+ * Ensure that inline `math` elements are rendered that way.
+ */
+math[display=inline] {
+  display: inline;
+}
+
+
+/*
+ * List subscription form controls should be a bit larger.
+ */
+form.list-subscribe .controls {
+  padding-top: 0.5rem;
+  font-size: 1.25rem;
+}

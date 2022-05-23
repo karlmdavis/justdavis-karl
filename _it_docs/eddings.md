@@ -31,7 +31,7 @@ The content on this page covers the base OS install and configuration; it doesn'
 
 Those services are either covered in the following (older) sub-guides for details on those:
 
-{% assign sub_docs = site.it_docs | where:"parent","/it/eddings" %}{% for sub_doc in sub_docs | sort:"date" %}* {% collection_doc_link_long {{sub_doc.id}} baseurl:true %}
+{% assign sub_docs = site.it_docs | where:"parent","/it/eddings" | sort:"date" %}{% for sub_doc in sub_docs %}* {% collection_doc_link_long {{sub_doc.id}} baseurl:true %}
 {% endfor %}
 
 Or the services' configuration is handled by the Ansible playbooks mentioned below. Most all of the configuration is being transitioned to the Ansible playbooks; the above sub-guides haven't yet been updated to reflect that.

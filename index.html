@@ -2,51 +2,43 @@
 layout: default
 ---
 
-<div class="jumbotron">
-	<h1>Karl M. Davis</h1>
-	<p class="lead">
-		Still shocked that I get paid to have this much fun.
-	</p>
-</div>
-
-<div class="container">
-
-	<div class="row">
-		<div class="col-lg-4">
-			<!--<img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">-->
-			<h2><a href="{{ '/projects' | prepend: site.baseurl }}">Projects</a></h2>
-			<p>I try to make sure that, every day, I put in at least a little bit of time on one or more of my active projects. According to my <a href="https://github.com/karlmdavis/">GitHub contribution calendar</a>, I've been doing pretty well at that!</p>
-			<!--<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>-->
+		<div class="home-title-row">
+			<div class="home-title">
+				<h1 class="display-1">Karl M. Davis</h1>
+				<p class="lead">
+					Still shocked that I get paid to have this much fun.
+				</p>
+			</div>
 		</div>
-		<div class="col-lg-4">
-			<!--<img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">-->
-			<h2><a href="{{ '/blog' | prepend: site.baseurl }}">Blog</a></h2>
-			<p>Trying to pay forward all of the excellent advice and tutorials that I've encountered over the years.</p>
-			<!--<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>-->
+		
+		<div class="home-sections-row row row-cols-1 row-cols-lg-3 g-3">
+			<div class="home-section col">
+				<h2><a href="{{ '/projects' | prepend: site.baseurl }}">Projects</a></h2>
+				<p>I try to make sure that, every day, I put in at least a little bit of time on one or more of my active projects. According to my <a href="https://github.com/karlmdavis/">GitHub contribution calendar</a>, I've been doing pretty well at that!</p>
+			</div>
+			<div class="col">
+				<h2><a href="{{ '/blog' | prepend: site.baseurl }}">Blog</a></h2>
+				<p>Trying to pay forward all of the excellent advice and tutorials that I've encountered over the years.</p>
+			</div>
+			<div class="col">
+				<h2><a href="{{ '/it' | prepend: site.baseurl }}">IT Docs</a></h2>
+				<p>For funsies, I like to build and run servers, networks, etc. Over the years, my obsessive documentation habits have piled up a lot of content on that.</p>
+			</div>
 		</div>
-		<div class="col-lg-4">
-			<!--<img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">-->
-			<h2><a href="{{ '/it' | prepend: site.baseurl }}">IT Docs</a></h2>
-			<p>For funsies, I like to build and run servers, networks, etc. Over the years, my obsessive documentation habits have piled up a lot of content on that.</p>
-			<!--<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>-->
+		
+		<hr class="about-me-divider">
+		
+		<div class="about-me-row row">
+			<div class="about-me">
+				<h2>About Me</h2>
+				<p>I've been banging away on computers for as long as I've known they existed. Shockingly, folks eventually started handing me money for it. The world's a crazy place.</p>
+				<p>Currently, my family and I live outside of Baltimore, MD, where I get to do a wonderful amount of kayaking and hiking.</p>
+				<p>I may not have bothered to update it in a while, but you can find my résumé here: <a href="{{ '/downloads/karlmdavis-swEngineer-resume.pdf' | prepend: site.baseurl }}">Karl M. Davis, Software Engineer</a>.</p>
+				<p>You can also find me on the following sites:</p>
+				<ul>
+					<li><a href="https://github.com/karlmdavis">Karl on GitHub</a></li>
+					<li><a href="http://stackexchange.com/users/1166705/karl-m-davis?tab=activity">Karl on Stack Exchange</a></li>
+					<li><a href="https://www.linkedin.com/in/karlmdavis">Karl on LinkedIn</a></li>
+				</ul>
+			</div>
 		</div>
-	</div>
-
-	<hr class="about-me-divider">
-
-	<div class="row about-me">
-		<div class="col-md-7">
-			<h2>About Me</h2>
-			<p>I've been banging away on computers for as long as I've known they existed. Shockingly, folks eventually started handing me money for it. The world's a crazy place.</p>
-			<p>Currently, my family and I live outside of Baltimore, MD, where I get to do a wonderful amount of kayaking and hiking.</p>
-			<p>I may not have bothered to update it in a while, but you can find my résumé here: <a href="{{ '/downloads/karlmdavis-swEngineer-resume.pdf' | prepend: site.baseurl }}">Karl M. Davis, Software Engineer</a>.</p>
-			<p>You can also find me on the following sites:</p>
-			<ul>
-				<li><a href="https://github.com/karlmdavis">Karl on GitHub</a></li>
-				<li><a href="http://stackexchange.com/users/1166705/karl-m-davis?tab=activity">Karl on Stack Exchange</a></li>
-				<li><a href="https://www.linkedin.com/in/karlmdavis">Karl on LinkedIn</a></li>
-			</ul>
-		</div>
-	</div>
-
-</div>

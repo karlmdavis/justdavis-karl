@@ -1,0 +1,33 @@
+/*
+ * This file contains styling for the site's `/projects` page.
+ */
+
+
+/*
+ * Import Bootstrap's functions, variables, and mixins so that we can use them
+ * below.
+ */
+@import "bootstrap/functions";
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+
+.projects {
+  @include make-row;
+  margin-bottom: 3rem;
+
+  .projects-intro {
+    @include make-col-ready();
+    @include make-col(12);
+  }
+
+  .project {
+    @include make-col-ready();
+    @include make-col(12);
+    margin-top: 2rem;
+
+    h2 {
+      margin-top: 0;
+      padding-top: 0;
+    }
+  }
+}
