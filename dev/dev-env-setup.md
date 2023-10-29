@@ -3,39 +3,24 @@
 This document details the setup for the tools used to develop the `justdavis.com` site. This site is primarily managed via [Jekyll](http://jekyllrb.com/), a static site generator.
 
 
-## Install RVM and Ruby 2
+## Install RVM and Ruby 3
 
 References:
 
 * [Installing RVM](https://rvm.io/rvm/install)
 
-Ubuntu Trusty ships with Ruby 1.9, while Jekyll requires Ruby 2. Upgrading the system's default Ruby version is a terrible idea that could break all sorts of other things, so instead, [RVM](https://rvm.io/) will be used to manage user-local versions of the Ruby tooling.
+Ubuntu tends to ship with old versions of Ruby, and Jekyll tends to require newer versions of it. One common way to manage this mismatch is with RVM.
 
-First, import the RVM signing key:
+I haven't had to install RVM in a while; I've been carrying an old version of it around, but see the link above for instructions.
 
-    $ gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
-
-Install RVM along with the latest stable Ruby release:
-
-    $ \curl -sSL https://get.rvm.io | bash -s stable --ruby
-
-At this point, RVM is installed and its shell functions are available for new shells. To load those functions into already-open terminal sessions, you can run the folloing command in each:
+Let's assume that RVM is installed and its shell functions are available for new shells. To load those functions into already-open terminal sessions, you can run the folloing command in each:
 
     $ source /home/karl/.rvm/scripts/rvm
 
-The following commands can be used to list the installed Ruby versions, and activate one of them:
+The following command can be used to install and activate a modern version of Ruby that will work with Kekyll:
 
-    $ rvm list
-    
-    rvm rubies
-    
-    =* ruby-2.2.1 [ x86_64 ]
-    
-    # => - current
-    # =* - current && default
-    #  * - default
-    
-    $ rvm use 2.2.1
+    $ rvm install ruby-3.2.2
+    $ rvm use 3.2.2
 
 
 ### RVM: Gemset for Jekyll
@@ -43,7 +28,7 @@ The following commands can be used to list the installed Ruby versions, and acti
 It's expected that different combinations of Ruby gems will be needed for different tasks. Accordingly, RVM supports the concept of "gemsets": named bundles of installed gems. Create a "`jekyll`" gemset and activate it, as follows:
 
     $ rvm gemset create jekyll
-    $ rvm 2.2.1@jekyll
+    $ rvm 3.2.2@jekyll
 
 Install the `jekyll` gem:
 
