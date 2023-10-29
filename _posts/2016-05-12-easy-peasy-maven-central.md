@@ -23,7 +23,7 @@ Pretty much everything you need to know is documented in detail here: [The Centr
 
 My projects are organized such that they all inherit from a single parent POM, so that's where I had to make all of the changes. Here's a trimmed-down version of what I ended up with:
 
-{% highlight xml %}
+```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -146,7 +146,7 @@ My projects are organized such that they all inherit from a single parent POM, s
   </build>
 
 </project>
-{% endhighlight %}
+```
 
 You can find the full POM here on Maven Central: [com.justdavis.karl.jessentials:jessentials-parent:5.0.0:pom](https://repo1.maven.org/maven2/com/justdavis/karl/jessentials/jessentials-parent/5.0.0/jessentials-parent-5.0.0.pom).
 

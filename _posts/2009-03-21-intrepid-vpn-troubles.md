@@ -8,14 +8,16 @@ description: "I've now spent a few evenings this week debugging a VPN client err
 
 I've now spent a few evenings this week debugging a VPN client error at home.  I'm running Ubuntu Intrepid, whose VPN client [has](https://bugs.launchpad.net/ubuntu/+source/network-manager-pptp/+bug/278309) [had](https://bugs.launchpad.net/ubuntu/+source/network-manager-pptp/+bug/291895) [some](https://bugs.launchpad.net/ubuntu/+source/network-manager-pptp/+bug/259168) [issues](https://bugs.launchpad.net/ubuntu/+source/network-manager-pptp/+bug/284212), I've noticed.  So running into yet another problem was less "surprising" and more "depressing."  Whenever I tried to connect to a VPN server, I'd get an error and see the following in the messages log:
 
-<pre>Mar 21 12:20:27 feist pppd[28594]: Plugin /usr/lib/pppd/2.4.4/nm-pptp-pppd-plugin.so loaded.
+```
+Mar 21 12:20:27 feist pppd[28594]: Plugin /usr/lib/pppd/2.4.4/nm-pptp-pppd-plugin.so loaded.
 Mar 21 12:20:27 feist pppd[28594]: pppd 2.4.4 started by root, uid 0
 Mar 21 12:20:27 feist pppd[28594]: Using interface ppp0
 Mar 21 12:20:27 feist pppd[28594]: Connect: ppp0 &lt;--&gt; /dev/pts/0
 Mar 21 12:20:58 feist pppd[28594]: LCP: timeout sending Config-Requests
 Mar 21 12:20:58 feist pppd[28594]: Connection terminated.
 Mar 21 12:20:58 feist pppd[28594]: Modem hangup
-Mar 21 12:20:58 feist pppd[28594]: Exit.</pre>
+Mar 21 12:20:58 feist pppd[28594]: Exit.
+```
 
 This problem appeared last weekend and since then I've spent a few fun-filled evenings learning all sorts of interesting things about pptp, the Linux VPN client used "under the hood" in Ubuntu.  Two of those things I learned might actually be useful someday:
 

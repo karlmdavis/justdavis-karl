@@ -21,32 +21,36 @@ The domains now hosted on `eddings` are:
 
 [bind](http://www.isc.org/software/bind) seems to be, by far, the most popular DNS server package for Linux. I've had good success with it, myself. Installing `bind` is as simple as:
 
-    $ sudo apt-get install bind9
+```shell-session
+$ sudo apt-get install bind9
+```
 
 
 ## Basic Configuration
 
 We want this DNS server to forward on requests for zones it isn't authoritative for to other DNS servers. Edit the `/etc/bind/named.conf.options` file and set the forwarders block up as follows:
 
-~~~~
+```
 	forwarders {
 		8.8.8.8;  // Google's public DNS server (https://developers.google.com/speed/public-dns/)
 		8.8.4.4;  // Google's public DNS server (https://developers.google.com/speed/public-dns/)
 	};
-~~~~
+```
 
 We need to setup the list of Gandi secondary DNS servers that will be allowed to perform zone transfers. Edit the `/etc/bind/named.conf.local` file and and the following lines to the end:
 
-~~~~
+```
 # List other trusted name servers that are allowed to request zone transfers:
 acl trusted-servers  {
         217.70.177.40;  // Gandi's ns6.gandi.net secondary name server
 };
-~~~~
+```
 
 Restart the `bind` service to apply these changes:
 
-    $ sudo /etc/init.d/bind9 restart
+```shell-session
+$ sudo /etc/init.d/bind9 restart
+```
 
 
 ## DNS Zones
@@ -58,7 +62,7 @@ The sections below cover the creation of the individual zone databases that will
 
 A new `/etc/bind/db.justdavis.com` file will store the records and some other configuration for the zone. The configuration below was used on 2012-05-17 to create the zone, though this was likely modified directly on the server later:
 
-~~~~
+```
 $TTL 1h ; sets the default time-to-live for this zone
 
 ; name ttl class rr    name-server                 email-addr  (sn ref ret ex min)
@@ -115,61 +119,71 @@ _kpasswd._udp                   IN      SRV               0 0 464 lewis
 ; AFSDB Records
 ; cell                   ttl    class   rr                name
 davisonlinehome.name.           IN      AFSDB             1 asimov.davisonlinehome.name.
-~~~~
+```
 
 *Note:* This zone database does not include an $ORIGIN directive, as this would prevent the database from being used as a symlink alias for other domains. Due to this exclusion, `bind` will compute the domain's origin dynamically from the zone names specified in `/etc/bind/named.conf.local`.
 
 Edit the `/etc/bind/named.conf.local` file and and the following lines to the end:
 
-~~~~
+```
 # Forward zone definition for justdavis.com:
 zone "justdavis.com" {
 	type master;
 	file "/etc/bind/db.justdavis.com";
 	allow-transfer { trusted-servers; };
 };
-~~~~
+```
 
 Have the `bind` service reload its configuration:
 
-    $ sudo /etc/init.d/bind9 reload
+```shell-session
+$ sudo /etc/init.d/bind9 reload
+```
 
 Test the domain by running the following, which should return "`174.79.40.37`":
 
-    $ dig @127.0.0.1 justdavis.com A
+```shell-session
+$ dig @127.0.0.1 justdavis.com A
+```
 
 
 ### DNS Zone: davisonlinehome.name
 
 This domain is intended to simply be an alias for the `justdavis.com` domain. To that end, we'll simply create a symbolic link to the zone database for that domain and use it as the database for this one:
 
-    $ sudo ln -s /etc/bind/db.justdavis.com /etc/bind/db.davisonlinehome.name
+```shell-session
+$ sudo ln -s /etc/bind/db.justdavis.com /etc/bind/db.davisonlinehome.name
+```
 
 Edit the `/etc/bind/named.conf.local` file and and the following lines to the end:
 
-~~~~
+```
 # Forward zone definition for davisonlinehome.name:
 zone "davisonlinehome.name" {
 	type master;
 	file "/etc/bind/db.davisonlinehome.name"; // symlinked copy of db.justdavis.com
 	allow-transfer { trusted-servers; };
 };
-~~~~
+```
 
 Have the `bind` service reload its configuration:
 
-    $ sudo /etc/init.d/bind9 reload
+```shell-session
+$ sudo /etc/init.d/bind9 reload
+```
 
 Test the domain by running the following, which should return "`174.79.40.37`":
 
-    $ dig @127.0.0.1 davisonlinehome.name A
+```shell-session
+$ dig @127.0.0.1 davisonlinehome.name A
+```
 
 
 ### DNS Zone: madrivercode.com
 
 A new `/etc/bind/db.madrivercode.com` file will store the records and some other configuration for the zone. The configuration below was used on 2012-05-12 to create the zone, though this was likely modified directly on the server later:
 
-~~~~
+```
 $TTL 1h ; sets the default time-to-live for this zone
 
 ; name ttl class rr    name-server                 email-addr  (sn ref ret ex min)
@@ -208,80 +222,96 @@ smtp                      IN      CNAME             mail
 ; TXT Records
 ; name             ttl    class   rr                name
 @                         IN      TXT               "v=spf1 ip4:174.79.40.36 ~all"
-~~~~
+```
 
 *Note:* This zone database does not include an $ORIGIN directive, as this would prevent the database from being used as a symlink alias for other domains. Due to this exclusion, `bind` will compute the domain's origin dynamically from the zone names specified in `/etc/bind/named.conf.local`.
 
 Edit the `/etc/bind/named.conf.local` file and and the following lines to the end:
 
-~~~~
+```
 # Forward zone definition for madrivercode.com:
 zone "madrivercode.com" {
 	type master;
 	file "/etc/bind/db.madrivercode.com";
 	allow-transfer { trusted-servers; };
 };
-~~~~
+```
 
 Have the `bind` service reload its configuration:
 
-    $ sudo /etc/init.d/bind9 reload
+```shell-session
+$ sudo /etc/init.d/bind9 reload
+```
 
 Test the domain by running the following, which should return "`174.79.40.37`":
 
-    $ dig @127.0.0.1 madrivercode.com A
+```shell-session
+$ dig @127.0.0.1 madrivercode.com A
+```
 
 
 ### DNS Zone: madriverdevelopment.com
 
 This domain is intended to simply be an alias for the `madrivercode.com` domain. To that end, we'll simply create a symbolic link to the zone database for that domain and use it as the database for this one:
 
-    $ sudo ln -s /etc/bind/db.madrivercode.com /etc/bind/db.madriverdevelopment.com
+```shell-session
+$ sudo ln -s /etc/bind/db.madrivercode.com /etc/bind/db.madriverdevelopment.com
+```
 
 Edit the `/etc/bind/named.conf.local` file and and the following lines to the end:
 
-~~~~
+```
 # Forward zone definition for madriverdevelopment.com:
 zone "madriverdevelopment.com" {
 	type master;
 	file "/etc/bind/db.madriverdevelopment.com"; // symlinked copy of db.madrivercode.com
 	allow-transfer { trusted-servers; };
 };
-~~~~
+```
 
 Have the `bind` service reload its configuration:
 
-    $ sudo /etc/init.d/bind9 reload
+```shell-session
+$ sudo /etc/init.d/bind9 reload
+```
 
 Test the domain by running the following, which should return "`174.79.40.37`":
 
-    $ dig @127.0.0.1 madriverdevelopment.com A
+```shell-session
+$ dig @127.0.0.1 madriverdevelopment.com A
+```
 
 
 ### DNS Zone: simplepersistence.com
 
 This domain is intended to simply be an alias for the `madrivercode.com` domain. To that end, we'll simply create a symbolic link to the zone database for that domain and use it as the database for this one:
 
-    $ sudo ln -s /etc/bind/db.madrivercode.com /etc/bind/db.simplepersistence.com
+```shell-session
+$ sudo ln -s /etc/bind/db.madrivercode.com /etc/bind/db.simplepersistence.com
+```
 
 Edit the `/etc/bind/named.conf.local` file and and the following lines to the end:
 
-~~~~
+```
 # Forward zone definition for simplepersistence.com:
 zone "simplepersistence.com" {
 	type master;
 	file "/etc/bind/db.simplepersistence.com"; // symlinked copy of db.madrivercode.com
 	allow-transfer { trusted-servers; };
 };
-~~~~
+```
 
 Have the `bind` service reload its configuration:
 
-    $ sudo /etc/init.d/bind9 reload
+```shell-session
+$ sudo /etc/init.d/bind9 reload
+```
 
 Test the domain by running the following, which should return "`174.79.40.37`":
 
-    $ dig @127.0.0.1 simplepersistence.com A
+```shell-session
+$ dig @127.0.0.1 simplepersistence.com A
+```
 
 
 ## Configuring Registrar to Use New Nameserver(s)
@@ -302,11 +332,15 @@ Use [Gandi’s](https://www.gandi.net/) tools to register the new nameservers fo
 
 Once the registrar has completed the update, test its configuration by running `dig` against the secondary name server. For example, the following should return "`174.79.40.37`":
 
-    $ dig @ns6.gandi.net madrivercode.com A
+```shell-session
+$ dig @ns6.gandi.net madrivercode.com A
+```
 
 These changes should propagate to the wider internet within a day or so. You'll want to test this by running dig against a public DNS server. For example, the following query against Google's public DNS server should return "`174.79.40.37`":
 
-    $ dig @8.8.8.8 madrivercode.com A
+```shell-session
+$ dig @8.8.8.8 madrivercode.com A
+```
 
 
 ## Reverse DNS
@@ -318,19 +352,18 @@ You will need to contact Cox business support and request that they create rever
 
 For whatever reason, the syslog ends up full of log entries like the following:
 
-~~~~
+```
 Mar 22 06:25:05 eddings named[2021]: error (unexpected RCODE REFUSED) resolving 'z.sh.multi.uribl.com/A/IN': 8.8.8.8#53
 Mar 22 06:25:05 eddings named[2021]: error (unexpected RCODE REFUSED) resolving 'abksprings.co.za.multi.uribl.com/A/IN': 8.8.4.4#53
-~~~~
+```
 
 Adding the following configuration to `/etc/bind/named.conf.local` suppresses these log entries:
 
-~~~~
+```
 # Suppress all of the "unexpected RCODE REFUSED" errors in syslog.
 logging {
         category lame-servers {
                 null;
         };
 };
-~~~~
-
+```

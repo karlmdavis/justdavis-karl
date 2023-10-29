@@ -54,8 +54,10 @@ Boot from the flash drive created earlier (press `F8` at the POST screen).
 
 You may receive the following error when booting from the flash drive:
 
-    Unknown keyword in configuration file: gfxboot
-    vesamenu.c32: not a COM32R image
+```
+Unknown keyword in configuration file: gfxboot
+vesamenu.c32: not a COM32R image
+```
 
 To get around this, type `help` at the prompt and then press `ENTER` to start the installer.
 
@@ -102,15 +104,19 @@ When prompted for the encryption passphrase, enter the one you set (and wrote do
 
 Before doing anything else, run the following commands:
 
-    $ sudo apt-get update
-    $ sudo apt-get upgrade
-    $ sudo apt-get dist-upgrade
+```shell-session
+$ sudo apt-get update
+$ sudo apt-get upgrade
+$ sudo apt-get dist-upgrade
+```
 
 This will update the installed versions of the libraries and applications installed on the system. This is important as there may be security vulnerabilities and other bugs in the version of libraries and applications included with the installer, that there are patches available to fix them. It's especially important to do this before enabling SSH!
 
 Once the patches are installed, you'll want to reboot the server to ensure the latest kernel available is being used. Please note that this is only necessary if kernel updates were applied:
 
-    $ sudo reboot
+```shell-session
+$ sudo reboot
+```
 
 
 ### Removing Separate Boot Partition
@@ -126,7 +132,7 @@ Ubuntu 16.04's full-disk encryption setup insists on creating a separate (unencr
 
 The first step here is to copy the current `/boot` partition into a `/boot` directory on the root partition:
 
-```
+```shell-session
 $ sudo mkdir /mnt/root-bind && sudo mount --bind / /mnt/root-bind
 $ sudo cp --archive --no-target-directory /boot /mnt/root-bind/boot
 $ sudo diff -ur /boot /mnt/root-bind/boot  # Check output of this to verify that no differences are found.
@@ -135,14 +141,14 @@ $ sudo umount /mnt/root-bind && sudo rmdir /mnt/root-bind
 
 Next, unmount the `/boot` partition and prevent it from being automatically mounted in the future:
 
-```
+```shell-session
 $ sudo umount /boot 
 $ sudo cp -a /etc/fstab /etc/fstab.backup-before-removing-boot && sudo sed -i -e '/\/boot/d' /etc/fstab
 ```
 
 Next, configure GRUB to load the `cryptodisk` module:
 
-```
+```shell-session
 $ echo 'insmod cryptodisk' | sudo tee --append /etc/grub.d/40_custom
 $ echo 'GRUB_ENABLE_CRYPTODISK=y' | sudo tee --append /etc/default/grub
 $ sudo update-grub
@@ -160,16 +166,22 @@ The configuration for this server is managed by ansible using these Ansible play
 
 SSH was installed:
 
-    $ sudo apt-get install openssh-server
+```shell-session
+$ sudo apt-get install openssh-server
+```
 
 The `localuser` account was given permission to run `sudo` without having to enter a password every time. An editor was started like this:
 
-    $ sudo visudo --file=/etc/sudoers.d/localuser
+```shell-session
+$ sudo visudo --file=/etc/sudoers.d/localuser
+```
 
 And the new file was given the following contents:
 
-    # Allow the `localuser` account sudo access without requiring a password.
-    localuser ALL=(ALL) NOPASSWD:ALL
+```
+# Allow the `localuser` account sudo access without requiring a password.
+localuser ALL=(ALL) NOPASSWD:ALL
+```
 
 The current private LAN IP address was discovered by running `ifconfig`.
 
@@ -177,14 +189,18 @@ On a separate system on the same LAN, the [justdavis-ansible](https://github.com
 
 The `hosts` file was edited to specify a temporary static `ansible_host` (replacing `<eddings_private_ip>` with the IP discovered a bit ago):
 
-    eddings ansible_user=localuser ansible_host=<eddings_private_ip> ansible_python_interpreter=/usr/bin/python2.7 public_ip=96.86.32.137
+```
+eddings ansible_user=localuser ansible_host=<eddings_private_ip> ansible_python_interpreter=/usr/bin/python2.7 public_ip=96.86.32.137
+```
 
 My SSH key was given access to the `localuser` account:
 
-    $ ssh-copy-id -i ~/.ssh/id_rsa.pub localuser@<eddings_private_ip>
+```shell-session
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub localuser@<eddings_private_ip>
+```
 
 The Ansible plays were then run:
 
-    $ ansible-playbook site.yml
-
-
+```shell-session
+$ ansible-playbook site.yml
+```

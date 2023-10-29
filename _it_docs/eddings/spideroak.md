@@ -21,15 +21,19 @@ References:
 
 Recent versions of [SpiderOak](https://spideroak.com/) now support headless installation and operation; they can be used on computers without a GUI environment, like `eddings`. To install SpiderOak, first go to <https://spideroak.com/download/> and locate the download link for 64bit Ubuntu. Copy the URL, e.g. <https://spideroak.com/directdownload?platform=ubuntulucid&arch=x86_64>. Then, download and install the `.deb` package (after installing its dependencies). For example:
 
-    $ sudo apt-get install libfontconfig1 libxrender1
-    $ wget -O spideroak.deb https://spideroak.com/directdownload?platform=ubuntulucid\&arch=x86_64
-    $ sudo dpkg -i spideroak.deb
+```shell-session
+$ sudo apt-get install libfontconfig1 libxrender1
+$ wget -O spideroak.deb https://spideroak.com/directdownload?platform=ubuntulucid\&arch=x86_64
+$ sudo dpkg -i spideroak.deb
+```
 
 Please note that the SpiderOak installation will add an `apt` repository that will be used to keep SpiderOak up to date.
 
 Once SpiderOak is installed, it needs to be configured with the account login and machine name. This can be done as follows:
 
-    $ SpiderOak --setup=-
+```shell-session
+$ SpiderOak --setup=-
+```
 
 When prompted, answer the questions as follows:
 
@@ -48,10 +52,12 @@ References:
 
 Backing up a specific folder one time with SpiderOak is simple. For example, the following command can be used to backup the entire `/afs/justdavis.com` folder:
 
-    $ kdestroy
-    $ kinit karl/admin
-    $ aklog
-    $ SpiderOak --backup=/afs/justdavis.com
+```shell-session
+$ kdestroy
+$ kinit karl/admin
+$ aklog
+$ SpiderOak --backup=/afs/justdavis.com
+```
 
 If the folder being backed up is large enough, the backup may stop early when the Kerberos/AFS tokens expire. If that happens, just rerun the commands until it completes successfully.
 
@@ -60,7 +66,7 @@ If the folder being backed up is large enough, the backup may stop early when th
 
 Create the following script file as `/usr/local/bin/spideroak-backup.sh`:
 
-~~~~
+```shell
 #!/bin/bash
 
 # References:
@@ -122,23 +128,29 @@ checkError ${LINENO} "Backup of /etc failed." $?
 echo "$(date +%T) Backup /etc: completed." >> $backupLog
 grep "[[:space:]]ERROR[[:space:]]" ~/.SpiderOak/*.log
 [ $? -eq 0 ] && error ${LINENO} "SpiderOak backup log has errors."
-~~~~
+```
 
 Mark the script as executable:
 
-    $ sudo chmod a+x /usr/local/bin/spideroak-backup.sh
+```shell-session
+$ sudo chmod a+x /usr/local/bin/spideroak-backup.sh
+```
 
 Create the log file the script will write to:
 
-    $ sudo touch /var/log/backup-spideroak
-    $ sudo chmod a+w /var/log/backup-spideroak
+```shell-session
+$ sudo touch /var/log/backup-spideroak
+$ sudo chmod a+w /var/log/backup-spideroak
+```
 
 Make sure the script runs as expected:
 
-    $ kdestroy
-    $ kinit karl/admin
-    $ aklog
-    $ /usr/local/bin/spideroak-backup.sh
+```shell-session
+$ kdestroy
+$ kinit karl/admin
+$ aklog
+$ /usr/local/bin/spideroak-backup.sh
+```
 
 
 ### Email Configuration
@@ -149,15 +161,19 @@ References:
 
 The above script makes use of the `mail` command, which requires configuration before it will work correctly. Specifically, the use of an SMTP gateway is required, as most ISPs and mail servers will block mails sent from random computers. The `msmtp` package can be used to route outgoing mail to a "real" SMTP server. Install the package:
 
-    $ sudo apt-get install msmtp
+```shell-session
+$ sudo apt-get install msmtp
+```
 
 Edit the system-wide `/etc/mail.rc` file to include the following setting:
 
-    set sendmail=/usr/bin/msmtp
+```
+set sendmail=/usr/bin/msmtp
+```
 
 Edit the system-wide `/etc/msmtprc` file to include the configuration for the SMTP server to be used. Details on this configuration can be found by running `man msmtp`. For example, a configuration similar to the following was used on `eddings`:
 
-~~~~
+```
 host		mail.justdavis.com
 from		eddings@justdavis.com
 auth		login
@@ -165,20 +181,22 @@ tls		on
 user		eddings@justdavis.com
 password	ASuperSecretPassword
 tls_certcheck	off
-~~~~
+```
 
 This setup can be verified by running the following command:
 
-    $ mail -s "Test Subject" "karl@justdavis.com"
+```shell-session
+$ mail -s "Test Subject" "karl@justdavis.com"
+```
 
 This will then prompt for the message body, which should be typed in. When complete, terminate it with a line that only has a period. After that, hit `ENTER` again when prompted for the CC addresses. For example:
 
-~~~~
+```
 $ mail -s "Test Subject" "karl@justdavis.com"
 test body
 .
 Cc: 
-~~~~
+```
 
 
 ## Running Script Automatically
@@ -189,43 +207,55 @@ The alternative to putting the password in a plain-text script file is to make u
 
 First, create a "`backups`" user on `eddings` that can be used to access the keytab and run the `cron` job:
 
-    $ sudo adduser --disabled-password backups
+```shell-session
+$ sudo adduser --disabled-password backups
+```
 
 Note that, with the "`--disabled-password`" flag, this user account will have no password, and thus can't be logged into directly; `su` will have to be used, instead:
 
-    $ sudo su - backups
+```shell-session
+$ sudo su - backups
+```
 
 Log in to the `backups` user, using `su` as above, and then create the Kerberos principal and keytab that will be used to perform the backups:
 
-    $ kadmin -p karl/admin
-    kadmin:  addprinc -policy services -randkey backups/afs
-    kadmin:  ktadd -k /home/backups/backups.afs.keytab backups/afs
-    kadmin:  quit
+```shell-session
+$ kadmin -p karl/admin
+kadmin:  addprinc -policy services -randkey backups/afs
+kadmin:  ktadd -k /home/backups/backups.afs.keytab backups/afs
+kadmin:  quit
+```
 
 Give this Kerberos principal access to the AFS cell:
 
-    $ kinit karl/admin
-    $ aklog
-    $ pts createuser -name backups.afs
-    $ pts creategroup -name backups -owner system:administrators
-    $ pts adduser -user backups.afs -group backups
-    $ find /afs/.justdavis.com/ -type d -exec fs setacl {} \-acl backups read \;
-    $ vos release -id root.cell -cell justdavis.com
-    $ kdestroy
+```shell-session
+$ kinit karl/admin
+$ aklog
+$ pts createuser -name backups.afs
+$ pts creategroup -name backups -owner system:administrators
+$ pts adduser -user backups.afs -group backups
+$ find /afs/.justdavis.com/ -type d -exec fs setacl {} \-acl backups read \;
+$ vos release -id root.cell -cell justdavis.com
+$ kdestroy
+```
 
 Now add the backup job (along with authentication) to the `backups` user's crontab, scheduled to run every day at 2am:
 
-    $ crontab -e
+```shell-session
+$ crontab -e
+```
 
 Use the following entry:
 
-~~~~
+```
 0   22  *   *   *     kinit backups/afs -k -t /home/backups/backups.afs.keytab; aklog; /usr/local/bin/spideroak-backup.sh; kdestroy; unlog
-~~~~
+```
 
 Finally, initialize SpiderOak for the `backups` user, as above:
 
-    $ SpiderOak --setup=-
+```shell-session
+$ SpiderOak --setup=-
+```
 
 When prompted, answer the questions as follows:
 
@@ -234,4 +264,3 @@ When prompted, answer the questions as follows:
 * Device ID: (select `eddings`)
 
 At this point, everything should be ready to go. To ensure the script, is working, temporarily set the cron job's schedule to a time two minutes ahead of the clock, and then wait for the job to run. The last modification time on `/var/log/backup-spideroak` can be checked, as well.
-

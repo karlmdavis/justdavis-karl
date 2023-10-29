@@ -35,12 +35,10 @@ References:
 It's not super useful to have the laptop go to sleep every time I dock it and close the lid. I resolved this, as follows:
 
 1. Add the following lines to `/etc/systemd/logind.conf`:
-    
-    ```
-    HandleLidSwitch=ignore
-    HandleLidSwitchDocked=ignore
-    ```
-    
+  ```
+  HandleLidSwitch=ignore
+  HandleLidSwitchDocked=ignore
+  ```
     * Note that this fixed the problem for me, even though it _looked_ like the default settings here shouldn't cause a suspend.
 2. Restart the system, or at least the `systemd-logind` service. (Either one of these will kill your i3 session, FYI.)
 
@@ -49,23 +47,17 @@ It's not super useful to have the laptop go to sleep every time I dock it and cl
 As mentioned above, i3 doesn't have any fancy control panels like Gnome for managing displays. Instead, displays need to be managed directly via the `xrandr` command line tool. Here are some sample commands I use to switch around my displays:
 
 * To turn on both `LVDS-0`, the laptop display and `DP-3`, the external 4K display at the same time:
-    
-    ```
-    $ xrandr --output LVDS-0 --auto --primary --output DP-3 --auto --rate 30.0 --right-of LVDS-0
-    ```
-    
+  ```shell-session
+  $ xrandr --output LVDS-0 --auto --primary --output DP-3 --auto --rate 30.0 --right-of LVDS-0
+  ```
 * To switch to just `DP-3`, the external 4K display:
-    
-    ```
-    $ xrandr --output LVDS-0 --off --output DP-3 --auto --rate 30.0 --primary
-    ```
-    
+  ```shell-session
+  $ xrandr --output LVDS-0 --off --output DP-3 --auto --rate 30.0 --primary
+  ```
 * To switch to just `LVDS-0`, the laptop display:
-    
-    ```
-    $ xrandr --output LVDS-0 --auto --primary --output DP-3 --off
-    ```
-    
+  ```shell-session
+  $ xrandr --output LVDS-0 --auto --primary --output DP-3 --off
+  ```
 
 Note: I initially ran into some trouble with this, until I realized that my laptop can't drive `DP-3` at the default 60.0 Hz. I learned this by logging back into Gnome, getting the displays configured the way I wanted them, and running `xrandr` with no options to see how things were actually configured.
 
@@ -77,8 +69,10 @@ i3 doesn't come with any builtin way to manage volume, mute/unmute, etc. My Ubun
 
 If I wanted to, I could probably wire up those commands to some keyboard shortcuts and leave it at that, but I'd prefer to have a GUI, personally. My first try at this is using `pasystray`, which is prett terribly, but has the advantage of being available in Ubuntu's default repositories:
 
-    $ sudo apt install pasystray
-    $ pasystray &> /dev/null &
+```shell-session
+$ sudo apt install pasystray
+$ pasystray &> /dev/null &
+```
 
 This will add a little volume icon in the systray that you can hover over and then use the mouse wheel to change the volume. For some reason, every other option it has seems disabled. Whatever: good enough for now.
 

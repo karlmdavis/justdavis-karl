@@ -21,15 +21,19 @@ References:
 
 Recent versions of [SpiderOak](https://spideroak.com/) now support headless installation and operation; they can be used on computers without a GUI environment, like `eddings`. To install SpiderOak, first go to <https://spideroak.com/download/> and locate the download link for 64bit Ubuntu. Copy the URL, e.g. <https://spideroak.com/directdownload?platform=ubuntulucid&arch=x86_64>. Then, download and install the `.deb` package (after installing its dependencies). For example:
 
-    $ sudo apt-get install libfontconfig1 libxrender1 libice6 libsm6 dbus
-    $ wget -O spideroak.deb https://spideroak.com/directdownload?platform=ubuntulucid\&arch=x86_64
-    $ sudo dpkg -i spideroak.deb
+```shell-session
+$ sudo apt-get install libfontconfig1 libxrender1 libice6 libsm6 dbus
+$ wget -O spideroak.deb https://spideroak.com/directdownload?platform=ubuntulucid\&arch=x86_64
+$ sudo dpkg -i spideroak.deb
+```
 
 Please note that the SpiderOak installation will add an `apt` repository that will be used to keep SpiderOak up to date.
 
 Once SpiderOak is installed, it needs to be configured with the account login and machine name. This can be done as follows:
 
-    $ SpiderOak --setup=-
+```shell-session
+$ SpiderOak --setup=-
+```
 
 When prompted, answer the questions as follows:
 
@@ -43,11 +47,13 @@ When prompted, answer the questions as follows:
 
 Install the `timelimit` utility:
 
-    $ sudo apt-get install timelimit
+```shell-session
+$ sudo apt-get install timelimit
+```
 
 Create the following script file as `/usr/local/bin/spideroak-backup.sh`:
 
-~~~~
+```shell
 #!/bin/bash
 
 # References:
@@ -114,20 +120,26 @@ zimbraDownTime="$(($zimbraStartTime - $zimbraStopTime))"
 echo "$(date +%T) Backup Zimbra: services started (down for $(($zimbraDownTime/60)) minutes)." >> $backupLog
 grep "[[:space:]]ERROR[[:space:]]" ~/.SpiderOak/*.log
 [ $? -eq 0 ] && error ${LINENO} "SpiderOak backup log has errors."
-~~~~
+```
 
 Mark the script as executable:
 
-    $ sudo chmod a+x /usr/local/bin/spideroak-backup.sh
+```shell-session
+$ sudo chmod a+x /usr/local/bin/spideroak-backup.sh
+```
 
 Create the log file the script will write to:
 
-    $ sudo touch /var/log/backup-spideroak
-    $ sudo chmod a+w /var/log/backup-spideroak
+```shell-session
+$ sudo touch /var/log/backup-spideroak
+$ sudo chmod a+w /var/log/backup-spideroak
+```
 
 Make sure the script runs as expected:
 
-    $ sudo /usr/local/bin/spideroak-backup.sh
+```shell-session
+$ sudo /usr/local/bin/spideroak-backup.sh
+```
 
 
 ### Email Configuration
@@ -138,15 +150,19 @@ References:
 
 The above script makes use of the `mail` command, which requires configuration before it will work correctly. Specifically, the use of an SMTP gateway is required, as most ISPs and mail servers will block mails sent from random computers. The `msmtp` package can be used to route outgoing mail to a "real" SMTP server. Install the packages:
 
-    $ sudo apt-get install bsd-mailx msmtp
+```shell-session
+$ sudo apt-get install bsd-mailx msmtp
+```
 
 Edit the system-wide `/etc/mail.rc` file to include the following setting:
 
-    set sendmail=/usr/bin/msmtp
+```
+set sendmail=/usr/bin/msmtp
+```
 
 Edit the system-wide `/etc/msmtprc` file to include the configuration for the SMTP server to be used. Details on this configuration can be found by running `man msmtp`. For example, a configuration similar to the following was used on `piers`:
 
-~~~~
+```
 host		mail.justdavis.com
 from		piers@justdavis.com
 auth		login
@@ -154,38 +170,44 @@ tls		on
 user		piers@justdavis.com
 password	ASuperSecretPassword
 tls_certcheck	off
-~~~~
+```
 
 This setup can be verified by running the following command:
 
-    $ mail -s "Test Subject" "karl@justdavis.com"
+```shell-session
+$ mail -s "Test Subject" "karl@justdavis.com"
+```
 
 This will then prompt for the message body, which should be typed in. When complete, terminate it with a line that only has a period. After that, hit `ENTER` again when prompted for the CC addresses. For example:
 
-~~~~
+```shell-session
 $ mail -s "Test Subject" "karl@justdavis.com"
 test body
 .
 Cc: 
-~~~~
+```
 
 
 ## Running Script Automatically
 
 Simply add the backup job to the `root` user's crontab, scheduled to run every day at 3am:
 
-    $ sudo crontab -e
+```shell-session
+$ sudo crontab -e
+```
 
 Use the following entry:
 
-~~~~
+```
 0   3  *   *   *     /usr/local/bin/spideroak-backup.sh
-~~~~
+```
 
 Finally, initialize SpiderOak for the `root` user, as above (except now with `sudo`):
 
-    $ sudo su -
-    # SpiderOak --setup=-
+```shell-session
+$ sudo su -
+# SpiderOak --setup=-
+```
 
 When prompted, answer the questions as follows:
 
@@ -194,4 +216,3 @@ When prompted, answer the questions as follows:
 * Device ID: (select `piers`)
 
 At this point, everything should be ready to go. To ensure the script, is working, temporarily set the cron job's schedule to a time two minutes ahead of the clock, and then wait for the job to run. The last modification time on `/var/log/backup-spideroak` can be checked, as well.
-

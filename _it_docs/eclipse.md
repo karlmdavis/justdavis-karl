@@ -18,7 +18,7 @@ While Ubuntu does have a somewhat-recent version of Eclipse in its repositories,
 
 The following script can be saved as `eclipse-juno-install.sh`, and will download and install Eclipse 4.2:
 
-~~~~
+```shell
 #!/bin/sh
 
 # Define the URL to download the "installation" package from.
@@ -59,12 +59,14 @@ Name=New Window
 Exec=$installationDirectory/eclipse
 TargetEnvironment=Unity
 EOF
-~~~~
+```
 
 Run the following commands to mark the script as executable and then run it:
 
-    $ chmod a+x eclipse-juno-install.sh
-    $ sudo ./eclipse-juno-install.sh
+```shell-session
+$ chmod a+x eclipse-juno-install.sh
+$ sudo ./eclipse-juno-install.sh
+```
 
 That's it. There should now be an **Eclipse Juno** application launcher available.
 
@@ -77,4 +79,6 @@ References:
 
 If the JavaDoc displays in Eclipse are rendering everything as plain text with the HTML stripped out, rather than rendering the HTML properly, install the `libwebkitgtk-1.0-0` package as follows and then restart Eclipse:
 
+```shell-session
 $ sudo apt-get install libwebkitgtk-1.0-0
+```

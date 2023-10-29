@@ -29,7 +29,9 @@ References:
 
 To create a new, empty Kerberos database for the realm, run the following command:
 
-    $ sudo krb5_newrealm
+```shell-session
+$ sudo krb5_newrealm
+```
 
 When prompted, enter the following:
 
@@ -37,18 +39,18 @@ When prompted, enter the following:
 
 Run the following commands to create the default policies that various principals will be assigned to:
 
-~~~~
+```shell-session
 $ sudo kadmin.local -r JUSTDAVIS.COM
 kadmin.local: add_policy -minlength 12 -minclasses 3 default
 kadmin.local: add_policy -minlength 24 -minclasses 4 admins
 kadmin.local: add_policy -minlength 24 -minclasses 4 hosts
 kadmin.local: add_policy -minlength 24 -minclasses 4 services
 kadmin.local: quit
-~~~~
+```
 
 Create the `/etc/krb5kdc/kadm5.acl` file to read as follows:
 
-~~~~
+```
 # This file Is the access control list for krb5 administration.
 # When this file is edited run /etc/init.d/krb5-admin-server restart to activate
 # One common way to set up Kerberos administration is to allow any principal
@@ -56,18 +58,20 @@ Create the `/etc/krb5kdc/kadm5.acl` file to read as follows:
 # To enable this, uncomment the following line:
 
 */admin@JUSTDAVIS.COM    *
-~~~~
+```
 
 Restart `krb5-admin-server`:
 
-    $ sudo /etc/init.d/krb5-admin-server restart
+```shell-session
+$ sudo /etc/init.d/krb5-admin-server restart
+```
 
 
 ### Configuring DNS
 
 Kerberos servers and clients rely heavily on DNS: clients use DNS to locate Kerberos servers and servers may use DNS to verify that clients are who they say that they are. Accordingly, forward and reverse DNS entries are oftentimes needed. The following entries were added to the `justdavis.com` DNS zone on `eddings` to assist clients in locating the Kerberos server:
 
-~~~~
+```
 ; CNAME Records
 ; name             ttl    class   rr                name
 kerberos                  IN      CNAME             eddings
@@ -82,19 +86,19 @@ _kerberos._udp                  IN      SRV               0 0 88 eddings
 _kerberos-master._udp           IN      SRV               0 0 88 eddings
 _kerberos-adm._tcp              IN      SRV               0 0 749 eddings
 _kpasswd._udp                   IN      SRV               0 0 464 eddings
-~~~~
+```
 
 
 ### Populating the JUSTDAVIS.COM Realm
 
 Once the realm is setup, it can be populated with the needed "principals": the users and other account objects that will be authenticating against the realm. At a minimum, you should create two principals: one for a regular user under your name, and an "`admin`" variant of that principal. For example:
 
-~~~~
+```shell-session
 $ sudo kadmin.local -r JUSTDAVIS.COM
 kadmin.local: addprinc -policy default karl
 kadmin.local: addprinc -policy admins karl/admin
 kadmin.local: quit
-~~~~
+```
 
 The simplest way to interact with Kerberos is using the following commands:
 
@@ -104,11 +108,11 @@ The simplest way to interact with Kerberos is using the following commands:
 
 For example, the following commands would obtain a ticket for `karl`, display that ticket, and then destroy it:
 
-~~~~
+```shell-session
 $ kinit -p karl
 $ klist
 $ kdestroy
-~~~~
+```
 
 
 ## Decomissioning the DAVISONLINEHOME.NAME Realm
@@ -128,8 +132,10 @@ The `DAVISONLINEHOME.NAME` realm was previously hosted on `lewis`. The realm was
 
 The database from the old server and realm was dumped to a file, which was then copied to a different server for achival/backup purposes. To backup the database on the old server to a `fullDump-2012-06-27.krb5dump` file, run the following command:
 
-    karl@lewis:$ sudo kdb5_util dump -verbose fullDump-2012-06-27.krb5dump
-    karl@lewis:$ sudo chown karl:karl fullDump-2012-06-27.krb5dump
+```shell-session
+karl@lewis:$ sudo kdb5_util dump -verbose fullDump-2012-06-27.krb5dump
+karl@lewis:$ sudo chown karl:karl fullDump-2012-06-27.krb5dump
+```
 
 The resulting file will then need to be copied from the old server, via `scp` or some other encrypted protocol to a permanent archival location.
 

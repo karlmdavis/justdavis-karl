@@ -23,7 +23,9 @@ References:
 
 Run the following command to install Nagios and the [nagios-nrpe-plugin](https://launchpad.net/ubuntu/precise/+package/nagios-nrpe-plugin) package for it, which will allow Nagios to monitor remote systems (systems other than the one it is installed on):
 
-    $ sudo apt-get install nagios3 nagios-nrpe-plugin
+```shell-session
+$ sudo apt-get install nagios3 nagios-nrpe-plugin
+```
 
 When prompted during the install to enter the *Nagios web administration password*, enter a password, being sure to write it down someplace safe.
 
@@ -36,16 +38,20 @@ As an Apache web application, Nagios can be configured via [mod_auth_kerb](http:
 
 Install the required Apache module:
 
-    $ sudo apt-get install libapache2-mod-auth-kerb
+```shell-session
+$ sudo apt-get install libapache2-mod-auth-kerb
+```
 
 Ensure that Apache's `www-data` user group has read access to the Kerberos `/etc/krb5.keytab` file:
 
-    $ sudo chown root:www-data /etc/krb5.keytab
-    $ sudo chmod g+r /etc/krb5.keytab
+```shell-session
+$ sudo chown root:www-data /etc/krb5.keytab
+$ sudo chmod g+r /etc/krb5.keytab
+```
 
 Nagios' Apache configuration needs to be modified to use Kerberos for authentication. Edit the `/etc/apache2/conf.d/nagios3.conf` file and modify the following section:
 
-~~~~
+```
 <DirectoryMatch (/usr/share/nagios3/htdocs|/usr/lib/cgi-bin/nagios3|/etc/nagios3/stylesheets)>
 	Options FollowSymLinks
 
@@ -62,11 +68,11 @@ Nagios' Apache configuration needs to be modified to use Kerberos for authentica
 	#AuthUserFile /etc/nagios/htpasswd.users
 	require valid-user
 </DirectoryMatch>
-~~~~
+```
 
 That section should instead read as follows:
 
-~~~~
+```
 <DirectoryMatch (/usr/share/nagios3/htdocs|/usr/lib/cgi-bin/nagios3|/etc/nagios3/stylesheets)>
 	Options FollowSymLinks
 
@@ -82,24 +88,26 @@ That section should instead read as follows:
 	KrbAuthRealms JUSTDAVIS.COM
 	require valid-user
 </DirectoryMatch>
-~~~~
+```
 
 By default, `mod_auth_kerb` will use an `HTTP` service principal on the server. This Kerberos principal will need to be created and added to the system's default keytab file (`/etc/krb5.keytab`). The simplest way to do this is to run the `kadmin` tool, as follows:
 
-~~~~
+```shell-session
 # sudo kadmin -p karl/admin@JUSTDAVIS.COM
 kadmin:  addprinc -policy services -randkey HTTP/eddings.justdavis.com
 kadmin:  ktadd HTTP/eddings.justdavis.com
 kadmin:  quit
-~~~~
+```
 
 Restart Apache to apply all of the configuration changes:
 
-    $ sudo service apache2 restart
+```shell-session
+$ sudo service apache2 restart
+```
 
 Nagios now needs to be configured to authorize Kerberos users as admins. To do so, edit the `/etc/nagios3/cgi.cfg` file and modify the related options, as follows:
 
-~~~~
+```
 authorized_for_system_information=nagiosadmin,karl@JUSTDAVIS.COM
 authorized_for_configuration_information=nagiosadmin,karl@JUSTDAVIS.COM
 authorized_for_system_commands=nagiosadmin,karl@JUSTDAVIS.COM
@@ -107,7 +115,7 @@ authorized_for_all_services=nagiosadmin,karl@JUSTDAVIS.COM
 authorized_for_all_hosts=nagiosadmin,karl@JUSTDAVIS.COM
 authorized_for_all_service_commands=nagiosadmin,karl@JUSTDAVIS.COM
 authorized_for_all_host_commands=nagiosadmin,karl@JUSTDAVIS.COM
-~~~~
+```
 
 
 ## Nagios Graphs
@@ -122,37 +130,45 @@ By default, the only graphs Nagios produces are "Good/Warning/Critical" trends o
 
 First, install the relevant Nagios plugin:
 
-    $ sudo apt-get install nagiosgrapher
+```shell-session
+$ sudo apt-get install nagiosgrapher
+```
 
 Set Nagios to process performance data and route that processing through the grapher by editing `/etc/nagios3/nagios.cfg` and setting the following options:
 
-~~~~
+```
 process_performance_data=1
 service_perfdata_command=ngraph-process-service-perfdata-pipe
-~~~~
+```
 
 Give users access to the graphs by editing the `` file and modifying the following option:
 
-~~~~
-    fe_use_browser_for      nagiosadmin,karl@JUSTDAVIS.COM
-~~~~
+```
+fe_use_browser_for      nagiosadmin,karl@JUSTDAVIS.COM
+```
 
 Individual monitors may or may not have graphs at this point. Monitor-specific configuration is needed to enable graphing for each. For some reason, the Ubuntu version of this package disables some of the standard Debian configurations. They can be enabled, as follows:
 
-    $ sudo cp /usr/share/nagiosgrapher/debian/cfg/ngraph.d/standard/check_disk.ncfg /etc/nagiosgrapher/ngraph.d/standard/
-    $ sudo cp /usr/share/nagiosgrapher/debian/cfg/ngraph.d/standard/check_load.ncfg /etc/nagiosgrapher/ngraph.d/standard/
-    $ sudo cp /usr/share/nagiosgrapher/debian/cfg/ngraph.d/standard/check_ping.ncfg /etc/nagiosgrapher/ngraph.d/standard/
-    $ sudo cp /usr/share/nagiosgrapher/debian/cfg/ngraph.d/standard/check_procs.ncfg /etc/nagiosgrapher/ngraph.d/standard/
-    $ sudo cp /usr/share/nagiosgrapher/debian/cfg/ngraph.d/standard/check_users.ncfg /etc/nagiosgrapher/ngraph.d/standard/
+```shell-session
+$ sudo cp /usr/share/nagiosgrapher/debian/cfg/ngraph.d/standard/check_disk.ncfg /etc/nagiosgrapher/ngraph.d/standard/
+$ sudo cp /usr/share/nagiosgrapher/debian/cfg/ngraph.d/standard/check_load.ncfg /etc/nagiosgrapher/ngraph.d/standard/
+$ sudo cp /usr/share/nagiosgrapher/debian/cfg/ngraph.d/standard/check_ping.ncfg /etc/nagiosgrapher/ngraph.d/standard/
+$ sudo cp /usr/share/nagiosgrapher/debian/cfg/ngraph.d/standard/check_procs.ncfg /etc/nagiosgrapher/ngraph.d/standard/
+$ sudo cp /usr/share/nagiosgrapher/debian/cfg/ngraph.d/standard/check_users.ncfg /etc/nagiosgrapher/ngraph.d/standard/
+```
 
 Restart Nagios and the grapher:
 
-    $ sudo service nagiosgrapher restart
-    $ sudo service nagios3 restart
+```shell-session
+$ sudo service nagiosgrapher restart
+$ sudo service nagios3 restart
+```
 
 After a few minutes, restart Nagios again so that it picks up the new graph data:
 
-    $ sudo service nagios3 restart
+```shell-session
+$ sudo service nagios3 restart
+```
 
 
 ## Common Service Monitors: Disable HTTP Monitor
@@ -173,7 +189,7 @@ The default Nagios service definitions for `eddings` included a call to the `che
 
 To resolve this, the "`Disk Space`" service definition was commented out in `/etc/nagios3/conf.d/localhost_nagios2.cfg` and the following service definitions were added to replace it:
 
-~~~~
+```
 define service{
 	use			generic-service     ; Inherit values from a template
 	host_name		localhost           ; The name of the host the service is associated with
@@ -187,11 +203,13 @@ define service{
 	service_description	Disk Space: /vicepa ; The service description
 	check_command		check_disk!20%!10%!/vicepa
 	}
-~~~~
+```
 
 Nagios needs to be restarted after adding these definitions:
 
-    $ sudo service nagios3 restart
+```shell-session
+$ sudo service nagios3 restart
+```
 
 
 ### Packet Loss Between eddings and the Internet
@@ -200,17 +218,17 @@ I've had troubles with my server's connection to the internet at various points 
 
 The following command definition was added to `/etc/nagios3/commands.cfg`:
 
-~~~~
+```
 # Custom command definition: 'check_remote_ping'
 define command{
 	command_name	check_remote_ping
 	command_line	/usr/lib/nagios/plugins/check_ping -H '$ARG1$' -w '$ARG2$' -c '$ARG3$'
 	}
-~~~~
+```
 
 The following service definitions were added to `/etc/nagios3/conf.d/localhost_nagios2.cfg`:
 
-~~~~
+```
 define service{
 	use			generic-service     ; Inherit values from a template
 	host_name		localhost           ; The name of the host the service is associated with
@@ -228,15 +246,17 @@ define service{
 	normal_check_interval	5	            ; Check the service every 5 minutes under normal conditions
 	retry_check_interval	1	            ; Re-check the service every minute until its final/hard state is determined
 	}
-~~~~
+```
 
 Nagios needs to be restarted after adding these definitions:
 
-    $ sudo service nagios3 restart
+```shell-session
+$ sudo service nagios3 restart
+```
 
 The following graphing definitions were added to `/etc/nagiosgrapher/ngraph.d/extra/check_ping_remote.ncfg`:
 
-~~~~
+```
 define ngraph{
 	service_name		Ping Google
 	graph_log_regex		loss = (\d+)
@@ -260,7 +280,7 @@ define ngraph{
 	rrd_plottype		LINE2
 	rrd_color		ff0000
 }
-~~~~
+```
 
 
 ### HTTPS Server on eddings
@@ -269,28 +289,30 @@ The `eddings` server hosts several applications (including Nagios) via apache ov
 
 The following command definition was added to `/etc/nagios3/commands.cfg`, using the [check_http](http://nagiosplugins.org/man/check_http) plugin:
 
-~~~~
+```
 # Custom command definition: 'check_https_remote'
 define command{
         command_name    check_https_remote
         command_line    /usr/lib/nagios/plugins/check_http --ssl -H '$ARG1$' -I '$ARG1$' -u '$ARG2$' -e '$ARG3$'
         }
-~~~~
+```
 
 The following service definition was added to `/etc/nagios3/conf.d/localhost_nagios2.cfg`:
 
-~~~~
+```
 define service{
 	use			generic-service     ; Inherit values from a template
 	host_name		localhost           ; The name of the host the service is associated with
 	service_description	Check Apache        ; The service description
 	check_command		check_https_remote!174.79.40.37!/karl/!HTTP/1.1 200 OK
 	}
-~~~~
+```
 
 Nagios needs to be restarted after adding these definitions:
 
-    $ sudo service nagios3 restart
+```shell-session
+$ sudo service nagios3 restart
+```
 
 
 ## Host Monitors: dumas
@@ -309,18 +331,17 @@ Download and install the latest version of [NSClient++](http://nsclient.org/nscp
 
 There are a couple of bugs with the default [check_nt]() command templates distributed by Ubuntu. Edit the `/etc/nagios-plugins/config/nt.cfg` file and modify the command definition to match the following (note the lack of single quotes, the additional port parameter, and the addition of `$ARG2$`):
 
-~~~~
+```
 # 'check_nt' command definition
 define command {
 	command_name	check_nt
 	command_line	/usr/lib/nagios/plugins/check_nt -H $HOSTADDRESS$ -p 12489 -v $ARG1$ $ARG2$
 }
-
-~~~~
+```
 
 Save the following template for Windows hosts as `/etc/nagios3/conf.d/generic-windows_nagios2.cfg`:
 
-~~~~
+```
 define host{
 	name                    windows-server
 	use                     generic-host
@@ -335,11 +356,11 @@ define host{
 	contact_groups          admins
 	register                0
 	}
-~~~~
+```
 
 The following host definition was created as `/etc/nagios3/conf.d/dumas_nagios2.cfg`:
 
-~~~~
+```
 define host{
 	use			windows-server
 	host_name		dumas.justdavis.com
@@ -389,9 +410,10 @@ define service{
 	service_description	C:\ Drive Space
 	check_command		check_nt!USEDDISKSPACE!-l C -w 80 -c 90
 }
-~~~~
+```
 
 Nagios needs to be restarted after adding these definitions:
 
-    $ sudo service nagios3 restart
-
+```shell-session
+$ sudo service nagios3 restart
+```

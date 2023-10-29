@@ -48,4 +48,3 @@ Personally, I **love** finding new and interesting stuff to read and then sharin
 </form>
 
 The world is full of lessons that other folks have kindly already learned for you. They probably learned those lessons the hard way, but since they were kind and humble enough to writte about it afterwards, you can learn it the easy way! Yay! Sharing is awesome! Our jobs are all hard enough already, without us having to go and make them harder by failing to educate ourselves.
-

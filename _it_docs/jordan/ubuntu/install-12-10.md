@@ -116,24 +116,28 @@ Boot the system. When prompted for the encryption passphrase, enter the one you 
 
 Before doing anything else, run the following commands:
 
-    $ sudo apt-get update
-    $ sudo apt-get upgrade
-    $ sudo apt-get dist-upgrade
+```shell-session
+$ sudo apt-get update
+$ sudo apt-get upgrade
+$ sudo apt-get dist-upgrade
+```
 
 This will update the installed versions of the libraries and applications installed on the system. This is important as there may be security vulnerabilities and other bugs in the version of libraries and applications included with the installer, that there are patches available to fix them. It's especially important to do this before enabling SSH!
 
 Once the patches are installed, you'll want to reboot the system to ensure the latest kernel available is being used. Please note that this is only necessary if kernel updates were applied:
 
-    $ sudo reboot
+```shell-session
+$ sudo reboot
+```
 
 
 ### Troubleshooting: Graphics Driver Issues
 
 On `jordan-u`, a Lenovo ThinkPad W530, with NVIDIA Optimus disabled in the BIOS, and a stock 64bit 12.10 install, the Ubuntu GUI would randomly crash when starting certain applications, such as Firefox or System Log. After the crash, the GUI would immediately restart and diplsay the login screen. In `/var/log/syslog`, the following error was recorded at the time of the crash:
 
-~~~~
+```
 Fatal IO error 11 (Resource temporarily unavailable) on X server
-~~~~
+```
 
 By default, Ubuntu will install and enable the open source [nouveau](http://nouveau.freedesktop.org/wiki/) graphics drivers. It seems these drivers have some bugs in 12.10, as switching to the proprietary NVIDIA drivers solved the problem. The NVIDIA drivers were enabled as follows:
 
@@ -153,25 +157,35 @@ As mentioned, this seems to have solved the problem.
 
 Before installing an SSH server, we're going to turn on [fail2ban](https://help.ubuntu.com/community/Fail2Ban), a service that will automatically blacklist any IP addresses that attempt to login over SSH after a certain number of failed attempts. This will make brute force attacks against your SSH server much more difficult. Install fail2ban by running the following command:
 
-    $ sudo apt-get install fail2ban
+```shell-session
+$ sudo apt-get install fail2ban
+```
 
 Install the OpenSSH server by running the following command:
 
-    $ sudo apt-get install openssh-server openssh-blacklist openssh-blacklist-extra
+```shell-session
+$ sudo apt-get install openssh-server openssh-blacklist openssh-blacklist-extra
+```
 
 Run the following command to determine what the system's IP address is:
 
-    $ ifconfig
+```shell-session
+$ ifconfig
+```
 
 If that command's output scrolls off the screen you can pipe it through `less`, use the up/down arrow keys to scroll, and press the `q` key to quit:
 
-    $ ifconfig | less
+```shell-session
+$ ifconfig | less
+```
 
 Look for the `inet addr` entry, which will be the system's IP address. On my system, it was `192.168.1.106`. Please note that `127.0.0.1` is not what you're looking for: it's the default [loopback address](http://en.wikipedia.org/wiki/Loopback) and cannot be used remotely.
 
 After the network connection has been setup, you should be able to connect to the computer from other hosts via the following SSH command (substituting the correct IP address):
 
-    $ ssh localuser@192.168.1.106
+```shell-session
+$ ssh localuser@192.168.1.106
+```
 
 
 ### Setting the System Name and Domain
@@ -187,15 +201,17 @@ A number of services such as Kerberos rely on each machine having a valid fully 
 
 Specifically, the first two entries in `/etc/hosts` should read as follows:
 
-~~~~
+```
 127.0.0.1       localhost
 127.0.1.1       jordan-u.justdavis.com   jordan-u
-~~~~
+```
 
 The hostname configuration can be tested with the `hostname` command. The first command should return the unqualified name and the second command should return the fully qualified name:
 
-    $ hostname
-    $ hostname -f
+```shell-session
+$ hostname
+$ hostname -f
+```
 
 
 ### Configuration: Displays
@@ -222,18 +238,20 @@ References:
 
 Per the above article, verify that hibernate works correctly by running the following command:
 
-    $ sudo pm-hibernate
+```shell-session
+$ sudo pm-hibernate
+```
 
 This will cause the system to enter hibernation (hopefully). Powering on the system should restore the computer to its previous state: with all applications still running. Please note that the system will prompt for the disk encryption password when restoring from hibernation.
 
 If hibernation worked correctly, it should be enabled as an option by creating a new `/etc/polkit-1/localauthority/50-local.d/com.ubuntu.enable-hibernate.pkla` file with the following content:
 
-~~~~
+```
 [Re-enable hibernate by default]
 Identity=unix-user:*
 Action=org.freedesktop.upower.hibernate
 ResultActive=yes
-~~~~
+```
 
 The following configuration changes were made to the system's power management options:
 
@@ -252,4 +270,3 @@ The following configuration changes were made to the system's security options:
 1. Launch the **System Settings** application.
 1. Open the **Brightness and Lock** applet.
 1. Set the *Turn screen off when inactive for* option to **1 hour**.
-

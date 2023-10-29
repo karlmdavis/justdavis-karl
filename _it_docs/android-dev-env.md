@@ -25,7 +25,7 @@ At this time, the Android SDK doesn't provide an automated installer for Ubuntu;
 
 The following script can be saved as `android-sdk-install.sh`, and will download and install Eclipse 4.2:
 
-~~~~
+```shell
 #!/bin/sh
 
 # Define the URL to download the "installation" package from.
@@ -78,16 +78,20 @@ $installationDirectory/tools/android update sdk --filter platform-tools --no-ui
 $installationDirectory/tools/android update sdk --filter extra-android-support,extra-google-admob_ads_sdk,extra-google-analytics_sdk_v2,extra-google-gcm,extra-google-google_play_services,extra-google-play_apk_expansion,extra-google-play_billing,extra-google-play_licensing,extra-google-webdriver --no-ui
 $installationDirectory/tools/android update sdk --filter android-17,doc-17,sample-17,sysimg-17,addon-google_apis-google-17 --no-ui
 $installationDirectory/tools/android update sdk --all --filter android-10,sample-10,sysimg-10,addon-google_apis-google-10 --no-ui
-~~~~
+```
 
 Run the following commands to mark the script as executable and then run it:
 
-    $ chmod a+x android-sdk-install.sh
-    $ sudo ./android-sdk-install.sh
+```shell-session
+$ chmod a+x android-sdk-install.sh
+$ sudo ./android-sdk-install.sh
+```
 
 The next time you login, a profile snippet will be run that will add the SDK's `tools` directory to the default path. To accomplish that in an existing terminal session (without having to logoff and login), run the following:
 
-    $ . /etc/profile.d/android-sdk.sh
+```shell-session
+$ . /etc/profile.d/android-sdk.sh
+```
 
 
 ### Eclipse Plugin: ADT
@@ -101,8 +105,9 @@ Android's Developer Tools include an Eclipse plugin that greatly aids in the
 development of Android code. It should be installed as follows:
 
 1. Install the plugin from the <https://dl-ssl.google.com/android/eclipse/> Eclipse update site. The following command will do this automatically (run it from the Eclipse installation to be modified):
-
-        $ eclipse -application org.eclipse.equinox.p2.director -repository https://dl-ssl.google.com/android/eclipse/ -installIU com.android.ide.eclipse.adt.feature.group
+   ```shell-session
+   $ eclipse -application org.eclipse.equinox.p2.director -repository https://dl-ssl.google.com/android/eclipse/ -installIU com.android.ide.eclipse.adt.feature.group
+   ```
 
 1. Allow Eclipse to restart.
 1. The *Configure SDK* screen will appear for ADT.

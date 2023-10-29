@@ -477,4 +477,3 @@ This post contains my notes and live-blog for both days of the event. Are you al
     * Agile Processes
     * Monitoring: Where to Start
     * DevOps in the Federal Government
-

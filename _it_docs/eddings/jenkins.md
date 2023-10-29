@@ -15,7 +15,9 @@ This {% collection_doc_link /it/eddings baseurl:true %} sub-guide describes the 
 
 Jenkins is a Java web application, that can be run via an embedded application server. This requires a JRE. As Jenkins will be used to build Java projects, it also requires a Java JDK. Install the JDKs that it will use as follows:
 
-    $ sudo apt-get install openjdk-7-jdk openjdk-6-jdk
+```shell-session
+$ sudo apt-get install openjdk-7-jdk openjdk-6-jdk
+```
 
 
 ## Installing Jenkins
@@ -26,30 +28,36 @@ References:
 
 Add the Jenkins APT repository, as follows:
 
-    $ wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
-    $ sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
-    $ sudo apt-get update
+```shell-session
+$ wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
+$ sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+$ sudo apt-get update
+```
 
 Once that's in place, installing Jenkins is simple:
 
-    $ sudo apt-get install jenkins
+```shell-session
+$ sudo apt-get install jenkins
+```
 
 During the installation, the following error message will likely be displayed:
 
-~~~~
+```
 The selected http port (8080) seems to be in use by another program 
 Please select another port to use for jenkins
-~~~~
+```
 
 This error is caused by Nexus running on the same port that Jenkins is trying to. Edit the `/etc/default/jenkins` file and modify the `HTTP_PORT` option, as follows:
 
-~~~~
+```
 HTTP_PORT=8081
-~~~~
+```
 
 After starting the `jenkins` service, it should be available at the following URL: <http://eddings.justdavis.com:8081/>:
 
-    $ sudo service jenkins start
+```shell-session
+$ sudo service jenkins start
+```
 
 
 ## Configuring Jenkins Authentication
@@ -86,12 +94,14 @@ Because Jenkins is running on the non-standard `8081` port and *can't* run on th
 
 Enable Apache's `mod_proxy` and `mod_proxy_http` modules, which will be needed for this:
 
-    $ sudo a2enmod proxy
-    $ sudo a2enmod proxy_http
+```shell-session
+$ sudo a2enmod proxy
+$ sudo a2enmod proxy_http
+```
 
 Add the following configuration to the end of the `VirtualHost` block in `/etc/apache2/sites-available/justdavis.com-ssl`:
 
-~~~~
+```
 	# Configure mod_proxy to be used for proxying URLs on this site to other URLs/ports on this server.
 	ProxyRequests Off
 	ProxyVia Off
@@ -109,13 +119,15 @@ Add the following configuration to the end of the `VirtualHost` block in `/etc/a
 		ProxyPassReverse http://justdavis.com/jenkins
 		SetEnv proxy-nokeepalive 1
 	</Location>
-~~~~
+```
 
 Please note that the first part of that configuration may already be there if Nexus has also been installed and configured in {% collection_doc_link /it/eddings/nexus baseurl:true %}. It does not need to be duplicated; just add the `Location /jenkins/` section.
 
 Restart Apache to apply the module and configuration changes:
 
-    $ sudo service apache2 restart
+```shell-session
+$ sudo service apache2 restart
+```
 
 Configure the proxy URL as the base URL in Jenkins, as follows:
 
@@ -126,14 +138,16 @@ Configure the proxy URL as the base URL in Jenkins, as follows:
 
 Modify the Jenkins configuration to use the new prefix/context path by editing `/etc/default/jenkins` to add a `--prefix` to `JENKINS_ARGS`, as follows:
 
-~~~~
+```
 PREFIX=/jenkins
 JENKINS_ARGS="--webroot=/var/cache/jenkins/war --httpPort=$HTTP_PORT --ajp13Port=$AJP_PORT --prefix=$PREFIX"
-~~~~
+```
 
 After restarting Jenkins, it should now be accessible from <https://justdavis.com/jenkins/>:
 
-    $ sudo service jenkins restart
+```shell-session
+$ sudo service jenkins restart
+```
 
 
 ## Build Settings/Configuration
@@ -189,31 +203,39 @@ References:
 
 Generate an SSH keypair for the `jenkins` user (just leaving the options blank, as below):
 
-    $ sudo su - jenkins
-    $ ssh-keygen -t rsa -C "admin.jenkins@justdavis.
-    Enter file in which to save the key (/var/lib/jenkins/.ssh/id_rsa): 
-    Enter passphrase (empty for no passphrase): 
-    Enter same passphrase again: 
-    $ exit
+```shell-session
+$ sudo su - jenkins
+$ ssh-keygen -t rsa -C "admin.jenkins@justdavis.
+Enter file in which to save the key (/var/lib/jenkins/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+$ exit
+```
 
 Configure Git for the `jenkins` user:
 
-    $ sudo su - jenkins
-    $ git config --global user.email "admin.jenkins@justdavis.com"
-    $ git config --global user.name "https://justdavis.com/jenkins/"
-    $ exit
+```shell-session
+$ sudo su - jenkins
+$ git config --global user.email "admin.jenkins@justdavis.com"
+$ git config --global user.name "https://justdavis.com/jenkins/"
+$ exit
+```
 
 Authorize the GitHub host key, enter `yes` when prompted to accept it:
 
-    $ sudo su - jenkins
-    $ git ls-remote -h git@github.com:karlmdavis/jessentials.git HEAD
-    $ exit
+```shell-session
+$ sudo su - jenkins
+$ git ls-remote -h git@github.com:karlmdavis/jessentials.git HEAD
+$ exit
+```
 
 Authorize the SSH public key for the `jenkins` user on GitHub. Run the following commands to write out the public key to the terminal:
 
-    $ sudo su - jenkins
-    $ cat ~/.ssh/id_rsa.pub
-    $ exit
+```shell-session
+$ sudo su - jenkins
+$ cat ~/.ssh/id_rsa.pub
+$ exit
+```
 
 Copy-paste the output from `cat` into <https://github.com/settings/ssh>.
 
@@ -251,17 +273,19 @@ The Jenkins builds should use the Nexus server that's been setup on the server. 
 
 The following was added to the Global Maven `settings.xml` for Jenkins, via the [Config File Management](https://justdavis.com/jenkins/configfiles/) page (the password was set to the correct one):
 
-    <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" 
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
-      <mirrors>
-        <mirror>
-          <id>justdavis.com-nexus</id>
-          <mirrorOf>*</mirrorOf>
-          <url>https://justdavis.com/nexus/content/groups/public/</url>
-        </mirror>
-      </mirrors>
-    </settings>
+```xml
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <mirrors>
+    <mirror>
+      <id>justdavis.com-nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>https://justdavis.com/nexus/content/groups/public/</url>
+    </mirror>
+  </mirrors>
+</settings>
+```
 
 
 ## Configuring PostgreSQL Access for Jenkins
@@ -274,31 +298,35 @@ Some of the Jenkins builds will need access to a PostgreSQL database server as p
 
 The following was run to create that role:
 
-    $ sudo -u postgres createuser --createdb --no-createrole --no-superuser jenkins --pwprompt
-    $ sudo -u postgres psql
-    postgres=# GRANT CONNECT ON DATABASE postgres TO jenkins;
+```shell-session
+$ sudo -u postgres createuser --createdb --no-createrole --no-superuser jenkins --pwprompt
+$ sudo -u postgres psql
+postgres=# GRANT CONNECT ON DATABASE postgres TO jenkins;
+```
 
 The following was then added to the Global Maven `settings.xml` for Jenkins, via the [Config File Management](https://justdavis.com/jenkins/configfiles/) page (the password was set to the correct one):
 
-    <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" 
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
-      <profiles>
-        <profile>
-          <!-- This profile sets the properties needed for integration tests that use the 
-             com.justdavis.karl.misc.datasources.provisioners API. -->
-          <id>justdavis-integration-tests</id>
-          <properties>
-            <com.justdavis.karl.datasources.provisioner.postgresql.server.url>jdbc:postgresql:postgres</com.justdavis.karl.datasources.provisioner.postgresql.server.url>
-            <com.justdavis.karl.datasources.provisioner.postgresql.server.user>jenkins</com.justdavis.karl.datasources.provisioner.postgresql.server.user>
-            <com.justdavis.karl.datasources.provisioner.postgresql.server.password>secretpw</com.justdavis.karl.datasources.provisioner.postgresql.server.password>
-          </properties>
-        </profile>
-      </profiles>
-      <activeProfiles>
-        <activeProfile>justdavis-integration-tests</activeProfile>
-      </activeProfiles>
-    </settings>
+```xml
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <profiles>
+    <profile>
+      <!-- This profile sets the properties needed for integration tests that use the 
+         com.justdavis.karl.misc.datasources.provisioners API. -->
+      <id>justdavis-integration-tests</id>
+      <properties>
+        <com.justdavis.karl.datasources.provisioner.postgresql.server.url>jdbc:postgresql:postgres</com.justdavis.karl.datasources.provisioner.postgresql.server.url>
+        <com.justdavis.karl.datasources.provisioner.postgresql.server.user>jenkins</com.justdavis.karl.datasources.provisioner.postgresql.server.user>
+        <com.justdavis.karl.datasources.provisioner.postgresql.server.password>secretpw</com.justdavis.karl.datasources.provisioner.postgresql.server.password>
+      </properties>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>justdavis-integration-tests</activeProfile>
+  </activeProfiles>
+</settings>
+```
 
 
 ### Troubleshooting: GitHub Web Hooks Not Working
@@ -318,5 +346,6 @@ References:
 
 This is really frustrating, but apparently StartSSL's CA certificate is not trusted by Java by default. However, Ubuntu should import the system's CA trust store into the Java trust store. For whatever reason, that hadn't happened correctly on `eddings`. The problem was fixed by running the following:
 
-    $ sudo dpkg --purge --force-depends ca-certificates-java; sudo apt-get install ca-certificates-java
-
+```shell-session
+$ sudo dpkg --purge --force-depends ca-certificates-java; sudo apt-get install ca-certificates-java
+```

@@ -32,37 +32,49 @@ If the `driver` element's `name` attribute is "`qemu`" and its "`type`" attribut
 
 Creating an empty "raw" image is simple and can be done with either `dd` or `truncate`. Use `truncate` if you don't want the extra space to be [sparse](https://wiki.archlinux.org/index.php/Sparse_file#What_is_a_sparse_file.3F). The following command uses `truncate` to create a non-sparse empty image named `biggerdisk.raw` of 40 GB:
 
-    $ truncate --size=+40G biggerdisk.raw
+```shell-session
+$ truncate --size=+40G biggerdisk.raw
+```
 
 Alternatively, the following command uses `dd` to create a sparse empty file named `biggerdisk.raw` of 40 GB:
 
-    $ dd if=/dev/zero of=biggerdisk.raw bs=1 count=0 seek=40G
+```shell-session
+$ dd if=/dev/zero of=biggerdisk.raw bs=1 count=0 seek=40G
+```
 
 Next, use the `virt-filesystems` command to display the internal partition structure of the old image file (replace the full `guestname.raw` path with the one found earlier):
 
-    $ sudo virt-filesystems --long --parts --blkdevs -h -a /var/lib/libvirt/images/guestname.raw
+```shell-session
+$ sudo virt-filesystems --long --parts --blkdevs -h -a /var/lib/libvirt/images/guestname.raw
+```
 
 Based on the output of this command, select which partition should receive the extra space being created. For example, the following might be output for an 8 GB disk where the `/dev/sda2` partition ought to be expanded:
 
-~~~~
+```
 Name       Type       Size  Parent
 /dev/sda1  partition  101M  /dev/sda
 /dev/sda2  partition  7.9G  /dev/sda
 /dev/sda   device     8.0G  -
-~~~~
+```
 
 Once that's determined, the `virt-resize` command can be used to copy the old image's data into the new, larger image, and expand the selected partition. For example, the following command will copy data from `/var/lib/libvirt/images/guestname.raw` into the new `biggerdisk.raw` image created earlier, expanding the `dev/sda2` partition:
 
-    $ virt-resize --expand /dev/sda2 /var/lib/libvirt/images/guestname.raw biggerdisk.raw
+```shell-session
+$ virt-resize --expand /dev/sda2 /var/lib/libvirt/images/guestname.raw biggerdisk.raw
+```
 
 After that, all the remains to be done is to replace the old image file with the new one:
 
-    $ sudo chown root:root biggerdisk.raw
-    $ sudo chmod u=rw,g=r,o=r biggerdisk.raw
-    $ sudo mv /var/lib/libvirt/images/guestname.raw /var/lib/libvirt/images/guestname-beforeResize.raw
-    $ sudo mv biggerdisk.raw /var/lib/libvirt/images/guestname.raw
+```shell-session
+$ sudo chown root:root biggerdisk.raw
+$ sudo chmod u=rw,g=r,o=r biggerdisk.raw
+$ sudo mv /var/lib/libvirt/images/guestname.raw /var/lib/libvirt/images/guestname-beforeResize.raw
+$ sudo mv biggerdisk.raw /var/lib/libvirt/images/guestname.raw
+```
 
 Once the virtual machine has been booted and it's verified that the resize operation worked correctly, the old image file can be removed:
 
-    $ sudo rm /var/lib/libvirt/images/guestname-beforeResize.raw
+```shell-session
+$ sudo rm /var/lib/libvirt/images/guestname-beforeResize.raw
+```
 

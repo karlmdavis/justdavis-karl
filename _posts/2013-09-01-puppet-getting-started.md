@@ -57,10 +57,10 @@ This one annoys me, but there really isn't any way to avoid it: all Puppet confi
 
 The only thing my node/site manifests contain is the following line:
 
-~~~~
+```
 # Pull the classes (and their configuration) for this node from Hiera
 hiera_include('classes')
-~~~~
+```
 
 This took me a while to figure out, but as mentioned above, Puppet really doesn't use manifests. They're still there, but they're practically deprecated. Everything these days is a combination of modules and Hiera. This is fine, I just wish the tutorials and documentation explained this. I had to figure it out for myself.
 

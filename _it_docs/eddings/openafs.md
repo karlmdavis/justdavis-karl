@@ -26,7 +26,7 @@ References:
 
 Before doing any repartitioning, though, making a backup of the server is **required**. To make a backup, we'll first need to find an external disk with enough free space to store everything. How much space is needed? Run the `df` command and note the "Used" number of bytes on the root filesystem, denoted by '`/`'. Once you've found an external drive with that much free space, connect it to the server and mount it. For example (lines starting with '`#`' are comments that can be safely ignored):
 
-~~~~
+```shell-session
 # Note the drive's device node under "Device", e.g. /dev/sdc1
 $ sudo fdisk -l
 # Note the drive's file system type, e.g. ext4
@@ -36,25 +36,29 @@ $ sudo fsck -y /dev/sdc1
 # Create a mount point for drive and mount it
 $ sudo mkdir /media/externalbackup
 $ sudo mount -t ext4 /dev/sdc1 /media/externalbackup
-~~~~
+```
 
 Before proceeding with the backup, all virtual machines should be stopped so that their volume images can be backed up correctly. The following commands were used to stop all virtual machines on `eddings`:
 
-~~~~
-sudo virsh --connect qemu:///system shutdown lewis
-sudo virsh --connect qemu:///system shutdown asimov
-sudo virsh --connect qemu:///system shutdown piers
-sudo virsh --connect qemu:///system shutdown tolkien
-~~~~
+```shell-session
+$ sudo virsh --connect qemu:///system shutdown lewis
+$ sudo virsh --connect qemu:///system shutdown asimov
+$ sudo virsh --connect qemu:///system shutdown piers
+$ sudo virsh --connect qemu:///system shutdown tolkien
+```
 
 The simplest backup mechanism is to create a compressed `.tar.gz` arhive of all files. The following command will back everything up to the external drive, excluding some virtual files:
 
-    $ sudo tar -cvpzSf /media/externalbackup/eddings-backup-2012-07-08-beforeResizeForAfs.tar.gz --exclude=/proc --exclude=/lost+found --exclude=/sys --exclude=/mnt --exclude=/media --exclude=/dev /
+```shell-session
+$ sudo tar -cvpzSf /media/externalbackup/eddings-backup-2012-07-08-beforeResizeForAfs.tar.gz --exclude=/proc --exclude=/lost+found --exclude=/sys --exclude=/mnt --exclude=/media --exclude=/dev /
+```
 
 Once the backup has complete, unmount the drive and remove the mount point, as follows:
 
-    $ sudo umount /media/externalbackup/
-    $ sudo rmdir /media/externalbackup/
+```shell-session
+$ sudo umount /media/externalbackup/
+$ sudo rmdir /media/externalbackup/
+```
 
 
 ### Shrinking Root Partition
@@ -75,41 +79,55 @@ Boot from the flash drive (press `F8` at the POST screen to select the boot driv
 
 In order to operate on the partitions, the libraries for using encrypted drives and `lvm`-managed partitions will need to be installed:
 
-    $ sudo apt-get update
-    $ sudo apt-get install lvm2 cryptsetup
+```shell-session
+$ sudo apt-get update
+$ sudo apt-get install lvm2 cryptsetup
+```
 
 Load the `cryptsetup` kernel module:
 
-    $ sudo modprobe dm-crypt
+```shell-session
+$ sudo modprobe dm-crypt
+```
 
 Run `fdisk` and examine the output to determine the device node (listed under "Device") of the encrypted system partition:
 
+```shell-session
 $ sudo fdisk -l
+```
 
 On `eddings`, the encrypted partition was `/dev/sdb5`.
 
 Run `cryptsetup` to decrypt the encrypted partition, entering the encryption key when prompted:
 
+```shell-session
 $ sudo cryptsetup luksOpen /dev/sdb5 crypt1
+```
 
 Locate and activate the drive's LVM groups and volumes:
 
-sudo vgscan --mknodes
-sudo vgchange -ay
+```shell-session
+$ sudo vgscan --mknodes
+$ sudo vgchange -ay
+```
 
 The `vgscan` command above will report the name of the volume group it finds, e.g. "`eddings`". Make note of this name, as it will be needed in later commands.
 
 Run a file system check, resize the file system and logical volume, and check the file system again. Run the following commands, replacing `<vgname>` with the volume group name noted earlier and <sizechange> with the amount of space to free up, e.g. "`-120G`" will reduce the existing volume's size by 120 GB:
 
-    $ sudo e2fsck -f /dev/mapper/<vgname>-root
-    $ sudo lvresize --resizefs --size <sizechange> /dev/<vgname>/root
-    $ sudo e2fsck -f /dev/mapper/<vgname>-root
+```shell-session
+$ sudo e2fsck -f /dev/mapper/<vgname>-root
+$ sudo lvresize --resizefs --size <sizechange> /dev/<vgname>/root
+$ sudo e2fsck -f /dev/mapper/<vgname>-root
+```
 
 Once the volume has been resized, unmount the LVM and crypt and then reboot into the normal operating system to continue:
 
-    $ sudo vgchange -an
-    $ sudo cryptsetup luksClose crypt1
-    $ sudo reboot
+```shell-session
+$ sudo vgchange -an
+$ sudo cryptsetup luksClose crypt1
+$ sudo reboot
+```
 
 **Please note:** Neither the enclosing volume group nor the enclosing crypt need to be resized, as the new partition will be contained within both of those.
 
@@ -123,22 +141,28 @@ References:
 
 The equivalent of a partition (something that can house a file system) with LVM is a "logical volume". Creating a logical volume is a simple one-line command. To create a new `openafs-a` logical volume using all of the free/unallocated space, on the volume group named `eddings` (as noted earlier):
 
-    $ sudo lvcreate --name openafs-a --extents 100%FREE eddings
+```shell-session
+$ sudo lvcreate --name openafs-a --extents 100%FREE eddings
+```
 
 Once the logical volume has been created, it needs to be formatted as `ext4`, which is the default for Ubuntu to 10.04:
 
-    $ sudo mkfs -t ext4 /dev/mapper/eddings-openafs--a
+```shell-session
+$ sudo mkfs -t ext4 /dev/mapper/eddings-openafs--a
+```
 
 The AFS convention is to store volumes on dedicated file systems, mounted as `/vicepa`, `/vicepb`, etc. In this setup, there is no need for more than one partition (multiple AFS volumes can be stored on a single partition), so the file system just created should be mounted as `/vicepa`. To configure this, add the following entry to `/etc/fstab`:
 
-~~~~
+```
 /dev/mapper/eddings-openafs--a /vicepa               ext4    defaults,noatime 0       1
-~~~~
+```
 
 After the entry has been added, run the following commands to create the mountpoint and mount the new volume:
 
-    $ sudo mkdir /vicepa
-    $ mount /vicepa
+```shell-session
+$ sudo mkdir /vicepa
+$ mount /vicepa
+```
 
 
 ## Installing OpenAFS
@@ -151,7 +175,9 @@ References:
 
 The OpenAFS server and client packages should be installed as follows:
 
-    $ sudo apt-get install openafs-doc openafs-dbserver openafs-krb5 krb5-user
+```shell-session
+$ sudo apt-get install openafs-doc openafs-dbserver openafs-krb5 krb5-user
+```
 
 When prompted by the installer, provide the following responses:
 
@@ -163,48 +189,56 @@ When prompted by the installer, provide the following responses:
 
 [http://www.openafs.org/](OpenAFS) is a complicated beast. In addition, there's not a lot of up-to-date information available on the internet on how to set it up. However, the documentation provided with the OpenAFS Debian/Ubuntu packages is fantastic and more than makes up for the lack of internet references. It's strongly recommended that you read through this packaged documentation before proceeding further with the installation. The documentation can be read by running the following commands:
 
-    $ less /usr/share/doc/openafs-dbserver/README.Debian.gz
-    $ less /usr/share/doc/openafs-dbserver/README.servers.gz
+```shell-session
+$ less /usr/share/doc/openafs-dbserver/README.Debian.gz
+$ less /usr/share/doc/openafs-dbserver/README.servers.gz
+```
 
 The rest of this guide is basically just a summary of the `README.servers` guide mentioned above, slightly customized for the particulars of the `justdavis.com` domain.
 
 A Kerberos principal and keytab will be needed for the AFS service. The following commands should be used to create this:
 
-~~~~
+```shell-session
 $ sudo kadmin.local
 kadmin.local: addprinc -policy services -randkey -e des-cbc-crc:v4 afs/justdavis.com
 kadmin.local: ktadd -k /tmp/afs.justdavis.com.keytab -e des-cbc-crc:v4 afs/justdavis.com
 kadmin.local: quit
-~~~~
+```
 
 Due to deficiencies in OpenAFS, the Kerberos KDC will also have to be configured to allow the use of DES. This deficiency is discussed in the following mailing list trhead: <http://lists.openafs.org/pipermail/openafs-info/2010-January/032746.html>. To enable this, add the following entry to the `[libdefaults]` section of the `/etc/krb5.conf` file:
 
-~~~~
+```
 	allow_weak_crypto = true
-~~~~
+```
 
 After doing this, restart the KDC with the following command:
 
-    $ sudo /etc/init.d/krb5-kdc restart
+```shell-session
+$ sudo /etc/init.d/krb5-kdc restart
+```
 
 The `ktadd` command above will create a keytab file named `/tmp/afs.justdavis.com.keytab`. It will also report the "`kvno`" of the keytab in its console output, which will be needed for the next step, so be sure to make note of it.
 
 The keytab will need to be converted into an AFS keyfile using the `asetkey` utility. The following commands will do so (replace "`<kvno>`" with the value noted from the `ktadd` command above):
 
-    $ sudo asetkey add <kvno> /tmp/afs.justdavis.com.keytab afs/justdavis.com
-    $ rm /tmp/afs.justdavis.com.keytab
+```shell-session
+$ sudo asetkey add <kvno> /tmp/afs.justdavis.com.keytab afs/justdavis.com
+$ rm /tmp/afs.justdavis.com.keytab
+```
 
 Edit the `/etc/openafs/CellServDB` file and add the following entry (replace the IP address with the server's static public IP, as returned by `nslookup eddings.justdavis.com`):
 
-~~~~
+```
 >justdavis.com          #Davis Family cell
 174.79.40.37                    #eddings.justdavis.com
-~~~~
+```
 
 Debian/Ubuntu include a number of scripts to ease the configuration of OpenAFS. One of these scripts is `afs-newcell`, which will setup the AFS `ptserver`, `volserver`, etc. such that a new cell is up, running, and (mostly) empty. Run the script as follows:
 
-    $ sudo /etc/init.d/openafs-client stop
-    $ sudo afs-newcell
+```shell-session
+$ sudo /etc/init.d/openafs-client stop
+$ sudo afs-newcell
+```
 
 When prompted, answer the questions as follows:
 
@@ -213,9 +247,11 @@ When prompted, answer the questions as follows:
 
 After this has completed, the AFS server has been setup. However, it lacks any volumes, as `ls /afs/justdavis.com` will demonstrate. To fix that, you should obtain tokens for the cell and run the `afs-rootvol` script, as follows:
 
-    $ sudo kinit karl/admin
-    $ sudo aklog
-    $ sudo afs-rootvol
+```shell-session
+$ sudo kinit karl/admin
+$ sudo aklog
+$ sudo afs-rootvol
+```
 
 When prompted, answer the questions as follows:
 
@@ -226,9 +262,9 @@ At this point, the cell's root volume has been populated with several "standard"
 
 Modern OpenAFS clients support the use of DNS to retrieve the list of AFS servers for a given cell via the use of `AFSDB` records. This is a convenient alternative to manually updating `/etc/openafs/CellServDB` files on every client workstation. The following record was added for the `justdavis.com` DNS zone:
 
-~~~~
+```
 justdavis.com.                  IN      AFSDB             1 eddings.justdavis.com.
-~~~~
+```
 
 
 ## Populating justdavis.com Cell
@@ -237,13 +273,15 @@ As the `justdavis.com` AFS cell is intended to replace `davisonlinehome.name`, m
 
 The first step in migrating from `davisonlinehome.name` was getting a list of the volumes in the cell. The following commands were used to produce such a list:
 
-    karl@asimov:~$ kinit karl/admin@DAVISONLINEHOME.NAME
-    karl@asimov:~$ aklog
-    karl@asimov:~$ vos listvol -server asimov.davisonlinehome.name
+```shell-session
+karl@asimov:~$ kinit karl/admin@DAVISONLINEHOME.NAME
+karl@asimov:~$ aklog
+karl@asimov:~$ vos listvol -server asimov.davisonlinehome.name
+```
 
 This returned the following:
 
-~~~~
+```shell-session
 Total number of volumes on server asimov.davisonlinehome.name partition /vicepa: 12 
 bogus.536870924                   536870924 RW          0 K Off-line
 group                             536870930 RW          3 K On-line
@@ -257,39 +295,47 @@ sysAdmin                          536870936 RW   17413305 K On-line
 user                              536870918 RW          4 K On-line
 user.erica                        536870927 RW   25417194 K On-line
 user.karl                         536870961 RW   26611473 K On-line
-~~~~
+```
 
 All of the volumes above that are larger than 200 K contain actual data, while the rest contain just mountpoints. That means the following volumes need to be moved: `group.karlanderica`, `sysAdmin`, `user.erica`, and `user.karl`.
 
 The volumes will need to be dumped (see `man vos_dump`) to `eddings` in order to be loaded (see `man vos_restore`) into the `justdavis.com` cell. The first step is to mount a directory on `eddings` from `asimov` using `sshfs` so that the dump can be created directly, rather than having to be copied over afterwards (which `asimov` doesn't have the drive space for, anyways). The following commands were used to create that mountpoint on `asimov`, named `/home/karl/eddings-karl`:
 
-    karl@asimov:~$ sudo apt-get install sshfs
-    karl@asimov:~$ sudo gpasswd -a $USER fuse
-    karl@asimov:~$ mkdir ~/eddings-localuser
-    karl@asimov:~$ sshfs -o idmap=user localuser@eddings.justdavis.com:/home/localuser ~/eddings-localuser
+```shell-session
+karl@asimov:~$ sudo apt-get install sshfs
+karl@asimov:~$ sudo gpasswd -a $USER fuse
+karl@asimov:~$ mkdir ~/eddings-localuser
+karl@asimov:~$ sshfs -o idmap=user localuser@eddings.justdavis.com:/home/localuser ~/eddings-localuser
+```
 
 With this done, the volumes were dumped from `asimov`, as follows:
 
-    karl@asimov:~$ mkdir ~/eddings-localuser/asimov-afs-dumps
-    karl@asimov:~$ vos dump -id group.karlanderica -file ~/eddings-localuser/asimov-afs-dumps/group.karlanderica.vosdump &
-    karl@asimov:~$ vos dump -id sysAdmin -file ~/eddings-localuser/asimov-afs-dumps/sysAdmin.vosdump &
-    karl@asimov:~$ vos dump -id user.erica -file ~/eddings-localuser/asimov-afs-dumps/user.erica.vosdump &
-    karl@asimov:~$ vos dump -id user.karl -file ~/eddings-localuser/asimov-afs-dumps/user.karl.vosdump &
+```shell-session
+karl@asimov:~$ mkdir ~/eddings-localuser/asimov-afs-dumps
+karl@asimov:~$ vos dump -id group.karlanderica -file ~/eddings-localuser/asimov-afs-dumps/group.karlanderica.vosdump &
+karl@asimov:~$ vos dump -id sysAdmin -file ~/eddings-localuser/asimov-afs-dumps/sysAdmin.vosdump &
+karl@asimov:~$ vos dump -id user.erica -file ~/eddings-localuser/asimov-afs-dumps/user.erica.vosdump &
+karl@asimov:~$ vos dump -id user.karl -file ~/eddings-localuser/asimov-afs-dumps/user.karl.vosdump &
+```
 
 Once the dumps were complete, the SSHFS mount was unmounted:
 
-    karl@asimov:~$ fusermount -u ~/eddings-localuser
+```shell-session
+karl@asimov:~$ fusermount -u ~/eddings-localuser
+```
 
 The dumps need to be restored into the `justdavis.com` cell, by running the following commands on `eddings`:
 
-    $ vos restore -server eddings.justdavis.com -partition a -name group.karlanderica -file ~/asimov-afs-dumps/group.karlanderica.vosdump &
-    $ vos restore -server eddings.justdavis.com -partition a -name group.sysadmin -file ~/asimov-afs-dumps/sysAdmin.vosdump &
-    $ vos restore -server eddings.justdavis.com -partition a -name user.erica -file ~/asimov-afs-dumps/user.erica.vosdump &
-    $ vos restore -server eddings.justdavis.com -partition a -name user.karl -file ~/asimov-afs-dumps/user.karl.vosdump &
+```shell-session
+$ vos restore -server eddings.justdavis.com -partition a -name group.karlanderica -file ~/asimov-afs-dumps/group.karlanderica.vosdump &
+$ vos restore -server eddings.justdavis.com -partition a -name group.sysadmin -file ~/asimov-afs-dumps/sysAdmin.vosdump &
+$ vos restore -server eddings.justdavis.com -partition a -name user.erica -file ~/asimov-afs-dumps/user.erica.vosdump &
+$ vos restore -server eddings.justdavis.com -partition a -name user.karl -file ~/asimov-afs-dumps/user.karl.vosdump &
+```
 
 The end goal is to obtain the following structure in the `justdavis.com` cell:
 
-~~~~
+```
 Path					Permissions			Description
 ----					-----------			-----------
 /afs/justdavis.com/			admins w, anyone r		
@@ -299,30 +345,31 @@ Path					Permissions			Description
 	user/				admins w, anyone r		The user volume.
 		erica/			admins w, erica w		The user.erica volume.
 		karl/			admins w, karl w		The user.karl volume.
-~~~~
+```
 
 The following commands were run on `eddings` (starting from the cell setup created by `afs-newcell` and `afs-rootvol`) to realize this:
 
-    $ fs rmmount -dir /afs/.justdavis.com/service
-    $ vos remove -id service -cell justdavis.com
-    $ vos create -server eddings.justdavis.com -partition a -name group
-    $ fs mkmount -dir /afs/.justdavis.com/group -vol group
-    $ fs mkmount -dir /afs/.justdavis.com/group/karlanderica -vol group.karlanderica
-    $ fs mkmount -dir /afs/.justdavis.com/group/sysadmin -vol group.sysadmin
-    $ fs mkmount -dir /afs/.justdavis.com/user/karl -vol user.karl
-    $ fs mkmount -dir /afs/.justdavis.com/user/erica -vol user.erica
-    $ pts createuser -name karl
-    $ pts createuser -name erica
-    $ pts creategroup -name sysadmins -owner system:administrators
-    $ pts adduser -user karl.admin karl -group sysadmins
-    $ pts creategroup -name karlanderica -owner karl
-    $ pts adduser -user karl erica -group karlanderica
-    $ fs setacl /afs/justdavis.com/ -acl system:administrators all system:anyuser read -clear
-    $ fs setacl /afs/justdavis.com/group -acl system:administrators all system:anyuser read -clear
-    $ find /afs/justdavis.com/group/karlanderica -type d -exec fs setacl {} \-acl system:administrators all karlanderica all \-clear \;
-    $ find /afs/justdavis.com/group/sysadmin -type d -exec fs setacl {} \-acl system:administrators all sysadmins all system:authuser read \-clear \;
-    $ fs setacl /afs/justdavis.com/user -acl system:administrators all system:anyuser read -clear
-    $ find /afs/justdavis.com/user/erica -type d -exec fs setacl {} \-acl system:administrators all erica all \-clear \;
-    $ find /afs/justdavis.com/user/karl -type d -exec fs setacl {} \-acl system:administrators all karl all \-clear \;
-    $ vos release -id root.cell -cell justdavis.com
-
+```shell-session
+$ fs rmmount -dir /afs/.justdavis.com/service
+$ vos remove -id service -cell justdavis.com
+$ vos create -server eddings.justdavis.com -partition a -name group
+$ fs mkmount -dir /afs/.justdavis.com/group -vol group
+$ fs mkmount -dir /afs/.justdavis.com/group/karlanderica -vol group.karlanderica
+$ fs mkmount -dir /afs/.justdavis.com/group/sysadmin -vol group.sysadmin
+$ fs mkmount -dir /afs/.justdavis.com/user/karl -vol user.karl
+$ fs mkmount -dir /afs/.justdavis.com/user/erica -vol user.erica
+$ pts createuser -name karl
+$ pts createuser -name erica
+$ pts creategroup -name sysadmins -owner system:administrators
+$ pts adduser -user karl.admin karl -group sysadmins
+$ pts creategroup -name karlanderica -owner karl
+$ pts adduser -user karl erica -group karlanderica
+$ fs setacl /afs/justdavis.com/ -acl system:administrators all system:anyuser read -clear
+$ fs setacl /afs/justdavis.com/group -acl system:administrators all system:anyuser read -clear
+$ find /afs/justdavis.com/group/karlanderica -type d -exec fs setacl {} \-acl system:administrators all karlanderica all \-clear \;
+$ find /afs/justdavis.com/group/sysadmin -type d -exec fs setacl {} \-acl system:administrators all sysadmins all system:authuser read \-clear \;
+$ fs setacl /afs/justdavis.com/user -acl system:administrators all system:anyuser read -clear
+$ find /afs/justdavis.com/user/erica -type d -exec fs setacl {} \-acl system:administrators all erica all \-clear \;
+$ find /afs/justdavis.com/user/karl -type d -exec fs setacl {} \-acl system:administrators all karl all \-clear \;
+$ vos release -id root.cell -cell justdavis.com
+```

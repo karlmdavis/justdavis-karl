@@ -43,4 +43,3 @@ I love finding new, interesting stuff to read and sharing it with other folks. I
 
 <br /><br /><br /><br />
 <a id="ref-1-target">[[1]](#ref-1-source)</a> Except for poets — I think there's some sort of rule that they have to be all edgy and mostly-miserable. But being miserable like that makes them happy, I guess? I don't know; poets are weird.
-

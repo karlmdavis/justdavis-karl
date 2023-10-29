@@ -14,7 +14,8 @@ All that aside, I'd like to present some alternatives to doing this that I'm swi
 
 Apache Maven is a wonderful tool for tracking, storing, and making use of compiled libraries.  Typically, these libraries are JARs but Maven can also handle native libraries.  Getting these libraries into Maven is as simple as:
 
-<pre class="CodeRay"><code class="language-bash">$ mvn deploy:deploy-file \
+```shell-session
+$ mvn deploy:deploy-file \
     -DgeneratePom=true \
     -Dpackaging=dll \
     -Dclassifier=native-win-x86 \
@@ -24,7 +25,8 @@ Apache Maven is a wonderful tool for tracking, storing, and making use of compil
     -DartifactId=someprojectId \
     -Dversion=1.2.3 \
     -DgeneratePom.description="The someprojectId library that makes excellent toast.  Please note that this project also requires a native library to be loaded."
-    -Dfile=someprojectId-1.2.3.dll</code></pre>
+    -Dfile=someprojectId-1.2.3.dll</code>
+```
 
 As long as you create and document some conventions on the classifier and packaging to use for each OS and architecture combination, you now have a standardized way of storing native libraries as Maven artifacts.
 
@@ -32,7 +34,7 @@ As long as you create and document some conventions on the classifier and packag
 
 At some point in your project's build cycle, you'll want to be able to pull that native library out of Maven and into your build target.  The [maven-dependency-plugin](http://maven.apache.org/plugins/maven-dependency-plugin/) makes this easy.  Add the plugin to your POM's `<build/>` descriptor, set it to run during one of the build phases, and tell it what to get and where to put it.  The following sample POM configuration will copy the `someprojectId-1.2.3.dll` file from earlier into the project's `target/classes/native/` folder:
 
-{% highlight xml %}
+```xml
 <project>
   [...]
   <build>
@@ -69,7 +71,7 @@ At some point in your project's build cycle, you'll want to be able to pull that
   </build>
   [...]
 </project>
-{% endhighlight %}
+```
 
 Like most things with Maven, this is overly verbose, but simple enough to understand.  During the `generate-resources` build lifecycle phase, the maven-dependency-plugin will find the repository artifacts that match each specified `<artifactItem/>` and copy them to the specified `<outputDirectory/>` with the specified `<destFileName/>`.
 
@@ -79,7 +81,7 @@ I actually try to hide any code that uses native libraries behind an interface s
 
 If you'd like to prevent the native libraries from being included in your project's package (e.g. the `.jar` file), the following POM snippet should do the trick:
 
-{% highlight xml %}
+```xml
 <project>
   [...]
   <build>
@@ -98,7 +100,6 @@ If you'd like to prevent the native libraries from being included in your projec
   </build>
   [...]
 </project>
-{% endhighlight %}
+```
 
 Adding that exclusion will ensure that the native libraries don't end up in your repository a second time as part of the project they're being used in.
-

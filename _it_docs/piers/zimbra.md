@@ -19,15 +19,17 @@ The Zimbra migration to be performed from the old to new `piers` requires that Z
 
 The first two entries in `/etc/hosts` should be changed to read as follows:
 
-~~~~
+```
 127.0.0.1       localhost
 127.0.1.1       piers.davisonlinehome.name   piers
-~~~~
+```
 
 The hostname configuration can be tested with the `hostname` command. The first command should return the unqualified name and the second command should return the fully qualified name:
 
-    $ hostname
-    $ hostname -f
+```shell-session
+$ hostname
+$ hostname -f
+```
 
 
 ### Installation
@@ -42,19 +44,25 @@ Please note that Zimbra *does* have a Migration Wizard that supports moving acco
 
 Download the latest Ubuntu 64-bit Zimbra 7.0 release from [Zimbra Open Source Downloads](http://www.zimbra.com/downloads/os-downloads.html). On 2012-10-14, that was 7.2.1. Download the release via `wget`, e.g.:
 
-    $ wget http://files2.zimbra.com/downloads/7.2.1_GA/zcs-7.2.1_GA_2790.UBUNTU10_64.20120815212201.tgz
+```shell-session
+$ wget http://files2.zimbra.com/downloads/7.2.1_GA/zcs-7.2.1_GA_2790.UBUNTU10_64.20120815212201.tgz
+```
 
 Note: The Zimbra installation guide (and installer) both instruct users to first configure `A` and `MX` records for the mail server. However, in the case of `piers`, those records will not be modified until later. Instead, `piers` will be setup as a new, stand-alone mail server that does not actually receive any mail. Once it's configured, firewall rules will be setup to block the old `piers` from receiving any further mail, and the accounts will be migrated off of it to the new `piers`. Only after that migration is complete will DNS records be updated to point to the new `piers`. This process will prevent mail from being lost or not migrated.
 
 Install the prerequisites needed by Zimbra:
 
-    $ sudo apt-get install libexpat1 libperl5.10 sysstat sqlite3
+```shell-session
+$ sudo apt-get install libexpat1 libperl5.10 sysstat sqlite3
+```
 
 Extract the installation bundle and start the installer:
 
-    $ tar -xzf zcs-7.2.1_GA_2790.UBUNTU10_64.20120815212201.tgz
-    $ cd zcs-7.2.1_GA_2790.UBUNTU10_64.20120815212201
-    $ sudo ./install.sh
+```shell-session
+$ tar -xzf zcs-7.2.1_GA_2790.UBUNTU10_64.20120815212201.tgz
+$ cd zcs-7.2.1_GA_2790.UBUNTU10_64.20120815212201
+$ sudo ./install.sh
+```
 
 Proceed through the installation, as follows:
 
@@ -97,27 +105,33 @@ Proceed through the installation, as follows:
 
 Check the service status and ensure everything is running:
 
-    user@piers:$ sudo su - zimbra
-    zimbra@piers:$ zmcontrol status
+```shell-session
+user@piers:$ sudo su - zimbra
+zimbra@piers:$ zmcontrol status
+```
 
 Access the Zimbra web application in a browser, e.g. at <http://174.79.40.35/> to ensure everything is working correctly. Do not try to send or receive email, as it will be lost during the data migration.
 
 **Troubleshooting Note:** If `zmcontrol status` displays a message saying "`mysql.server is not running`", the problem may be that the MySQL `root` password is incorrect. This was the case with the installation I performed on 2012-10-18. To checkto see if the MySQL password is correct, first determine what Zimbra thinks the password should be, and then try logging in to MySQL directly, e.g.:
 
-    zimbra@piers:$ zmlocalconfig -s | grep mysql_root_password
-    zimbra@piers:$ mysql -u root -p
+```shell-session
+zimbra@piers:$ zmlocalconfig -s | grep mysql_root_password
+zimbra@piers:$ mysql -u root -p
+```
 
 If this fails with the password returned by `zmlocalconfig`, the MySQL password needs to be reset, following the instructions on this page: <http://wiki.zimbra.com/wiki/Issues_with_mysql_and_logmysql_passwords>.
 
 In my case, this still wasn't working. I ended up solving it by setting the MySQL root password to `''` and running `zmmyinit`, as follows:
 
-    zimbra@piers:$ mysql.server start
-    zimbra@piers:$ mysql -u root -e "UPDATE mysql.user SET Password=PASSWORD('') WHERE User='root';"
-    zimbra@piers:$ mysql -u root -e "FLUSH PRIVILEGES;"
-    zimbra@piers:$ /opt/zimbra/libexec/zmmyinit --sql_root_pw `zmlocalconfig -s -m nokey mysql_root_password`
-    zimbra@piers:$ zmcontrol stop
-    zimbra@piers:$ zmcontrol start
-    zimbra@piers:$ zmcontrol status
+```shell-session
+zimbra@piers:$ mysql.server start
+zimbra@piers:$ mysql -u root -e "UPDATE mysql.user SET Password=PASSWORD('') WHERE User='root';"
+zimbra@piers:$ mysql -u root -e "FLUSH PRIVILEGES;"
+zimbra@piers:$ /opt/zimbra/libexec/zmmyinit --sql_root_pw `zmlocalconfig -s -m nokey mysql_root_password`
+zimbra@piers:$ zmcontrol stop
+zimbra@piers:$ zmcontrol start
+zimbra@piers:$ zmcontrol status
+```
 
 
 ## Migrating from Old Server
@@ -128,42 +142,50 @@ References:
 
 Before starting the migration process, it's imperative to first block the both the old and new `piers` from receiving any new email. If this is not done, messages received during the migration will be lost. The simplest way to do this is to block all of the SMTP ports on the machines. This can be done by running the following commands on both the old and the new `piers`:
 
-    user@piers:$ sudo ufw default allow
-    user@piers:$ sudo ufw deny smtp
-    user@piers:$ sudo ufw enable
+```shell-session
+user@piers:$ sudo ufw default allow
+user@piers:$ sudo ufw deny smtp
+user@piers:$ sudo ufw enable
+```
 
 Next, switch to the `zimbra` user and stop the Zimbra services on both the old and new `piers`:
 
-    user@piers:$ sudo su - zimbra
-    zimbra@piers:$ zmcontrol stop
+```shell-session
+user@piers:$ sudo su - zimbra
+zimbra@piers:$ zmcontrol stop
+```
 
 Backup the LDAP configuration database and the LDAP data on the old `piers`:
 
-    zimbra@piers:$ exit
-    user@piers:$ sudo mkdir /zimbra-migration
-    user@piers:$ sudo chown zimbra:zimbra /zimbra-migration
-    user@piers:$ sudo chmod o+rw /zimbra-migration
-    user@piers:$ sudo su - zimbra
-    zimbra@piers:$ /opt/zimbra/libexec/zmslapcat -c /zimbra-migration
-    zimbra@piers:$ /opt/zimbra/libexec/zmslapcat /zimbra-migration
-    zimbra@piers:$ cp /opt/zimbra/data/ldap/hdb/db/DB_CONFIG /zimbra-migration
+```shell-session
+zimbra@piers:$ exit
+user@piers:$ sudo mkdir /zimbra-migration
+user@piers:$ sudo chown zimbra:zimbra /zimbra-migration
+user@piers:$ sudo chmod o+rw /zimbra-migration
+user@piers:$ sudo su - zimbra
+zimbra@piers:$ /opt/zimbra/libexec/zmslapcat -c /zimbra-migration
+zimbra@piers:$ /opt/zimbra/libexec/zmslapcat /zimbra-migration
+zimbra@piers:$ cp /opt/zimbra/data/ldap/hdb/db/DB_CONFIG /zimbra-migration
+```
 
 On the new `piers`, copy that data over and replace the LDAP data directories there with it (note that `174.79.40.36` is the IP of the old `piers`):
 
-    zimbra@piers:$ exit
-    user@piers:$ sudo mkdir /zimbra-migration
-    user@piers:$ sudo scp -r user@174.79.40.36:/zimbra-migration /
-    user@piers:$ sudo mkdir -p /zimbra-migration/clean/ldap/config /zimbra-migration/clean/ldap/hdb /zimbra-migration/clean/ldap/accesslog
-    user@piers:$ sudo chmod -R o+r /zimbra-migration
-    user@piers:$ sudo chown -R zimbra:zimbra /zimbra-migration
-    user@piers:$ sudo su - zimbra
-    zimbra@piers:$ mv /opt/zimbra/data/ldap/config/* /zimbra-migration/clean/ldap/config/
-    zimbra@piers:$ mv /opt/zimbra/data/ldap/hdb/* /zimbra-migration/clean/ldap/hdb/
-    zimbra@piers:$ mv /opt/zimbra/data/ldap/accesslog/* /zimbra-migration/clean/ldap/accesslog/
-    zimbra@piers:$ mkdir -p /opt/zimbra/data/ldap/hdb/db /opt/zimbra/data/ldap/hdb/logs /opt/zimbra/data/ldap/accesslog/db /opt/zimbra/data/ldap/accesslog/logs
-    zimbra@piers:$ cp /zimbra-migration/DB_CONFIG /opt/zimbra/data/ldap/hdb/db
-    zimbra@piers:$ /opt/zimbra/openldap/sbin/slapadd -q -n 0 -F /opt/zimbra/data/ldap/config -cv -l /zimbra-migration/ldap-config.bak
-    zimbra@piers:$ /opt/zimbra/openldap/sbin/slapadd -q -b "" -F /opt/zimbra/data/ldap/config -cv -l /zimbra-migration/ldap.bak
+```shell-session
+zimbra@piers:$ exit
+user@piers:$ sudo mkdir /zimbra-migration
+user@piers:$ sudo scp -r user@174.79.40.36:/zimbra-migration /
+user@piers:$ sudo mkdir -p /zimbra-migration/clean/ldap/config /zimbra-migration/clean/ldap/hdb /zimbra-migration/clean/ldap/accesslog
+user@piers:$ sudo chmod -R o+r /zimbra-migration
+user@piers:$ sudo chown -R zimbra:zimbra /zimbra-migration
+user@piers:$ sudo su - zimbra
+zimbra@piers:$ mv /opt/zimbra/data/ldap/config/* /zimbra-migration/clean/ldap/config/
+zimbra@piers:$ mv /opt/zimbra/data/ldap/hdb/* /zimbra-migration/clean/ldap/hdb/
+zimbra@piers:$ mv /opt/zimbra/data/ldap/accesslog/* /zimbra-migration/clean/ldap/accesslog/
+zimbra@piers:$ mkdir -p /opt/zimbra/data/ldap/hdb/db /opt/zimbra/data/ldap/hdb/logs /opt/zimbra/data/ldap/accesslog/db /opt/zimbra/data/ldap/accesslog/logs
+zimbra@piers:$ cp /zimbra-migration/DB_CONFIG /opt/zimbra/data/ldap/hdb/db
+zimbra@piers:$ /opt/zimbra/openldap/sbin/slapadd -q -n 0 -F /opt/zimbra/data/ldap/config -cv -l /zimbra-migration/ldap-config.bak
+zimbra@piers:$ /opt/zimbra/openldap/sbin/slapadd -q -b "" -F /opt/zimbra/data/ldap/config -cv -l /zimbra-migration/ldap.bak
+```
 
 On the new `piers`, edit the `/opt/zimbra/conf/localconfig.xml` file to ensure that the following settings match their values in the same file on the old `piers`:
 
@@ -182,27 +204,35 @@ On the new `piers`, edit the `/opt/zimbra/conf/localconfig.xml` file to ensure t
 
 On the old `piers`, copy the MySQL data and other data files to the new `piers` (note that `174.79.40.35` is the IP of the new `piers`):
 
-    user@piers:$ sudo scp -r /opt/zimbra/db/data user@174.79.40.35:/zimbra-migration/db-data
-    user@piers:$ sudo scp -r /opt/zimbra/store user@174.79.40.35:/zimbra-migration/store
-    user@piers:$ sudo scp -r /opt/zimbra/index user@174.79.40.35:/zimbra-migration/index
-    user@piers:$ sudo scp -r /opt/zimbra/mailboxd/etc/keystore user@174.79.40.35:/zimbra-migration/
+```shell-session
+user@piers:$ sudo scp -r /opt/zimbra/db/data user@174.79.40.35:/zimbra-migration/db-data
+user@piers:$ sudo scp -r /opt/zimbra/store user@174.79.40.35:/zimbra-migration/store
+user@piers:$ sudo scp -r /opt/zimbra/index user@174.79.40.35:/zimbra-migration/index
+user@piers:$ sudo scp -r /opt/zimbra/mailboxd/etc/keystore user@174.79.40.35:/zimbra-migration/
+```
 
 On the new `piers`, copy that data to its new home:
 
-    user@piers:$ sudo mv /opt/zimbra/db/data/ /opt/zimbra/store/ /opt/zimbra/index/ /opt/zimbra/mailboxd/etc/keystore /zimbra-migration/clean/
-    user@piers:$ sudo cp -r /zimbra-migration/db-data /opt/zimbra/db/data
-    user@piers:$ sudo cp -r /zimbra-migration/store /zimbra-migration/index /opt/zimbra/
-    user@piers:$ sudo cp -r /zimbra-migration/keystore /opt/zimbra/mailboxd/etc/
+```shell-session
+user@piers:$ sudo mv /opt/zimbra/db/data/ /opt/zimbra/store/ /opt/zimbra/index/ /opt/zimbra/mailboxd/etc/keystore /zimbra-migration/clean/
+user@piers:$ sudo cp -r /zimbra-migration/db-data /opt/zimbra/db/data
+user@piers:$ sudo cp -r /zimbra-migration/store /zimbra-migration/index /opt/zimbra/
+user@piers:$ sudo cp -r /zimbra-migration/keystore /opt/zimbra/mailboxd/etc/
+```
 
 Repair any potential permissions problems with files under `/opt/zimbra` on the new `piers`:
 
-    user@piers:$ sudo chown -R zimbra:zimbra /opt/zimbra/store /opt/zimbra/index
-    user@piers:$ sudo /opt/zimbra/libexec/zmfixperms
+```shell-session
+user@piers:$ sudo chown -R zimbra:zimbra /opt/zimbra/store /opt/zimbra/index
+user@piers:$ sudo /opt/zimbra/libexec/zmfixperms
+```
 
 Start Zimbra back up on the new `piers`:
 
-    user@piers:$ sudo su - zimbra
-    zimbra@piers:$ zmcontrol start
+```shell-session
+user@piers:$ sudo su - zimbra
+zimbra@piers:$ zmcontrol start
+```
 
 
 ## Verifying Migration
@@ -223,17 +253,23 @@ References:
 
 Download the latest Ubuntu 64-bit Zimbra 8.0 release from [Zimbra Open Source Downloads](http://www.zimbra.com/downloads/os-downloads.html). On 2012-10-18, that was 8.0.0. Download the release via `wget`, e.g.:
 
-    $ wget http://files2.zimbra.com/downloads/8.0.0_GA/zcs-8.0.0_GA_5434.UBUNTU10_64.20120907144627.tgz
+```shell-session
+$ wget http://files2.zimbra.com/downloads/8.0.0_GA/zcs-8.0.0_GA_5434.UBUNTU10_64.20120907144627.tgz
+```
 
 Install the prerequisites needed by Zimbra:
 
-    $ sudo apt-get install libgmp3c2 libperl5.14
+```shell-session
+$ sudo apt-get install libgmp3c2 libperl5.14
+```
 
 Extract the installation bundle and start the installer:
 
-    $ tar -xzf zcs-8.0.0_GA_5434.UBUNTU10_64.20120907144627.tgz
-    $ cd zcs-8.0.0_GA_5434.UBUNTU10_64.20120907144627
-    $ sudo ./install.sh
+```shell-session
+$ tar -xzf zcs-8.0.0_GA_5434.UBUNTU10_64.20120907144627.tgz
+$ cd zcs-8.0.0_GA_5434.UBUNTU10_64.20120907144627
+$ sudo ./install.sh
+```
 
 Proceed through the installation, as follows:
 
@@ -249,12 +285,16 @@ Proceed through the installation, as follows:
 
 Check the service status and ensure everything is running:
 
-    $ sudo -i -u zimbra zmcontrol status
+```shell-session
+$ sudo -i -u zimbra zmcontrol status
+```
 
 Access the Zimbra web application in a browser, e.g. at <http://mail.davisonlinehome.name/>, to ensure everything is working correctly. If internal sends/receives work, and mail can be sent externaly successfully, it should be safe to disable the firewall block on incoming external mail:
 
-    $ sudo ufw delete deny smtp
-    $ sudo ufw disable
+```shell-session
+$ sudo ufw delete deny smtp
+$ sudo ufw disable
+```
 
 
 ## Switching to Commercial SSL Certificate
@@ -269,69 +309,87 @@ Before switching the certificate to use the same wildcard cert discussed in {% c
 
 First, put the server's domains into maintenance mode, which will prevent new mail delivery/receipt and also users from logging in:
 
-    $ sudo ufw default allow
-    $ sudo ufw deny smtp
-    $ sudo ufw enable
-    $ sudo su - zimbra
-    $ zmprov modifydomain davisonlinehome.name zimbraDomainStatus maintenance
-    $ zmprov modifydomain justdavis.com zimbraDomainStatus maintenance
-    $ zmprov modifydomain madrivercode.com zimbraDomainStatus maintenance
-    $ zmprov modifydomain madriverdevelopment.com zimbraDomainStatus maintenance
-    $ zmprov modifydomain simplepersistence.com zimbraDomainStatus maintenance
-    $ exit
+```shell-session
+$ sudo ufw default allow
+$ sudo ufw deny smtp
+$ sudo ufw enable
+$ sudo su - zimbra
+$ zmprov modifydomain davisonlinehome.name zimbraDomainStatus maintenance
+$ zmprov modifydomain justdavis.com zimbraDomainStatus maintenance
+$ zmprov modifydomain madrivercode.com zimbraDomainStatus maintenance
+$ zmprov modifydomain madriverdevelopment.com zimbraDomainStatus maintenance
+$ zmprov modifydomain simplepersistence.com zimbraDomainStatus maintenance
+$ exit
+```
 
 Then make a backup:
 
-    $ sudo su - zimbra
-    $ zmcontrol stop
-    $ exit
-    $ sudo rsync -ah /opt/zimbra/ /opt/zimbra-backupBeforeRename-2013-10-18/
-    $ sudo mkdir /opt/zimbra-backupBeforeRename-2013-10-18/ldap-dump
-    $ sudo chown zimbra:zimbra /opt/zimbra-backupBeforeRename-2013-10-18/ldap-dump
-    $ sudo su - zimbra
-    $ /opt/zimbra/libexec/zmslapcat -c /opt/zimbra-backupBeforeRename-2013-10-18/ldap-dump
-    $ /opt/zimbra/libexec/zmslapcat /opt/zimbra-backupBeforeRename-2013-10-18/ldap-dump
-    $ zmcontrol start
-    $ exit
+```shell-session
+$ sudo su - zimbra
+$ zmcontrol stop
+$ exit
+$ sudo rsync -ah /opt/zimbra/ /opt/zimbra-backupBeforeRename-2013-10-18/
+$ sudo mkdir /opt/zimbra-backupBeforeRename-2013-10-18/ldap-dump
+$ sudo chown zimbra:zimbra /opt/zimbra-backupBeforeRename-2013-10-18/ldap-dump
+$ sudo su - zimbra
+$ /opt/zimbra/libexec/zmslapcat -c /opt/zimbra-backupBeforeRename-2013-10-18/ldap-dump
+$ /opt/zimbra/libexec/zmslapcat /opt/zimbra-backupBeforeRename-2013-10-18/ldap-dump
+$ zmcontrol start
+$ exit
+```
 
 Temporarily add a `/etc/hosts` alias/entry for both the old and new fully-qualified name, as follows:
 
-    127.0.1.1 piers.justdavis.com piers piers.davisonlinehome.name
+```
+127.0.1.1 piers.justdavis.com piers piers.davisonlinehome.name
+```
 
 Now, rename the server within Zimbra:
 
-    $ sudo su - zimbra
-    $ /opt/zimbra/libexec/zmsetservername --verbose --newServerName piers.justdavis.com
-    $ exit
+```shell-session
+$ sudo su - zimbra
+$ /opt/zimbra/libexec/zmsetservername --verbose --newServerName piers.justdavis.com
+$ exit
+```
 
 Edit `/etc/hosts` to remove the old hostname, as follows:
 
-    127.0.1.1 piers.justdavis.com piers
+```
+127.0.1.1 piers.justdavis.com piers
+```
 
 Verify the OS hostname by running the following command:
 
-    $ hostname -f
+```shell-session
+$ hostname -f
+```
 
 Regenerate the SSH keys used by Zimbra:
 
-    $ zmsshkeygen
-    $ zmupdateauthkeys
+```shell-session
+$ zmsshkeygen
+$ zmupdateauthkeys
+```
 
 Reboot the server:
 
-    $ sudo reboot
+```shell-session
+$ sudo reboot
+```
 
 Set the domains active again:
 
-    $ sudo ufw delete deny smtp
-    $ sudo ufw disable
-    $ sudo su - zimbra
-    $ zmprov modifydomain davisonlinehome.name zimbraDomainStatus active
-    $ zmprov modifydomain justdavis.com zimbraDomainStatus active
-    $ zmprov modifydomain madrivercode.com zimbraDomainStatus active
-    $ zmprov modifydomain madriverdevelopment.com zimbraDomainStatus active
-    $ zmprov modifydomain simplepersistence.com zimbraDomainStatus active
-    $ exit
+```shell-session
+$ sudo ufw delete deny smtp
+$ sudo ufw disable
+$ sudo su - zimbra
+$ zmprov modifydomain davisonlinehome.name zimbraDomainStatus active
+$ zmprov modifydomain justdavis.com zimbraDomainStatus active
+$ zmprov modifydomain madrivercode.com zimbraDomainStatus active
+$ zmprov modifydomain madriverdevelopment.com zimbraDomainStatus active
+$ zmprov modifydomain simplepersistence.com zimbraDomainStatus active
+$ exit
+```
 
 
 #### Troubleshooting: Errors from `zmsetservername`
@@ -342,8 +400,10 @@ References:
 
 When first running the above `zmsetservername` command, I received the following errors towards the end:
 
-    Unable to contact ldap://piers.davisonlinehome.name:389: Connection refused
-    Unable to contact ldap://piers.davisonlinehome.name:389: Connection refused
+```
+Unable to contact ldap://piers.davisonlinehome.name:389: Connection refused
+Unable to contact ldap://piers.davisonlinehome.name:389: Connection refused
+```
 
 To resolve these, I added a step above before the `zmsetservername`, to edit `/etc/hosts` and ensure that aliases exist for both the old and new server name. I had to restore from backup, but after doing so, the rest of the rename worked as expected.
 
@@ -356,9 +416,11 @@ References:
 
 After changing the server name, the Admin Console's Server Status page was still listing the old server. The following commands resolved that:
 
-    $ sudo su - zimbra
-    $ zmloggerhostmap -d piers.davisonlinehome.name piers.davisonlinehome.name
-    $ exit
+```shell-session
+$ sudo su - zimbra
+$ zmloggerhostmap -d piers.davisonlinehome.name piers.davisonlinehome.name
+$ exit
+```
 
 
 ### Deploying SSL Certificate to Zimbra
@@ -369,23 +431,31 @@ References:
 
 The following commands were run from `eddings` to copy the certificates over to `piers`:
 
-    $ kinit karl
-    $ aklog
-    $ scp -r /afs/justdavis.com/user/karl/id/ssl-for-justdavis.com/2015-gandi-wildcard-for-justdavis.com/ piers.justdavis.com:/home/karl/
+```shell-session
+$ kinit karl
+$ aklog
+$ scp -r /afs/justdavis.com/user/karl/id/ssl-for-justdavis.com/2015-gandi-wildcard-for-justdavis.com/ piers.justdavis.com:/home/karl/
+```
 
 The following was then run on `piers` to concatenate the CA and intermediate certs:
 
-    $ cat justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-root.pem justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-intermediate.pem > justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-chain.pem
+```shell-session
+$ cat justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-root.pem justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-intermediate.pem > justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-chain.pem
+```
 
 The certificate was verified with the following command:
 
-    $ sudo /opt/zimbra/bin/zmcertmgr verifycrt comm justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-keyWithoutPassword.key justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30.crt justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-chain.pem
+```shell-session
+$ sudo /opt/zimbra/bin/zmcertmgr verifycrt comm justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-keyWithoutPassword.key justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30.crt justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-chain.pem
+```
 
 Finally, the certificate was deployed, as follows:
 
-    $ sudo cp justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-keyWithoutPassword.key /opt/zimbra/ssl/zimbra/commercial/commercial.key
-    $ sudo chmod 740 /opt/zimbra/ssl/zimbra/commercial/commercial.key
-    $ sudo /opt/zimbra/bin/zmcertmgr deploycrt comm justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30.crt justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-chain.pem
+```shell-session
+$ sudo cp justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-keyWithoutPassword.key /opt/zimbra/ssl/zimbra/commercial/commercial.key
+$ sudo chmod 740 /opt/zimbra/ssl/zimbra/commercial/commercial.key
+$ sudo /opt/zimbra/bin/zmcertmgr deploycrt comm justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30.crt justdavis.com-wildcardCert-2013-03-30/justdavis.com-wildcardCert-2013-03-30-ca-chain.pem
+```
 
 
 ### Updating Zimbra SSL Certificate in 2015
@@ -398,24 +468,32 @@ In 2015, after the original wildcard certificate for `justdavis.com` expired, a 
 
 The following commands were run from `eddings` to copy the certificates over to `piers`:
 
-    $ kinit karl
-    $ aklog
-    $ scp -r /afs/justdavis.com/user/karl/id/ssl-for-justdavis.com/2015-gandi-wildcard-for-justdavis.com/ piers.justdavis.com:/home/karl/
+```shell-session
+$ kinit karl
+$ aklog
+$ scp -r /afs/justdavis.com/user/karl/id/ssl-for-justdavis.com/2015-gandi-wildcard-for-justdavis.com/ piers.justdavis.com:/home/karl/
+```
 
 The following was then run on `piers` to concatenate the CA and intermediate certs:
 
-    $ cd 2015-gandi-wildcard-for-justdavis.com
-    $ cat GandiStandardSSLCA2.pem AddTrustExternalCARoot.pem > justdavis.com-wildcard-2015-04-13-ca-chain.pem
+```shell-session
+$ cd 2015-gandi-wildcard-for-justdavis.com
+$ cat GandiStandardSSLCA2.pem AddTrustExternalCARoot.pem > justdavis.com-wildcard-2015-04-13-ca-chain.pem
+```
 
 The certificate was verified with the following command:
 
-    $ sudo /opt/zimbra/bin/zmcertmgr verifycrt comm justdavis.com-wildcard-2015-04-13.key justdavis.com-wildcard-2015-04-13.crt justdavis.com-wildcard-2015-04-13-ca-chain.pem
+```shell-session
+$ sudo /opt/zimbra/bin/zmcertmgr verifycrt comm justdavis.com-wildcard-2015-04-13.key justdavis.com-wildcard-2015-04-13.crt justdavis.com-wildcard-2015-04-13-ca-chain.pem
+```
 
 Finally, the certificate was deployed, as follows:
 
-    $ sudo cp justdavis.com-wildcard-2015-04-13.key /opt/zimbra/ssl/zimbra/commercial/commercial.key
-    $ sudo chmod 740 /opt/zimbra/ssl/zimbra/commercial/commercial.key
-    $ sudo /opt/zimbra/bin/zmcertmgr deploycrt comm justdavis.com-wildcard-2015-04-13.crt justdavis.com-wildcard-2015-04-13-ca-chain.pem
+```shell-session
+$ sudo cp justdavis.com-wildcard-2015-04-13.key /opt/zimbra/ssl/zimbra/commercial/commercial.key
+$ sudo chmod 740 /opt/zimbra/ssl/zimbra/commercial/commercial.key
+$ sudo /opt/zimbra/bin/zmcertmgr deploycrt comm justdavis.com-wildcard-2015-04-13.crt justdavis.com-wildcard-2015-04-13-ca-chain.pem
+```
 
 The server was then rebooted.
 
@@ -428,9 +506,11 @@ As a side note: I received a call from my ISP, Verizon FiOS, warning me about th
 
 The Zimbra ports I was concerned about were permanently firewalled, as follows:
 
+```shell-session
 $ sudo ufw enable
 $ sudo ufw allow from 127.0.0.1 port 11211
 $ sudo ufw deny in to any port 11211
+```
 
 
 ## Configuring DKIM for the Email Domains in Zimbra and DNS
@@ -444,9 +524,10 @@ DKIM is used to verify the origin of email addresses for a given `MX` email doma
 
 The following commands were run on `piers` to generate and apply DKIM keys for each of the domains in Zimbra:
 
-    $ sudo su - zimbra
-    $ /opt/zimbra/libexec/zmdkimkeyutil -a -d davisonlinehome.name
-    $ /opt/zimbra/libexec/zmdkimkeyutil -a -d justdavis.com
+```shell-session
+$ sudo su - zimbra
+$ /opt/zimbra/libexec/zmdkimkeyutil -a -d davisonlinehome.name
+$ /opt/zimbra/libexec/zmdkimkeyutil -a -d justdavis.com
+```
 
 The output of those commands was then used to create new `TXT` records in the DNS domains on `eddings`, by editing `/etc/bind/db.justdavis.com`. That file is also used for the `davisonlinehome.name` domain, so both entries were added to it.
-

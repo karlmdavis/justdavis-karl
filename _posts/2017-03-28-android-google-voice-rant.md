@@ -42,4 +42,3 @@ Having problems with this feature while driving is _particularly_ galling becaus
 Thinking about this, I realized that this ties in a bit to a hot topic in the dev community: ChatOps. Personally, I don't see the appeal of the concept. IRC is great when I have a specific question, but I don't have the time to just hang out there. Same with Slack: it's a very slick app, but I avoid it like the plague because I already have way too much trouble just staying on top of my email. But in a way, the promise of Google Voice/Alexa/Siri/whatever is that they provide all of us with a ChatOps system for our lives. A conversational interface that we can use to get things done when our hands are busy.
 
 But they only deliver on that promise when they work.
-

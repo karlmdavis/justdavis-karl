@@ -31,28 +31,38 @@ Because it's likely that this computer will end up hosting other Java web applic
 
 Download the latest release of the Nexus WAR. The link can be found at: [Download and Install Nexus](http://www.sonatype.org/nexus/go). For example, the following will download the 2.0.4 release:
 
-    $ wget http://www.sonatype.org/downloads/nexus-2.0.4-1.war
+```shell-session
+$ wget http://www.sonatype.org/downloads/nexus-2.0.4-1.war
+```
 
 "Install" the WAR to the `/usr/local/` folder and "publish" it to Tomcat's `webapps` folder:
 
-    $ sudo mkdir -p /usr/local/manual-installs/sonatype-nexus/
-    $ sudo mv nexus-2.0.4-1.war /usr/local/manual-installs/sonatype-nexus/
-    $ sudo chown tomcat7:tomcat7 /usr/local/manual-installs/sonatype-nexus/nexus-2.0.4-1.war
-    $ sudo ln -s /usr/local/manual-installs/sonatype-nexus/nexus-2.0.4-1.war /var/lib/tomcat7/webapps/nexus.war
+```shell-session
+$ sudo mkdir -p /usr/local/manual-installs/sonatype-nexus/
+$ sudo mv nexus-2.0.4-1.war /usr/local/manual-installs/sonatype-nexus/
+$ sudo chown tomcat7:tomcat7 /usr/local/manual-installs/sonatype-nexus/nexus-2.0.4-1.war
+$ sudo ln -s /usr/local/manual-installs/sonatype-nexus/nexus-2.0.4-1.war /var/lib/tomcat7/webapps/nexus.war
+```
 
 Create the location that Nexus will use to store all of its data:
 
-    $ sudo mkdir -p /var/sonatype/nexus
-    $ sudo chown tomcat7:tomcat7 /var/sonatype/nexus
+```shell-session
+$ sudo mkdir -p /var/sonatype/nexus
+$ sudo chown tomcat7:tomcat7 /var/sonatype/nexus
+```
 
 Configure Nexus to use that storage location by adding the following lines to `/etc/default/tomcat7`:
 
-    # Configure the default storage directory for Sonatype's Nexus web application.
-    export PLEXUS_NEXUS_WORK=/var/sonatype/nexus
+```
+# Configure the default storage directory for Sonatype's Nexus web application.
+ export PLEXUS_NEXUS_WORK=/var/sonatype/nexus
+```
 
 On its next restart, Tomcat will automatically deploy that WAR and serve it at the following URL: <http://eddings:8080/nexus/>:
 
-    $ sudo /etc/init.d/tomcat7 restart
+```shell-session
+$ sudo /etc/init.d/tomcat7 restart
+```
 
 
 ## Proxying Nexus into Apache
@@ -67,12 +77,14 @@ Because Tomcat is running on the non-standard `8080` port and *can't* run on the
 
 Enable Apache's `mod_proxy` and `mod_proxy_http` modules, which will be needed for this:
 
-    $ sudo a2enmod proxy
-    $ sudo a2enmod proxy_http
+```shell-session
+$ sudo a2enmod proxy
+$ sudo a2enmod proxy_http
+```
 
 Add the following configuration to the end of the `VirtualHost` block in `/etc/apache2/sites-available/justdavis.com-ssl`:
 
-~~~~
+```
 	# Configure mod_proxy to be used for proxying URLs on this site to other URLs/ports on this server.
 	ProxyRequests Off
 	ProxyVia Off
@@ -89,11 +101,13 @@ Add the following configuration to the end of the `VirtualHost` block in `/etc/a
 		ProxyPassReverse http://localhost:8080/nexus/
 		SetEnv proxy-nokeepalive 1
 	</Location>
-~~~~
+```
 
 Restart Apache to apply the module and configuration changes:
 
-    $ sudo /etc/init.d/apache2 restart
+```shell-session
+$ sudo /etc/init.d/apache2 restart
+```
 
 Configure the proxy URL as the base URL in Nexus, as follows:
 
@@ -118,40 +132,54 @@ As the instance previously hosted by `tolkien` ([TolkienSetupNexus]({{ '/legacy_
 
 First, stop Nexus/Tomcat on both servers so that nothing is modified during this operation:
 
-    $ sudo service tomcat7 stop
-    $ ssh -t karl@tolkien.madrivercode.com 'sudo /etc/init.d/nexus stop'
+```shell-session
+$ sudo service tomcat7 stop
+$ ssh -t karl@tolkien.madrivercode.com 'sudo /etc/init.d/nexus stop'
+```
 
 Next, `rsync` the Nexus data from `tolkien` to this server, overwiting the existing (mostly empty) data:
 
-    $ sudo rsync -a --delete -v karl@tolkien.madrivercode.com:/var/lib/sonatype-work/nexus/ /var/sonatype/nexus/
-    $ sudo chown -R tomcat7:tomcat7 /var/sonatype/nexus
+```shell-session
+$ sudo rsync -a --delete -v karl@tolkien.madrivercode.com:/var/lib/sonatype-work/nexus/ /var/sonatype/nexus/
+$ sudo chown -R tomcat7:tomcat7 /var/sonatype/nexus
+```
 
 Then, disable the old Nexus server so it never runs again and start the new one back up:
 
-    $ ssh -t karl@tolkien.madrivercode.com 'sudo rm /etc/init.d/nexus'
-    $ ssh -t karl@tolkien.madrivercode.com 'sudo update-rc.d nexus remove'
-    $ sudo service tomcat7 start
+```shell-session
+$ ssh -t karl@tolkien.madrivercode.com 'sudo rm /etc/init.d/nexus'
+$ ssh -t karl@tolkien.madrivercode.com 'sudo update-rc.d nexus remove'
+$ sudo service tomcat7 start
+```
 
 
 ## Upgrading Nexus from 2.0.4-1 to 2.3.1-01
 
 Stop the Tomcat service hosting Nexus:
 
-    $ sudo service tomcat7 stop
+```shell-session
+$ sudo service tomcat7 stop
+```
 
 Download the Nexus WAR. The link can be found at: [Download and Install Nexus](http://www.sonatype.org/nexus/go). For example, the following will download the 2.3.1-01 release:
 
-    $ wget http://www.sonatype.org/downloads/nexus-2.3.1-01.war
+```shell-session
+$ wget http://www.sonatype.org/downloads/nexus-2.3.1-01.war
+```
 
 "Install" the WAR to the `/usr/local/` folder and "publish" it to Tomcat's `webapps` folder:
 
-    $ sudo mv nexus-2.3.1-01.war /usr/local/manual-installs/sonatype-nexus/
-    $ sudo chown tomcat7:tomcat7 /usr/local/manual-installs/sonatype-nexus/nexus-2.3.1-01.war
-    $ sudo ln -s /usr/local/manual-installs/sonatype-nexus/nexus-2.3.1-01.war /var/lib/tomcat7/webapps/nexus.war
+```shell-session
+$ sudo mv nexus-2.3.1-01.war /usr/local/manual-installs/sonatype-nexus/
+$ sudo chown tomcat7:tomcat7 /usr/local/manual-installs/sonatype-nexus/nexus-2.3.1-01.war
+$ sudo ln -s /usr/local/manual-installs/sonatype-nexus/nexus-2.3.1-01.war /var/lib/tomcat7/webapps/nexus.war
+```
 
 Restart Tomcat to ensure that Nexus gets redeployed:
 
-    $ sudo service tomcat7 restart
+```shell-session
+$ sudo service tomcat7 restart
+```
 
 Access the [Nexus webapp](https://justdavis.com/nexus/) and make sure everything started correctly (may take a few minutes before it's available).
 
@@ -168,32 +196,44 @@ This upgrade is a bit tricky, as Nexus has deprecated their WAR-only distributio
 
 First, disable the old Nexus version:
 
-    $ sudo service tomcat7 stop
-    $ sudo rm /var/lib/tomcat7/webapps/nexus.war
-    $ sudo service tomcat7 start
+```shell-session
+$ sudo service tomcat7 stop
+$ sudo rm /var/lib/tomcat7/webapps/nexus.war
+$ sudo service tomcat7 start
+```
 
 Create a new `nexus` user (just accept all defaults, when prompted):
 
-    $ sudo adduser --system --home /var/sonatype/nexus --shell /bin/bash --disabled-password --group nexus
+```shell-session
+$ sudo adduser --system --home /var/sonatype/nexus --shell /bin/bash --disabled-password --group nexus
+```
 
 Create a link for the Nexus data and reset its permissions:
 
-    $ sudo ln -s /var/sonatype/ /usr/local/manual-installs/sonatype-nexus/sonatype-work
-    $ sudo chown -R nexus:nexus /var/sonatype/nexus/
+```shell-session
+$ sudo ln -s /var/sonatype/ /usr/local/manual-installs/sonatype-nexus/sonatype-work
+$ sudo chown -R nexus:nexus /var/sonatype/nexus/
+```
 
 Download the latest Nexus version. The link can be found at: [Download and Install Nexus](http://www.sonatype.org/nexus/go). For example, the following will download the 2.11.1-01 release:
 
-    $ wget http://download.sonatype.com/nexus/oss/nexus-2.11.1-01-bundle.tar.gz
+```shell-session
+$ wget http://download.sonatype.com/nexus/oss/nexus-2.11.1-01-bundle.tar.gz
+```
 
 Unpack the bundle to the `/usr/local/` directory:
 
-    $ sudo tar --extract --gunzip --file nexus-2.11.1-01-bundle.tar.gz --directory /usr/local/manual-installs/sonatype-nexus/
-    $ sudo ln -s /usr/local/manual-installs/sonatype-nexus/nexus-2.11.1-01/bin/nexus /etc/init.d/nexus
+```shell-session
+$ sudo tar --extract --gunzip --file nexus-2.11.1-01-bundle.tar.gz --directory /usr/local/manual-installs/sonatype-nexus/
+$ sudo ln -s /usr/local/manual-installs/sonatype-nexus/nexus-2.11.1-01/bin/nexus /etc/init.d/nexus
+```
 
 Make sure the `nexus` user owns the install's `logs` and `tmp` directories, which will be modified while the service is running:
 
-    $ sudo chown -R nexus:nexus /usr/local/manual-installs/sonatype-nexus/nexus-2.11.1-01/logs/
-    $ sudo chown -R nexus:nexus /usr/local/manual-installs/sonatype-nexus/nexus-2.11.1-01/tmp/
+```shell-session
+$ sudo chown -R nexus:nexus /usr/local/manual-installs/sonatype-nexus/nexus-2.11.1-01/logs/
+$ sudo chown -R nexus:nexus /usr/local/manual-installs/sonatype-nexus/nexus-2.11.1-01/tmp/
+```
 
 Edit the `/etc/init.d/nexus` file and make the following changes:
 
@@ -209,9 +249,11 @@ Be sure to update the Apache proxy configuration in `/etc/apache2/sites-availabl
 
 Register the `nexus` service:
 
-    $ cd /etc/init.d
-    $ sudo update-rc.d nexus defaults
-    $ sudo service nexus start
+```shell-session
+$ cd /etc/init.d
+$ sudo update-rc.d nexus defaults
+$ sudo service nexus start
+```
 
 Access the [Nexus webapp](https://justdavis.com/nexus/) and make sure everything started correctly (may take a few minutes before it's available).
 

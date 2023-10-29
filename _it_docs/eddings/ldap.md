@@ -21,13 +21,17 @@ References:
 
 OpenLDAP should be installed as follows:
 
-    $ sudo apt-get install slapd ldap-utils
+```shell-session
+$ sudo apt-get install slapd ldap-utils
+```
 
 The latest releases of the `slapd` Ubuntu package will not prompt users to answer any questions during install. Accordingly, no `admin` LDAP entry is created; users will have to do this themselves (see below). Until this entry has been created, the `EXTERNAL` authentication mechanism must be used. Effectively, this means that only `root` on the LDAP server's host machine can access it.
 
 To test the new `slapd` installation and see a list of the entries created, run the following command:
 
-    $ sudo ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=config
+```shell-session
+$ sudo ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=config
+```
 
 Perusing the output, you should notice that the entries all appear to be related to the configuration of OpenLDAP itself. This is because, in its latest releases, OpenLDAP no longer stores its configuration in `slapd.conf`: the configuration is instead represented by LDAP entries and stored across the files in `/etc/ldap/slapd.d/`.
 
@@ -41,15 +45,15 @@ References:
 
 By default, OpenLDAP will not have a typical users/addresses directory at all. In fact, in releases prior to Ubuntu 11.04, it won't even have the schemas for such a directory installed. First thing to do is add those schemas, as follows:
 
-~~~~
+```shell-session
 $ sudo ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/cosine.ldif
 $ sudo ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/nis.ldif
 $ sudo ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/inetorgperson.ldif
-~~~~
+```
 
 Next thing that needs to be done is to create a "backend" to host the new directory that will be created. This is basically just the configuration that tells OpenLDAP where to store the new directory and how to control access to it. Create a new `~/ldap-entries/backend.justdavis.com.ldif` file with the following contents (be sure that the password in `olcRootPW` is complex, unique, and also recorded in a safe place):
 
-~~~~
+```
 # Load dynamic backend modules
 dn: cn=module,cn=config
 objectClass: olcModuleList
@@ -77,15 +81,19 @@ olcAccess: to attrs=userPassword by dn="cn=admin,dc=justdavis,dc=com" write by a
 olcAccess: to attrs=shadowLastChange by self write by * read
 olcAccess: to dn.base="" by * read
 olcAccess: to * by dn="cn=admin,dc=justdavis,dc=com" write by * read
-~~~~
+```
 
 Add/load the entries in this file, as follows:
 
-    $ sudo ldapadd -Y EXTERNAL -H ldapi:/// -f ~/ldap-entries/backend.justdavis.com.ldif
+```shell-session
+$ sudo ldapadd -Y EXTERNAL -H ldapi:/// -f ~/ldap-entries/backend.justdavis.com.ldif
+```
 
 At this point, an empty `dc=justdavis,dc=com` directory exists and can be populated. We have also specified that only the `cn=admin,dc=justdavis,dc=com` user has permissions to modify this directory. We can test this user's read access, as follows:
 
-    $ ldapsearch -x -D cn=admin,dc=justdavis,dc=com -W -H ldapi:/// -b dc=justdavis,dc=com
+```shell-session
+$ ldapsearch -x -D cn=admin,dc=justdavis,dc=com -W -H ldapi:/// -b dc=justdavis,dc=com
+```
 
 We now need to populate the new directory/domain. The end goal is to have a directory strutured as follows:
 
@@ -97,11 +105,13 @@ We now need to populate the new directory/domain. The end goal is to have a dire
 
 Much of this structure was copied from the `dc=davisonlinehome,dc=name` directory before it was decommissioned. The old directory's entries were discovered by running the following command on `lewis`:
 
-    $ sudo ldapsearch -Y EXTERNAL -H ldapi:/// -b dc=davisonlinehome,dc=name
+```shell-session
+$ sudo ldapsearch -Y EXTERNAL -H ldapi:/// -b dc=davisonlinehome,dc=name
+```
 
 To add these new OUs, first create a new `~/ldap-entries/ous.justdavis.com.ldif` file with the following contents:
 
-~~~~
+```
 # Create top-level object in domain.
 dn: dc=justdavis,dc=com
 objectClass: top
@@ -134,11 +144,13 @@ dn: ou=serviceAccounts,dc=justdavis,dc=com
 objectClass: organizationalUnit
 ou: groups
 description: This OU will store all of the various `posixAccount` entries.
-~~~~
+```
 
 Add/load the entries in this file, as follows:
 
-    $ ldapadd -x -D cn=admin,dc=justdavis,dc=com -W -H ldapi:/// -f ~/ldap-entries/ous.justdavis.com.ldif
+```shell-session
+$ ldapadd -x -D cn=admin,dc=justdavis,dc=com -W -H ldapi:/// -f ~/ldap-entries/ous.justdavis.com.ldif
+```
 
 
 ## Enabling SSL Encryption
@@ -173,19 +185,23 @@ References:
 
 First, install the `gnutls-bin` package, which provides the SSL utilities that will be needed:
 
-    $ sudo apt-get install gnutls-bin
+```shell-session
+$ sudo apt-get install gnutls-bin
+```
 
 Then, generate a private key for the certificate authority (CA), secure it, and store it in the server's central `/etc/ssl/private/` directory. This command relies on obtaining enough entropy (randomness) to generate a suitably random key, and can thus take up to 30 minutes. It can be done as follows:
 
-    $ sudo certtool --generate-privkey --outfile /etc/ssl/private/ca.justdavis.com.key
-    $ sudo chmod u=rw,g=,o= /etc/ssl/private/ca.justdavis.com.key
-    $ sudo chown root:root /etc/ssl/private/ca.justdavis.com.key
+```shell-session
+$ sudo certtool --generate-privkey --outfile /etc/ssl/private/ca.justdavis.com.key
+$ sudo chmod u=rw,g=,o= /etc/ssl/private/ca.justdavis.com.key
+$ sudo chown root:root /etc/ssl/private/ca.justdavis.com.key
+```
 
 Please note: unlike the other files in the same directory, `/etc/ssl/private/ca.justdavis.com.key` will be owned by `root:root`, not `root:ssl-cert`. This is to protect the key, as it should never be used for anything other than signing new certificates.
 
 Create the following configuration template file, and save it as `/etc/ssl/private/ca.justdavis.com.cfg`:
 
-~~~~
+```
 # X.509 Certificate options
 #
 # DN options
@@ -237,13 +253,15 @@ crl_signing_key
 # request, then honor the extensions stored in the request
 # and store them in the real certificate.
 honor_crq_extensions
-~~~~
+```
 
 Next, use the private key and the configuration to generate the certificate for the CA. This can be done as follows:
 
-    $ sudo certtool --generate-self-signed --load-privkey /etc/ssl/private/ca.justdavis.com.key --template /etc/ssl/private/ca.justdavis.com.cfg --outfile ca.justdavis.com.crt
-    $ sudo chmod u=rw,g=r,o=r ca.justdavis.com.crt
-    $ sudo chown root:root ca.justdavis.com.crt
+```shell-session
+$ sudo certtool --generate-self-signed --load-privkey /etc/ssl/private/ca.justdavis.com.key --template /etc/ssl/private/ca.justdavis.com.cfg --outfile ca.justdavis.com.crt
+$ sudo chmod u=rw,g=r,o=r ca.justdavis.com.crt
+$ sudo chown root:root ca.justdavis.com.crt
+```
 
 The `ca.justdavis.com.crt` file that was generated by the previous command represents the new certificate authority's public key. This is the key that should be distributed to client computers and applications. Because it is a CA certificate, it can be distributed in lieu of all the certificates generated from it: the clients will use the root CA to build a "chain of trust" for the individual certificates for each application or server.
 
@@ -261,8 +279,10 @@ References:
 
 To add the CA certificate to the operating system store on Ubuntu, first copy the certificate to that computer via `scp` or some other mechanism. Then, add it to the local certificate store and update the master store database, by running the following commands:
 
-    $ sudo cp ca.justdavis.com.crt /usr/local/share/ca-certificates/
-    $ sudo update-ca-certificates
+```shell-session
+$ sudo cp ca.justdavis.com.crt /usr/local/share/ca-certificates/
+$ sudo update-ca-certificates
+```
 
 
 ### Creating the LDAP Service Certificate
@@ -271,16 +291,18 @@ The CA certificate created earlier should not (and cannot, due to the options se
 
 First, create a private key for the LDAP server, secure it, and store it in the server's central `/etc/ssl/private/` directory:
 
-    $ sudo mkdir /etc/ldap/ssl/
-    $ sudo chmod u=rwx,g=rx,o= /etc/ldap/ssl/
-    $ sudo chown root:openldap /etc/ldap/ssl/
-    $ sudo certtool --generate-privkey --outfile /etc/ldap/ssl/ldap.justdavis.com.key
-    $ sudo chmod u=r,g=r,o= /etc/ldap/ssl/ldap.justdavis.com.key
-    $ sudo chown root:openldap /etc/ldap/ssl/ldap.justdavis.com.key
+```shell-session
+$ sudo mkdir /etc/ldap/ssl/
+$ sudo chmod u=rwx,g=rx,o= /etc/ldap/ssl/
+$ sudo chown root:openldap /etc/ldap/ssl/
+$ sudo certtool --generate-privkey --outfile /etc/ldap/ssl/ldap.justdavis.com.key
+$ sudo chmod u=r,g=r,o= /etc/ldap/ssl/ldap.justdavis.com.key
+$ sudo chown root:openldap /etc/ldap/ssl/ldap.justdavis.com.key
+```
 
 When using a commercial CA, a "certificate signing request" is needed. However, when using a local CA, this step can be skipped. Instead, we'll directly use our CA's private key, public certificate, and the private key for the service to generate the public certificate for the service. A configuration template file for the service's public certificate should be created as `/etc/ldap/ssl/ldap.justdavis.com.cfg` with the following contents:
 
-~~~~
+```
 # X.509 Certificate options
 #
 # DN options
@@ -326,13 +348,15 @@ tls_www_server
 # in TLS RSA ciphersuites). Note that it is preferred to use different
 # keys for encryption and signing.
 encryption_key
-~~~~
+```
 
 Generate the public certificate for the service, placing it into the `/etc/ldap/ssl/` directory:
 
-    $ sudo certtool --generate-certificate --load-privkey /etc/ldap/ssl/ldap.justdavis.com.key --load-ca-certificate /usr/local/share/ca-certificates/ca.justdavis.com.crt --load-ca-privkey /etc/ssl/private/ca.justdavis.com.key --template /etc/ldap/ssl/ldap.justdavis.com.cfg --outfile /etc/ldap/ssl/ldap.justdavis.com.crt
-    $ sudo chmod u=r,g=r,o= /etc/ldap/ssl/ldap.justdavis.com.crt
-    $ sudo chown root:openldap /etc/ldap/ssl/ldap.justdavis.com.crt
+```shell-session
+$ sudo certtool --generate-certificate --load-privkey /etc/ldap/ssl/ldap.justdavis.com.key --load-ca-certificate /usr/local/share/ca-certificates/ca.justdavis.com.crt --load-ca-privkey /etc/ssl/private/ca.justdavis.com.key --template /etc/ldap/ssl/ldap.justdavis.com.cfg --outfile /etc/ldap/ssl/ldap.justdavis.com.crt
+$ sudo chmod u=r,g=r,o= /etc/ldap/ssl/ldap.justdavis.com.crt
+$ sudo chown root:openldap /etc/ldap/ssl/ldap.justdavis.com.crt
+```
 
 
 #### Troubleshooting: Location of End-Chain Certificates
@@ -347,7 +371,7 @@ After initially trying this and setting `/etc/ldap/ldap.conf`'s `TLS_CACERT` opt
 
 Specifically, `ldapsearch` was returning the following output:
 
-~~~~
+```shell-session
 $ ldapsearch -x -D cn=admin,dc=justdavis,dc=com -W -H ldaps://ldap.justdavis.com -b dc=davisonlinehome,dc=name -d5
 ldap_url_parse_ext(ldaps://ldap.justdavis.com)
 ldap_create
@@ -366,11 +390,11 @@ TLS: peer cert untrusted or revoked (0x2)
 TLS: can't connect: (unknown error code).
 ldap_err2string
 ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)
-~~~~
+```
 
 In addition, `gnutls-cli` was returning the following output (trimmed):
 
-~~~~
+```shell-session
 $ gnutls-cli --print-cert -p 636 --x509cafile /etc/ssl/certs/ca-certificates.crt ldap.justdavis.com
 Processed 143 CA certificate(s).
 Resolving 'ldap.justdavis.com'...
@@ -394,11 +418,11 @@ gB466NbMEeXCV6foO3AApTF4L+/FZF8myA3w
 - MAC: SHA1
 - Compression: NULL
 *** Verifying server certificate failed...
-~~~~
+```
 
 Oddly, `openssl s_client` was perfectly happy to accept the certificate. It was returning the following output (trimmed):
 
-~~~~
+```shell-session
 $ openssl s_client -CAfile /etc/ssl/certs/ca-certificates.crt -connect ldap.justdavis.com:636 -showcerts
 CONNECTED(00000003)
 depth=1 /C=US/O=Davis Family/ST=Arizona/CN=Karl M. Davis
@@ -440,7 +464,7 @@ SSL-Session:
     Verify return code: 0 (ok)
 ---
 DONE
-~~~~
+```
 
 
 ### Configuring OpenLDAP to Use the SSL Certificate
@@ -449,7 +473,7 @@ Now that a CA certifcate, service certificate, service key are all available and
 
 Create a new `~/ldap-entries/ssl.justdavis.com.ldif` file that will be used to configure SSL:
 
-~~~~
+```
 dn: cn=config
 add: olcTLSCACertificateFile
 olcTLSCACertificateFile: /usr/local/share/ca-certificates/ca.justdavis.com.crt
@@ -459,7 +483,7 @@ olcTLSCertificateFile: /etc/ldap/ssl/ldap.justdavis.com.crt
 -
 add: olcTLSCertificateKeyFile
 olcTLSCertificateKeyFile: /etc/ldap/ssl/ldap.justdavis.com.key
-~~~~
+```
 
 Apply the changes in this file, as follows (the `-Y EXTERNAL` mechanism must be used here as `cn=admin,dc=justdavis,dc=com` does not have permission to modify the `cn=config` entry):
 
@@ -471,33 +495,37 @@ Give the OpenLDAP service permission to read the service certificate's private k
 
 Modify the AppArmor profile for OpenLDAP to give it access to the files in `/usr/local/share/ca-certificates/` by editing the `/etc/apparmor.d/usr.sbin.slapd` file to add the following entry:
 
-~~~~
+```
   # Add read access to the local certs directory:
   /usr/local/share/ca-certificates/* r,
-~~~~
+```
 
 **Post-12.04 Upgrade Note:** If this server is running Ubuntu 12.04 or later, it is instead recommended that the above entry be added to the `/etc/apparmor.d/local/usr.sbin.slapd` file. This will prevent conflicts during package manager upgrades.
 
 Apply the change by reloading the AppArmor profiles with the following command:
 
-    $ sudo /etc/init.d/apparmor reload
+```shell-session
+$ sudo /etc/init.d/apparmor reload
+```
 
 Enable the SSL transport mechanism (along with the unencrypted TCP transport and the local IPC transport) by editing the `SLAPD_SERVICES` setting in `/etc/default/slapd`, as follows:
 
-~~~~
+```
 SLAPD_SERVICES="ldap:/// ldapi:/// ldaps:///"
-~~~~
+```
 
 By default, the OpenLDAP client tools do not trust any certificates. Accordingly, in order to connect, we'll have to configure them to trust all of the CA certificate's installed on the Ubuntu system. Running Ubuntu's `update-ca-certificates` command will actually concatenate all of these certificates into one large `/etc/ssl/certs/ca-certificates.crt` file. To make this configuration change, set the following option in the `/etc/ldap/ldap.conf` file:
 
-~~~~
+```
 TLS_CACERT	/etc/ssl/certs/ca-certificates.crt
-~~~~
+```
 
 Finally, restart the OpenLDAP service and run a test query over SSL:
 
-    $ sudo /etc/init.d/slapd restart
-    $ ldapsearch -x -D cn=admin,dc=justdavis,dc=com -W -H ldaps://ldap.justdavis.com -b dc=davisonlinehome,dc=name
+```shell-session
+$ sudo /etc/init.d/slapd restart
+$ ldapsearch -x -D cn=admin,dc=justdavis,dc=com -W -H ldaps://ldap.justdavis.com -b dc=davisonlinehome,dc=name
+```
 
 
 #### Troubleshooting: TLS_CACERTDIR Option
@@ -531,38 +559,44 @@ When accessing the LDAP server on a Linux command line, e.g. via `ldapsearch`, w
 
 The `libsasl2-modules-gssapi-mit` package is required for this support. Install it by running the following command:
 
-    $ sudo apt-get install libsasl2-modules-gssapi-mit
+```shell-session
+$ sudo apt-get install libsasl2-modules-gssapi-mit
+```
 
 The LDAP server will also need a Kerberos host key and a service key with a principal for the LDAP service within the realm for the host on which the service runs. Create a `host` principal for the LDAP server and export it to the default local keytab:
 
-~~~~
+```shell-session
 $ sudo kadmin.local
 kadmin.local:  addprinc -policy hosts -randkey host/eddings.justdavis.com
 kadmin.local:  ktadd host/eddings.justdavis.com
 kadmin.local:  quit
-~~~~
+```
 
 Create an `ldap` principal for the LDAP server and export it to a separate keytab, which will keep the `host` keytab from becoming compromised if the OpenLDAP server is:
 
-~~~~
+```shell-session
 $ sudo kadmin.local
 kadmin:  addprinc -policy services -randkey ldap/eddings.justdavis.com
 kadmin:  ktadd -k /etc/ldap/ldap.keytab ldap/eddings.justdavis.com
 kadmin:  quit
 $ sudo chown openldap /etc/ldap/ldap.keytab
-~~~~
+````
 
 Set the `KRB5_KTNAME` variable in the `/etc/default/slapd` configuration file as follows:
 
-    export KRB5_KTNAME=/etc/ldap/ldap.keytab
+```
+export KRB5_KTNAME=/etc/ldap/ldap.keytab
+```
 
 Restart OpenLDAP to apply the previous change:
 
-    $ sudo /etc/init.d/slapd restart
+```shell-session
+$ sudo /etc/init.d/slapd restart
+```
 
 Create a new `~/ldap-entries/sasl.justdavis.com.ldif` file that will be used to configure SASL:
 
-~~~~
+```
 dn: cn=config
 changetype: modify
 # The FQDN of the Kerberos KDC.
@@ -583,24 +617,30 @@ add: olcAuthzRegexp
 olcAuthzRegexp: {0}"uid=([^/]*),cn=justdavis.com,cn=GSSAPI,cn=auth" "uid=$1,ou=people,dc=justdavis,dc=com"
 # Administrative user map, assumes existence of cn=admin,cn=config
 olcAuthzRegexp: {1}"uid=karl/admin,cn=justdavis.com,cn=gssapi,cn=auth" "cn=admin,cn=config"
-~~~~
+```
 
 **Troubleshooting Note:** [OpenLDAPServer: Kerberos Authentication](https://help.ubuntu.com/community/OpenLDAPServer#Kerberos_Authentication) recommends also using the `noactive` flag in `olcSaslSecProps`. However, doing so seems to prevent the use of the `-Y EXTERNAL` mechanism, which seems to be the only way to view or modify the root `cn=config` entry. Accordingly, I've left this flag out.
 
 Apply the changes in this file, as follows (the `-Y EXTERNAL` mechanism must be used here as `cn=admin,dc=justdavis,dc=com` does not have permission to modify the `cn=config` entry):
 
-    $ sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ~/ldap-entries/sasl.justdavis.com.ldif
+```shell-session
+$ sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ~/ldap-entries/sasl.justdavis.com.ldif
+```
 
 **Troubleshooting Note:** If something is wrong and you find yourself unable to connect to the LDAP server after applying these changes, you will have to: stop the LDAP server, edit the `/etc/ldap/slapd.d/cn=config.ldif` file manually to revert these changes, start the server, fix the problem, and then reapply these changes.
 
 To test this configuration, we'll first obtain a Kerberos ticket for the `karl/admin@JUSTDAVIS.COM` principal, which should be mapped by the second `olcAuthzRegexp` mapping we created above to the `cn=admin,cn=config` user. This test can be performed by running the following commands:
 
-    $ kinit karl/admin
-    $ ldapsearch -Y GSSAPI -H ldapi:/// -b dc=justdavis,dc=com
+```shell-session
+$ kinit karl/admin
+$ ldapsearch -Y GSSAPI -H ldapi:/// -b dc=justdavis,dc=com
+```
 
 Another test should also be run, combining `-Y GSSAPI` and SSL. This test should expose any DNS issues:
 
-    $ ldapsearch -Y GSSAPI -H ldaps://ldap.justdavis.com -b dc=justdavis,dc=com
+```shell-session
+$ ldapsearch -Y GSSAPI -H ldaps://ldap.justdavis.com -b dc=justdavis,dc=com
+```
 
 
 ### When Authenticating via a Simple Bind (Using SASL via saslauthd)
@@ -617,7 +657,9 @@ While the previous section's configuration will allow OpenLDAP to make use of al
 
 First, install the SASL application/daemon (rather than just the libraries) by running the following command:
 
-    $ sudo apt-get install sasl2-bin
+```shell-session
+$ sudo apt-get install sasl2-bin
+```
 
 Then, edit the following entries in the `/etc/default/saslauthd` file:
 
@@ -626,28 +668,36 @@ Then, edit the following entries in the `/etc/default/saslauthd` file:
 
 Then, start the `saslauthd` daemon:
 
-    $ sudo /etc/init.d/saslauthd start
+```shell-session
+$ sudo /etc/init.d/saslauthd start
+```
 
 Test that `saslauthd` works correctly via the `testsaslauthd` command (add a space before the command to keep your password from landing in the Bash history):
 
-    $ sudo testsaslauthd -u karl -p "my password"
+```shell-session
+$ sudo testsaslauthd -u karl -p "my password"
+```
 
 Then, create the SASL configuration for OpenLDAP's `slapd` by creating the `/etc/ldap/sasl2/slapd.conf` file and ensuring it contains the following:
 
-~~~~
+```
 pwcheck_method: saslauthd
-~~~~
+```
 
 Then, edit OpenLDAP's AppArmor profile to give it access to `saslauthd`. Edit the `/etc/apparmor.d/local/usr.sbin.slapd` file and add the following:
 
-    # Add read access to saslauthd.
-    /run/saslauthd/mux rw,
+```
+# Add read access to saslauthd.
+/run/saslauthd/mux rw,
+```
 
 Finally, restart the OpenLDAP server to apply the previous change and test everything out using `ldapsearch`:
 
-    $ sudo service apparmor reload
-    $ sudo service slapd restart
-    $ ldapsearch -x -D uid=karl,ou=people,dc=justdavis,dc=com -W -H ldapi:/// -b dc=justdavis,dc=com
+```shell-session
+$ sudo service apparmor reload
+$ sudo service slapd restart
+$ ldapsearch -x -D uid=karl,ou=people,dc=justdavis,dc=com -W -H ldapi:/// -b dc=justdavis,dc=com
+```
 
 (Please note: the above `ldapsearch` command makes use of the `uid=karl,ou=people,dc=justdavis,dc=com` user account and will not succeed unless that account has been created in the LDAP directory. The creation of this account is described below.)
 
@@ -662,7 +712,7 @@ As we'll be using our LDAP directory in combination with a Kerberos server to pr
 
 For maintenance purposes, it's recommended to create a separate `.ldif` file for each user-group pair and keep it around. As an example, the following was created as `~/ldap-entries/karl.justdavis.com.ldif` to create a user and group for the `karl` user:
 
-~~~~
+```
 dn: uid=karl,ou=people,dc=justdavis,dc=com
 objectClass: inetOrgPerson
 objectClass: posixAccount
@@ -688,7 +738,7 @@ dn: cn=karl,ou=groups,dc=justdavis,dc=com
 objectClass: posixGroup
 cn: karl
 gidNumber: 10000
-~~~~
+```
 
 
 ## Configuring LDAP Security Controls
@@ -709,20 +759,22 @@ With the configuration thus far, the security controls are set as follows:
 
 This is a confusing mess. Create an `administrators-ldap` group that will be given permissions to modify the LDAP data (and other systems). Save the following as `~/ldap-entries/group-administrators-ldap.ldif`:
 
-~~~~
+```
 dn: cn=administrators-ldap,ou=groups,dc=justdavis,dc=com
 objectClass: groupOfNames
 cn: administrators-ldap
 member: uid=karl,ou=people,dc=justdavis,dc=com
-~~~~
+```
 
 Add the group:
 
-    $ ldapadd -x -D cn=admin,dc=justdavis,dc=com -W -H ldapi:/// -f ~/ldap-entries/group-administrators-ldap.ldif
+```shell-session
+$ ldapadd -x -D cn=admin,dc=justdavis,dc=com -W -H ldapi:/// -f ~/ldap-entries/group-administrators-ldap.ldif
+```
 
 Then, modify the DIT's security settings to give this group administrative permissions (rather than just `cn=admin,dc=justdavis,dc=com`). Save the following as `~/ldap-entries/justdavis-security.ldif`:
 
-~~~~
+```
 dn: olcDatabase={1}hdb,cn=config
 changetype: modify
 replace: olcAccess
@@ -740,11 +792,13 @@ olcAccess: to *
     by dn="cn=admin,dc=justdavis,dc=com" write
     by group.exact="cn=administrators-ldap,ou=groups,dc=justdavis,dc=com" write
     by * read
-~~~~
+```
 
 Apply those changes:
 
-    $ sudo ldapmodify -Y EXTERNAL ldapi:/// -f ~/ldap-entries/justdavis-security.ldif
+```shell-session
+$ sudo ldapmodify -Y EXTERNAL ldapi:/// -f ~/ldap-entries/justdavis-security.ldif
+```
 
 With that done, security stands as follows:
 
@@ -756,16 +810,17 @@ With that done, security stands as follows:
 
 A separate `posixGroup` named `cn=administrators,ou=groups,dc=justdavis,dc=com` was created to track non-LDAP administrative access. Save the following as `~/ldap-entries/group-administrators.ldif`:
 
-~~~~
+```
 dn: cn=administrators,ou=groups,dc=justdavis,dc=com
 objectClass: posixGroup
 objectClass: top
 cn: administrators
 gidNumber: 11000
 memberUid: uid=karl
-~~~~
+```
 
 Apply those changes:
 
-    $ ldapadd -f ~/ldap-entries/group-administrators.ldif
-
+```shell-session
+$ ldapadd -f ~/ldap-entries/group-administrators.ldif
+```

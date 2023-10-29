@@ -11,5 +11,6 @@ This guide describes how to install the [Chromium](http://www.chromium.org/Home)
 
 Installing Chromium is simple, just run the following command:
 
-    $ sudo apt-get install chromium-browser chromium-codecs-ffmpeg-extra
-
+```shell-session
+$ sudo apt-get install chromium-browser chromium-codecs-ffmpeg-extra
+```
