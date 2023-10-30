@@ -95,21 +95,21 @@ That's not a blank check, though:
      and over to
      [GitHub Actions](https://github.com/features/actions) and
      [GitHub Packages](https://github.com/features/packages).
-       * I'd estimate this as likely to take 4.0h.
+    * I'd estimate this as likely to take 4.0h.
 4. Update its dependencies to current versions,
      particularly Spring, Tomcat, and Java.
-       * I'd estimate this as likely to take 20.0h.
+    * I'd estimate this as likely to take 20.0h.
 5. Update its usage of
      [Google Analytics](https://analytics.google.com),
      as Google has been sending me emails
      telling me that the current setup will stop working soon.
-       * I'd estimate this as likely to take 2.0h.
+    * I'd estimate this as likely to take 2.0h.
 6. Containerize its deployment and hosting,
      and also consider moving it to AWS or something like that,
      so that future vulnerabilities don't put my home network at risk.
-       * I'd estimate this as likely to take 24.0h,
-           if I leave it on my personal server and host it via Docker Compose,
-           or 60.0h if I decide to move it to AWS.
+    * I'd estimate this as likely to take 24.0h,
+        if I leave it on my personal server and host it via Docker Compose,
+        or 60.0h if I decide to move it to AWS.
 
 All together, that's an estimate of at least 72.0h of work.
 
